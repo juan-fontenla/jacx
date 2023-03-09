@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">JACX</string>
+    <string name="search">Search</string>
+    <string name="album">Album</string>
+    <string name="explore">Explore</string>
+    <string name="music">Music</string>
+    <string name="profile">Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_data">No data.</string>
+    <string name="joinLabel">Join trip by:</string>
+    <string name="or">o</string>
+    <string name="back">Back</string>
+    <string name="pin">PIN</string>
+    <string name="qrScan">Scan QR code</string>
+    <string name="createTrip">Create new trip</string>
+    <string name="origin">Origin</string>
+    <string name="destination">Destination</string>
+    <string name="name">Name</string>
+    <string name="create">Create</string>
+    <string name="startDate">Start date</string>
+    <string name="endDate">End date</string>
+</resources>

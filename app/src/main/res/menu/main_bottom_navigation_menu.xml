@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/search"
+        android:enabled="true"
+        android:icon="@drawable/baseline_search_24"
+        android:title="@string/search" />
+    <item
+        android:id="@+id/album"
+        android:enabled="true"
+        android:icon="@drawable/baseline_photo_album_24"
+        android:title="@string/album" />
+    <item
+        android:id="@+id/explore"
+        android:enabled="true"
+        android:icon="@drawable/baseline_travel_explore_24"
+        android:title="@string/explore" />
+    <item
+        android:id="@+id/music"
+        android:enabled="true"
+        android:icon="@drawable/baseline_music_note_24"
+        android:title="@string/music" />
+    <item
+        android:id="@+id/profile"
+        android:enabled="true"
+        android:icon="@drawable/baseline_account_circle_24"
+        android:title="@string/profile" />
+</menu>
