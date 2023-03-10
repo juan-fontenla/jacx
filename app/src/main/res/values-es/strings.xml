@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JACX</string>
+    <string name="search">Buscar</string>
+    <string name="album">Album</string>
+    <string name="explore">Explorar</string>
+    <string name="music">Musica</string>
+    <string name="profile">Perfil</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_data">No hay datos.</string>
+    <string name="joinLabel">Únete al viaje con:</string>
+    <string name="or">o</string>
+    <string name="back">Atrás</string>
+    <string name="pin">PIN</string>
+    <string name="qrScan">Escanea el código QR</string>
+    <string name="createTrip">Crea un viaje nuevo</string>
+    <string name="origin">Origen</string>
+    <string name="destination">Destino</string>
+    <string name="name">Nombre</string>
+    <string name="create">Crear</string>
+    <string name="startDate">Fecha de inicio</string>
+    <string name="endDate">Fecha de fin</string>
+    <string name="username">Usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="mail">Correo electronico</string>
+    <string name="date">Fecha nacimiento</string>
+    <string name="button_login">Iniciar Sesion</string>
+    <string name="button_signup">Registrarse</string>
+    <string name="button_logout">Cerrar Sesion</string>
+    <string name="new_password">Nueva contraseña</string>
+    <string name="repeat_password">Repetir contraseña</string>
+    <string name="change_password"><u>Cambiar contraseña</u></string>
+    <string name="reset_password"><u>Recuperar contraseña</u></string>
+    <string name="confirm_password">Confirmar</string>
+    <string name="connect">O conectar via</string>
+    <string name="connect_google">Continuar con Google</string>
+    <string name="connect_spotify">Continuar con Spotify</string>
+    <string name="logo">Logo</string>
+    <string name="login_name">nombre.apellido</string>
+    <string name="text_name">Nombre Apellido</string>
+    <string name="text_date">Miercoles 8 de Marzo 2023</string>
+    <string name="text_mail">nombreapellido@gmail.com</string>
+</resources>

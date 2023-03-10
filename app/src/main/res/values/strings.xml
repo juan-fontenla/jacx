@@ -5,7 +5,6 @@
     <string name="explore">Explore</string>
     <string name="music">Music</string>
     <string name="profile">Profile</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_data">No data.</string>
     <string name="joinLabel">Join trip by:</string>
@@ -20,4 +19,24 @@
     <string name="create">Create</string>
     <string name="startDate">Start date</string>
     <string name="endDate">End date</string>
+    <string name="username">User</string>
+    <string name="password">Password</string>
+    <string name="mail">Mail</string>
+    <string name="date">Birthdate</string>
+    <string name="button_login">Login</string>
+    <string name="button_signup">Sign Up</string>
+    <string name="button_logout">Logut</string>
+    <string name="new_password">New password</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="change_password"><u>Change password</u></string>
+    <string name="reset_password"><u>Reset password</u></string>
+    <string name="confirm_password">Confirm</string>
+    <string name="connect">Connect via</string>
+    <string name="connect_google">Continue via Google</string>
+    <string name="connect_spotify">Continue via Spotify</string>
+    <string name="logo">Logo</string>
+    <string name="login_name">name.surname</string>
+    <string name="text_name">Name Surname</string>
+    <string name="text_date">Wednesday 8 of March 2023</string>
+    <string name="text_mail">namesurname@gmail.com</string>
 </resources>
