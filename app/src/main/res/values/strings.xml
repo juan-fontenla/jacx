@@ -20,4 +20,7 @@
     <string name="create">Create</string>
     <string name="startDate">Start date</string>
     <string name="endDate">End date</string>
+    <string name="friend_trip">Friends</string>
+    <string name="music_trip">Music</string>
+    <string name="album_trip">Album</string>
 </resources>
