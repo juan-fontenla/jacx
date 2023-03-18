@@ -28,6 +28,8 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:src="@drawable/baseline_add_link_24"
+        android:contentDescription="@string/join"
+        android:backgroundTint="@color/green"
         app:layout_constraintBottom_toTopOf="@id/newButton"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -39,6 +41,8 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add"
+        android:contentDescription="@string/add"
+        android:backgroundTint="@color/green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

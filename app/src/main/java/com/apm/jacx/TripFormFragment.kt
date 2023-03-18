@@ -33,8 +33,16 @@ class TripFormFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val mainActivity : MainActivity = activity as MainActivity
+        mainActivity.showUpButton()
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_trip_form, container, false)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val mainActivity : MainActivity = activity as MainActivity
+        mainActivity.hideUpButton()
     }
 
     companion object {

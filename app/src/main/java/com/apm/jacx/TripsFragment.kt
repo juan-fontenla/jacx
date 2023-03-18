@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 // TODO: Rename parameter arguments, choose names that match
@@ -50,11 +49,17 @@ class TripsFragment : Fragment() {
     }
 
     private fun onJoinButtonClick() {
-        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_view_container, JoinFragment())?.commit()
+        val transaction = activity?.supportFragmentManager?.beginTransaction()
+        transaction?.addToBackStack(null)
+        transaction?.replace(R.id.main_view_container, JoinFragment())
+        transaction?.commit()
     }
 
     private fun onCreateButtonClick() {
-        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_view_container, TripFormFragment())?.commit()
+        val transaction = activity?.supportFragmentManager?.beginTransaction()
+        transaction?.addToBackStack(null)
+        transaction?.replace(R.id.main_view_container, TripFormFragment())
+        transaction?.commit()
     }
 
     companion object {
