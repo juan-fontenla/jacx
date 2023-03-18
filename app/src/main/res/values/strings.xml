@@ -20,4 +20,7 @@
     <string name="create">Create</string>
     <string name="startDate">Start date</string>
     <string name="endDate">End date</string>
+    <string name="Explore">Explorar</string>
+    <string name="My_album">Mi album</string>
+    <string name="My_routes">Mis rutas</string>
 </resources>
