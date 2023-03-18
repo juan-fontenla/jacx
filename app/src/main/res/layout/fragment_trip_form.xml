@@ -6,20 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".TripFormFragment" >
 
-<ImageButton
-android:id="@+id/backButton"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:layout_marginStart="16dp"
-android:layout_marginTop="16dp"
-android:minWidth="48dp"
-android:minHeight="48dp"
-android:src="?attr/actionModeCloseDrawable"
-android:background="@null"
-android:contentDescription="@string/back"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/tripFormTitle"
         android:layout_width="wrap_content"
@@ -29,7 +15,7 @@ app:layout_constraintTop_toTopOf="parent" />
         android:text="@string/createTrip"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backButton" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/startInput"
