@@ -40,4 +40,6 @@
     <string name="text_name">Nombre Apellido</string>
     <string name="text_date">Miercoles 8 de Marzo 2023</string>
     <string name="text_mail">nombreapellido@gmail.com</string>
+    <string name="join">Unir</string>
+    <string name="add">Añadir</string>
 </resources>
