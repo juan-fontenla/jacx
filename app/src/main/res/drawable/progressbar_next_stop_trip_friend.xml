@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Determina la longitud de lo que lleva recorrido del progressBar -->
+    <item android:id="@android:id/background">
+            <color android:color="@color/green"></color>
+    </item>
+
+    <!-- Determina el color basico del progressBar -->
+    <item android:id="@android:id/progress">
+        <clip
+            android:clipOrientation="vertical"
+            android:gravity="bottom">
+
+            <color android:color="#000"></color>
+        </clip>
+    </item>
+</layer-list>

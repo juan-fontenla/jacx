@@ -23,4 +23,12 @@
     <string name="friend_trip">Friends</string>
     <string name="music_trip">Music</string>
     <string name="album_trip">Album</string>
+    <string name="tv_route_trip_friend">Seleccione la ruta</string>
+    <string name="btn_start_route_trip_friend">Inicio Ruta</string>
+    <string name="btn_finish_route_trip_friend">Fin Ruta</string>
+    <string name="btn_save_route_trip_friend">Guardar ruta</string>
+    <string name="btn_add_route_trip_friend">Añadir ruta</string>
+    <string name="iV_ubicacion_actual">Ubicacion actual</string>
+    <string name="tV_ubicacion_actual">Parada 1</string>
+    <string name="iB_delete_stop_present">Eliminar parada</string>
 </resources>
