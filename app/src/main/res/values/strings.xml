@@ -39,4 +39,6 @@
     <string name="text_name">Name Surname</string>
     <string name="text_date">Wednesday 8 of March 2023</string>
     <string name="text_mail">namesurname@gmail.com</string>
+    <string name="join">Join</string>
+    <string name="add">Add</string>
 </resources>
