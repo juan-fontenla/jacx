@@ -31,4 +31,9 @@
     <string name="iV_ubicacion_actual">Ubicacion actual</string>
     <string name="tV_ubicacion_actual">Parada 1</string>
     <string name="iB_delete_stop_present">Eliminar parada</string>
+    <string name="tV_lista_canciones_trip_music">Lista de canciones</string>
+    <string name="iB_mas_opciones_trip_music">Más opciones</string>
+    <string name="iB_download_song_trip_music">Descargar</string>
+    <string name="iV_portada_album_trip_music">Portada</string>
+    <string name="btn_add_song_trip_music">Añadir música</string>
 </resources>
