@@ -2,15 +2,18 @@ package com.apm.jacx
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.adapter.ItemSongAdapter
 import com.apm.jacx.data.Datasource
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,8 +44,9 @@ class MusicFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val viewFragment = inflater.inflate(R.layout.fragment_music, container, false)
-        loadMusicFragmentDate(viewFragment)
+        loadMusicFragmentData(viewFragment)
         createListenerAddButton(viewFragment)
+        createListenerSpotifyButton(viewFragment)
         return viewFragment
     }
 
@@ -66,9 +70,10 @@ class MusicFragment : Fragment() {
             }
     }
 
-    private fun loadMusicFragmentDate(viewFragment: View) {
+    private fun loadMusicFragmentData(viewFragment: View) {
         // Initialize data.
         val myDataset = Datasource().loadSongs()
+        val numberOfColumns = 2
 
         Log.d("Song dataset loaded", myDataset.toString())
 
@@ -86,6 +91,13 @@ class MusicFragment : Fragment() {
         val button : FloatingActionButton = viewFragment.findViewById(R.id.add_song_button)
         button.setOnClickListener {
             Toast.makeText(context, "Añadir cancion", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private fun createListenerSpotifyButton(viewFragment: View) {
+        val button : Button = viewFragment.findViewById(R.id.spotify_button)
+        button.setOnClickListener {
+            Toast.makeText(context, "Conectando con spotify", Toast.LENGTH_SHORT).show();
         }
     }
 }

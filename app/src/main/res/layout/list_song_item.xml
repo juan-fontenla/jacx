@@ -71,6 +71,7 @@
                 android:clickable="true"
                 android:contentDescription="@string/dest_play_button"
                 android:focusable="true"
+                app:backgroundTint="@color/green"
                 app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/linearLayout"

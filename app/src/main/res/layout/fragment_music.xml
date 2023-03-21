@@ -29,6 +29,7 @@
         android:contentDescription="@string/dest_add"
         android:focusable="true"
         android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -1,10 +1,17 @@
 package com.apm.jacx
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.apm.jacx.adapter.ItemPhotoAdapter
+import com.apm.jacx.adapter.ItemTripAdapter
+import com.apm.jacx.data.Datasource
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,8 +40,9 @@ class ExploreFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_explore, container, false)
+        val viewFragment = inflater.inflate(R.layout.fragment_explore, container, false)
+        loadTripsFragmentData(viewFragment)
+        return viewFragment
     }
 
     companion object {
@@ -55,5 +63,21 @@ class ExploreFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    private fun loadTripsFragmentData(viewFragment: View ) {
+        // Initialize data.
+        val myDataset = Datasource().loadTrips()
+
+        Log.d("Trips dataset loaded", myDataset.toString())
+
+        val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_trips_explore)
+        recyclerView?.adapter = context?.let { ItemTripAdapter(it, myDataset) }
+
+        // Use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        //recyclerView.setHasFixedSize(true)
+
+        Toast.makeText(context, "Datos de viajes cargados", Toast.LENGTH_SHORT).show();
     }
 }

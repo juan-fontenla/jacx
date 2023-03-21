@@ -22,8 +22,8 @@ class ItemSongAdapter(
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val titleSongText: TextView = view.findViewById(R.id.title_song)
         val artistSongText: TextView = view.findViewById(R.id.artist_song)
-        //val image_song: ImageView = view.findViewById(R.id.image_song)
         val songButton: FloatingActionButton = view.findViewById(R.id.play_song)
+        // val image_song: ImageView = view.findViewById(R.id.image_song)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -38,12 +38,10 @@ class ItemSongAdapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
-        holder.titleSongText.text =  item.title
-        holder.artistSongText.text =  item.artist
+        holder.titleSongText.text = item.title
+        holder.artistSongText.text = item.artist
         holder.songButton.setOnClickListener {
             Toast.makeText(context, "Reproduciendo ${item.title} :)", Toast.LENGTH_SHORT).show();
         }
-
     }
-
 }
