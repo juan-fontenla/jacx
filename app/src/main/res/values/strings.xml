@@ -25,4 +25,8 @@
     <string name="My_routes">Mis rutas</string>
     <string name="join">Join</string>
     <string name="add">Add</string>
+    <string name="dest_image_song">Imagen representativa de una canción.</string>
+    <string name="dest_play_button">Botón de reproducción de una canción</string>
+    <string name="dest_add">Añadir elemento</string>
+    <string name="spotify_button">Conectar con Spotify</string>
 </resources>
