@@ -36,4 +36,11 @@
     <string name="iB_download_song_trip_music">Descargar</string>
     <string name="iV_portada_album_trip_music">Portada</string>
     <string name="btn_add_song_trip_music">Añadir música</string>
+    <string name="tV_trip_album">Album</string>
+    <string name="tV_filtro_trip_album">Filtros</string>
+    <string name="btn_add_new_post_trip_album">Añadir nueva publicación</string>
+    <string name="tV_username_trip_album">Nombre Usuario</string>
+    <string name="tV_horaPublicacion_trip_album">Hace 3 horas</string>
+    <string name="iV_publicacion_trip_album">Imagen Publicación</string>
+    <string name="iV_logo_perfil_trip_album">Logo Perfil</string>
 </resources>

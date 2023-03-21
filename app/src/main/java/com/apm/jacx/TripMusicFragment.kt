@@ -1,13 +1,12 @@
 package com.apm.jacx
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import android.widget.ListAdapter as ListAdapter1
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 private const val ARG_PARAM1 = "param1"
@@ -34,6 +33,11 @@ class TripMusicFragment : Fragment() {
     ): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_trip_music, container, false)
+
+        val btnAddMusic: FloatingActionButton = rootView.findViewById(R.id.btn_add_new_post_detail_trip_album)
+        btnAddMusic.setOnClickListener {
+            Toast.makeText(activity, "Añadir canción", Toast.LENGTH_SHORT).show()
+        }
 
         // Llamamos a la activity DetailTripMusic del ListView desde el fragment
         // TODO: Descomentar para poder ver la Activity con el Adapter de la ListView

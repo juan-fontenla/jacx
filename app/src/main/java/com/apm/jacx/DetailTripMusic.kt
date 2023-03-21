@@ -1,8 +1,9 @@
 package com.apm.jacx
 
 import android.os.Bundle
-import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.ListView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 
@@ -12,20 +13,19 @@ class DetailTripMusic : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_trip_music)
 
-        val titulosCanciones = arrayOf(
-            "Caminar", "Una Noche Sin Pensar", "Calm Down", "Quien Diría"
-        )
+        val listViewDetailMusic = findViewById<ListView?>(R.id.listView_trip_music);
+        val arrayList: ArrayList<MyDataMusic> = ArrayList();
+        var adapter: ListAdapterDetailMusic? = null
 
-        val imagenesPortada = arrayOf(
-            R.drawable.baseline_photo_album_24, R.drawable.baseline_photo_album_24,
-            R.drawable.baseline_photo_album_24, R.drawable.baseline_photo_album_24)
+        arrayList.add(MyDataMusic("Calm Down", "Rema, Selena Gomez",  R.drawable.baseline_photo_album_24))
+        arrayList.add(MyDataMusic("Caminar", "Dani Martin",  R.drawable.baseline_photo_album_24))
+        arrayList.add(MyDataMusic("Una Noche Sin Pensar", "Sebastian Yatra",  R.drawable.baseline_photo_album_24))
+        arrayList.add(MyDataMusic("Quien Diría", "Quevedo", R.drawable.baseline_photo_album_24))
+        arrayList.add(MyDataMusic("Flowers", "Miley Cyrus", R.drawable.baseline_photo_album_24))
 
-        val autorCancion = arrayOf(
-            "Dani Martin", "Sebastian Yatra", "Rema, Selena Gomez", "Quevedo"
-        )
-
-        val mLeadsList = findViewById<ListView?>(R.id.listView_trip_music);
-
-        mLeadsList.adapter = ListAdapter(this, imagenesPortada, titulosCanciones, autorCancion)
+        listViewDetailMusic.adapter = ListAdapterDetailMusic(this, arrayList)
     }
+
+    // Creamos un array temporal para mostrar los datos:
+    class MyDataMusic(val tituloCancion: String, val autorCancion: String, val portada: Int);
 }

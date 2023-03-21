@@ -41,7 +41,7 @@
 <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/btn_add_song_trip_music"
+                    android:id="@+id/btn_add_new_post_detail_trip_album"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="320dp"
