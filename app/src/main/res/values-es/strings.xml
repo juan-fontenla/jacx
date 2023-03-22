@@ -20,6 +20,8 @@
     <string name="create">Crear</string>
     <string name="startDate">Fecha de inicio</string>
     <string name="endDate">Fecha de fin</string>
+    <string name="my_album">Mi album</string>
+    <string name="my_trips">Mis viajes</string>
     <string name="username">Usuario</string>
     <string name="password">Contraseña</string>
     <string name="mail">Correo electronico</string>
@@ -42,4 +44,8 @@
     <string name="text_mail">nombreapellido@gmail.com</string>
     <string name="join">Unir</string>
     <string name="add">Añadir</string>
+    <string name="dest_image_song">Imagen representativa de una canción.</string>
+    <string name="dest_play_button">Botón de reproducción de una canción</string>
+    <string name="dest_add">Añadir elemento</string>
+    <string name="dest_photo">Foto del album</string>
 </resources>
