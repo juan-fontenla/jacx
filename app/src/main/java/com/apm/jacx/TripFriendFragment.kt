@@ -62,7 +62,7 @@ class TripFriendFragment : Fragment() {
         // Initialize data.
         val myDataset = DataSourceTrip().loadFriendsTrip()
 
-        Log.d("Friend dataset loaded", myDataset.toString())
+        Log.d("Friends dataset loaded", myDataset.toString())
 
         val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_friends)
         recyclerView?.adapter = context?.let { ItemFriendAdapter(it, myDataset) }
@@ -81,10 +81,6 @@ class TripFriendFragment : Fragment() {
     private fun createListenerMenuButton(viewFragment: View) {
         val btnMenu : ImageButton = viewFragment.findViewById(R.id.iB_menu_burger_trip_music)
         btnMenu.setOnClickListener {
-            // TODO : Temporal para acceder a la seccion de Seleccionar Rutas
-            val intent: Intent = Intent(activity, ItineraryActivity::class.java)
-            startActivity(intent)
-
             Toast.makeText(context, "Menu", Toast.LENGTH_SHORT).show();
         }
     }

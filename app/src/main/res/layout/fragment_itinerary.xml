@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ItineraryFragment">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add_route_trip_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="476dp"
+        android:clickable="true"
+        android:contentDescription="@string/btn_add_route_trip_friend"
+        android:focusable="true"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/green"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.905"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_save_route_trip_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="308dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:clickable="true"
+        android:contentDescription="@string/btn_save_route_trip_friend"
+        android:focusable="true"
+        android:src="@android:drawable/ic_menu_save"
+        app:backgroundTint="@color/teal_200"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_add_route_trip_friend" />
+
+    <TextView
+        android:id="@+id/tv_route_trip_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="321dp"
+        android:text="@string/tv_route_trip_friend"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_start_route_trip_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="285dp"
+        android:text="@string/btn_start_route_trip_friend"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.352"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_route_trip_friend" />
+
+    <Button
+        android:id="@+id/btn_finish_route_trip_friend2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="448dp"
+        android:layout_marginEnd="190dp"
+        android:text="@string/btn_finish_route_trip_friend"
+        app:layout_constraintEnd_toStartOf="@+id/btn_save_route_trip_friend"
+        app:layout_constraintHorizontal_bias="0.095"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_start_route_trip_friend" />
+
+    <ProgressBar
+        android:id="@+id/progressBar_next_stop_trip_friend"
+        style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+        android:layout_width="10dp"
+        android:layout_height="447dp"
+        android:layout_marginStart="73dp"
+        android:layout_marginTop="81dp"
+        android:layout_marginEnd="222dp"
+        android:layout_marginBottom="67dp"
+        android:progress="70"
+        android:progressDrawable="@drawable/progressbar_next_stop_trip_friend"
+        app:layout_constraintBottom_toTopOf="@+id/btn_finish_route_trip_friend2"
+        app:layout_constraintEnd_toStartOf="@+id/btn_add_route_trip_friend"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_start_route_trip_friend"
+        app:layout_constraintVertical_bias="0.544" />
+
+    <ImageView
+        android:id="@+id/iV_ubicacion_actual"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="122dp"
+        android:layout_marginEnd="259dp"
+        android:layout_marginBottom="302dp"
+        android:contentDescription="@string/iV_ubicacion_actual"
+        android:src="@drawable/baseline_pin_drop_24"
+        app:layout_constraintBottom_toTopOf="@+id/btn_finish_route_trip_friend2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/progressBar_next_stop_trip_friend"
+        app:layout_constraintTop_toBottomOf="@+id/btn_start_route_trip_friend" />
+
+    <TextView
+        android:id="@+id/tV_ubicacion_actual"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="122dp"
+        android:layout_marginBottom="302dp"
+        android:text="@string/tV_ubicacion_actual"
+        app:layout_constraintBottom_toTopOf="@+id/btn_finish_route_trip_friend2"
+        app:layout_constraintStart_toEndOf="@+id/iV_ubicacion_actual"
+        app:layout_constraintTop_toBottomOf="@+id/btn_start_route_trip_friend" />
+
+    <ImageButton
+        android:id="@+id/iB_delete_stop_present"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="122dp"
+        android:layout_marginEnd="116dp"
+        android:layout_marginBottom="302dp"
+        android:contentDescription="@string/iB_delete_stop_present"
+        android:src="@android:drawable/ic_delete"
+        app:layout_constraintBottom_toTopOf="@+id/btn_finish_route_trip_friend2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tV_ubicacion_actual"
+        app:layout_constraintTop_toBottomOf="@+id/btn_start_route_trip_friend" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

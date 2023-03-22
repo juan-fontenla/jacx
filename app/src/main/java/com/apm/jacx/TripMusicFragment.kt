@@ -69,7 +69,7 @@ class TripMusicFragment : Fragment() {
         val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_music_trip)
         recyclerView?.adapter = context?.let { ItemMusicTripAdapter(it, myDataset) }
 
-        Toast.makeText(context, "Datos de amigos cargados", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Datos de musica cargados", Toast.LENGTH_SHORT).show();
 
     }
 
