@@ -59,7 +59,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@android:drawable/ic_menu_camera" />
+        app:srcCompat="@drawable/baseline_music_note_24" />
 
     <ImageButton
         android:id="@+id/iB_download_song_trip_music"

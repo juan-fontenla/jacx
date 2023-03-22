@@ -1,11 +1,16 @@
 package com.apm.jacx
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import com.apm.jacx.trip.DataSourceTrip
+import com.apm.jacx.trip.ItemMusicTripAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
@@ -32,20 +37,13 @@ class TripMusicFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val rootView = inflater.inflate(R.layout.fragment_trip_music, container, false)
+        val viewFragment = inflater.inflate(R.layout.fragment_trip_music, container, false)
 
-        val btnAddMusic: FloatingActionButton = rootView.findViewById(R.id.btn_add_new_post_detail_trip_album)
-        btnAddMusic.setOnClickListener {
-            Toast.makeText(activity, "Añadir canción", Toast.LENGTH_SHORT).show()
-        }
+        loadMusicTripFragmentData(viewFragment)
+        createListenerMusicButton(viewFragment)
+        createListenerMenuButton(viewFragment)
 
-        // Llamamos a la activity DetailTripMusic del ListView desde el fragment
-        // TODO: Descomentar para poder ver la Activity con el Adapter de la ListView
-        // val intent: Intent = Intent(activity, DetailTripMusic::class.java)
-        // startActivity(intent)
-
-        // Inflate the layout for this fragment
-        return rootView;
+        return viewFragment;
     }
 
     companion object {
@@ -61,5 +59,33 @@ class TripMusicFragment : Fragment() {
                 }
             }
     }
+
+    private fun loadMusicTripFragmentData(viewFragment: View) {
+        // Initialize data.
+        val myDataset = DataSourceTrip().loadMusicTrip()
+
+        Log.d("Music of trip dataset loaded", myDataset.toString())
+
+        val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_music_trip)
+        recyclerView?.adapter = context?.let { ItemMusicTripAdapter(it, myDataset) }
+
+        Toast.makeText(context, "Datos de amigos cargados", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private fun createListenerMusicButton(viewFragment: View) {
+        val button : FloatingActionButton = viewFragment.findViewById(R.id.btn_add_new_post_detail_trip_album)
+        button.setOnClickListener {
+            Toast.makeText(context, "Añadir nueva canción", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private fun createListenerMenuButton(viewFragment: View) {
+        val btnMenu : ImageButton = viewFragment.findViewById(R.id.iB_menu_burger_trip_music)
+        btnMenu.setOnClickListener {
+            Toast.makeText(context, "Menu", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 }

@@ -43,4 +43,10 @@
     <string name="tV_horaPublicacion_trip_album">Hace 3 horas</string>
     <string name="iV_publicacion_trip_album">Imagen Publicación</string>
     <string name="iV_logo_perfil_trip_album">Logo Perfil</string>
+    <string name="tV_lista_amigos_trip_friend">Amigos</string>
+    <string name="iB_menu_burger_trip_friend">Menu</string>
+    <string name="iV_perfil_trip_friend">Perfil</string>
+    <string name="tV_userName_trip_friend">UserName</string>
+    <string name="tV_email_userName_trip_friend">userName@udc.es</string>
+    <string name="btn_add_new_friend_trip_album">Añadir Amigos</string>
 </resources>
