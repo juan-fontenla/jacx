@@ -1,6 +1,7 @@
 package com.apm.jacx.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.apm.jacx.DetailRouteActivity
 import com.apm.jacx.R
 import com.apm.jacx.model.Trip
 
@@ -36,7 +38,8 @@ class ItemTripAdapter(
         val item = dataset[position]
         holder.textTrip.text = item.title
         holder.cardTrip.setOnClickListener {
-            Toast.makeText(context, "Abriendo ${item.title}", Toast.LENGTH_SHORT).show();
+            val intent = Intent(context, DetailRouteActivity::class.java)
+            context.startActivity(intent)
         }
     }
 }
