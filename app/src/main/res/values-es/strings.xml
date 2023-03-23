@@ -48,4 +48,5 @@
     <string name="dest_play_button">Botón de reproducción de una canción</string>
     <string name="dest_add">Añadir elemento</string>
     <string name="dest_photo">Foto del album</string>
+    <string name="searchPin">Search by PIN</string>
 </resources>

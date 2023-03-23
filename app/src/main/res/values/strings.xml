@@ -76,4 +76,5 @@
     <string name="dest_play_button">Play song button</string>
     <string name="dest_add">Add element</string>
     <string name="dest_photo">Album photo</string>
+    <string name="searchPin">Search by PIN</string>
 </resources>
