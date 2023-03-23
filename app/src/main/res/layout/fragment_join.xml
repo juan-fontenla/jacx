@@ -17,21 +17,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/pinInput"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pinContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:ems="10"
-        android:inputType="number"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
-        android:hint="@string/pin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tripFormTitle"
-        android:autofillHints="pin"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" />
+        app:layout_constraintTop_toBottomOf="@id/tripFormTitle">
+
+        <EditText
+            android:id="@+id/pinInput"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints="pin"
+            android:ems="10"
+            android:hint="@string/pin"
+            android:inputType="number"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/searchPin"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:contentDescription="@string/searchPin"
+            app:layout_constraintBottom_toBottomOf="@+id/pinInput"
+            app:layout_constraintStart_toEndOf="@id/pinInput"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/baseline_search_24" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/orText"
@@ -42,7 +66,7 @@
         android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pinInput" />
+        app:layout_constraintTop_toBottomOf="@id/pinContainer" />
 
     <ImageButton
         android:id="@+id/qrButton"

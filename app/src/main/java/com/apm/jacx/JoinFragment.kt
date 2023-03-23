@@ -1,10 +1,15 @@
 package com.apm.jacx
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageButton
+import com.google.android.material.button.MaterialButton
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,10 +44,29 @@ class JoinFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_join, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val searchByPinButton = getView()?.findViewById<ImageView>(R.id.searchPin)
+        searchByPinButton!!.setOnClickListener{ onSearchBtPinButtonClick() }
+
+        val qrButton = getView()?.findViewById<AppCompatImageButton>(R.id.qrButton)
+        qrButton!!.setOnClickListener{ onQrButtonClick() }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         val mainActivity : MainActivity = activity as MainActivity
         mainActivity.hideUpButton()
+    }
+
+    private fun onSearchBtPinButtonClick() {
+        val intent = Intent(activity, DetailRouteActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun onQrButtonClick() {
+        Toast.makeText(context, "Escaneo de QR", Toast.LENGTH_SHORT).show();
     }
 
     companion object {
