@@ -41,7 +41,6 @@ class TripAlbumFragment : Fragment() {
         val viewFragment = inflater.inflate(R.layout.fragment_trip_album, container, false);
         loadAlbumTripFragmentData(viewFragment)
         createListenerAlbumTripButton(viewFragment)
-        createListenerMenuButton(viewFragment)
 
         return viewFragment
     }
@@ -74,13 +73,6 @@ class TripAlbumFragment : Fragment() {
         val button : FloatingActionButton = viewFragment.findViewById(R.id.btn_add_new_post_detail_trip_album)
         button.setOnClickListener {
             Toast.makeText(context, "Añadir un nuevo post", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private fun createListenerMenuButton(viewFragment: View) {
-        val btnMenu : ImageButton = viewFragment.findViewById(R.id.iB_menu_burger_trip_album)
-        btnMenu.setOnClickListener {
-            Toast.makeText(context, "Menu", Toast.LENGTH_SHORT).show();
         }
     }
 }

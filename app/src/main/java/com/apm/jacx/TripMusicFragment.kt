@@ -41,7 +41,6 @@ class TripMusicFragment : Fragment() {
 
         loadMusicTripFragmentData(viewFragment)
         createListenerMusicButton(viewFragment)
-        createListenerMenuButton(viewFragment)
 
         return viewFragment;
     }
@@ -77,13 +76,6 @@ class TripMusicFragment : Fragment() {
         val button : FloatingActionButton = viewFragment.findViewById(R.id.btn_add_new_post_detail_trip_album)
         button.setOnClickListener {
             Toast.makeText(context, "Añadir nueva canción", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private fun createListenerMenuButton(viewFragment: View) {
-        val btnMenu : ImageButton = viewFragment.findViewById(R.id.iB_menu_burger_trip_music)
-        btnMenu.setOnClickListener {
-            Toast.makeText(context, "Menu", Toast.LENGTH_SHORT).show();
         }
     }
 
