@@ -22,29 +22,12 @@
         android:id="@+id/tV_filtro_trip_album"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="240dp"
         android:layout_marginTop="36dp"
         android:text="@string/tV_filtro_trip_album"
         android:textSize="15sp"
         android:textStyle="italic"
-        app:layout_constraintEnd_toStartOf="@+id/iB_menu_burger_trip_album"
-        app:layout_constraintHorizontal_bias="0.947"
         app:layout_constraintStart_toEndOf="@+id/tV_detail_trip_music"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/iB_menu_burger_trip_album"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="155dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="#00FFFFFF"
-        android:contentDescription="@string/iB_menu_burger_trip_friend"
-        android:scaleType="centerInside"
-        android:src="@drawable/img_menu_burger"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.918"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView

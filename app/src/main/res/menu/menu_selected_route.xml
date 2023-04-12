@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+     <item
+        android:id="@+id/menu_ubicacion"
+        android:icon="@drawable/icon_selected_route"
+        android:title="@string/tV_ubicacion_actual"
+        app:showAsAction="always"/>
+
+</menu>

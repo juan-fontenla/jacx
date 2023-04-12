@@ -40,8 +40,6 @@ class TripFriendFragment : Fragment() {
         val viewFragment = inflater.inflate(R.layout.fragment_trip_friend, container, false)
         loadFriendFragmentData(viewFragment)
         createListenerFriendButton(viewFragment)
-        createListenerMenuButton(viewFragment)
-
 
         return viewFragment
     }
@@ -78,10 +76,4 @@ class TripFriendFragment : Fragment() {
         }
     }
 
-    private fun createListenerMenuButton(viewFragment: View) {
-        val btnMenu : ImageButton = viewFragment.findViewById(R.id.iB_menu_burger_trip_music)
-        btnMenu.setOnClickListener {
-            Toast.makeText(context, "Menu", Toast.LENGTH_SHORT).show();
-        }
-    }
 }

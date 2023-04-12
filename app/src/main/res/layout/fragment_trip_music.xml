@@ -55,20 +55,4 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_input_add" />
 
-        <ImageButton
-            android:id="@+id/iB_menu_burger_trip_music"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="155dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
-            android:background="#00FFFFFF"
-            android:contentDescription="@string/iB_menu_burger_trip_friend"
-            android:scaleType="centerInside"
-            android:src="@drawable/img_menu_burger"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.918"
-            app:layout_constraintStart_toEndOf="@+id/tV_lista_canciones_trip_music"
-            app:layout_constraintTop_toTopOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
