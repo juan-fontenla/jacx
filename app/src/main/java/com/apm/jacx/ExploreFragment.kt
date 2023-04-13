@@ -2,10 +2,8 @@ package com.apm.jacx
 
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +32,7 @@ class ExploreFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        setHasOptionsMenu(true);
     }
 
     override fun onCreateView(
@@ -79,5 +78,10 @@ class ExploreFragment : Fragment() {
         //recyclerView.setHasFixedSize(true)
 
         Toast.makeText(context, "Datos de viajes cargados", Toast.LENGTH_SHORT).show();
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_search_input, menu);
+        return super.onCreateOptionsMenu(menu, inflater)
     }
 }

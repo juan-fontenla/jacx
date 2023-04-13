@@ -2,9 +2,7 @@ package com.apm.jacx
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -36,6 +34,7 @@ class MusicFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        setHasOptionsMenu(true);
     }
 
     override fun onCreateView(
@@ -99,5 +98,10 @@ class MusicFragment : Fragment() {
         button.setOnClickListener {
             Toast.makeText(context, "Conectando con spotify", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_search_input, menu);
+        return super.onCreateOptionsMenu(menu, inflater)
     }
 }
