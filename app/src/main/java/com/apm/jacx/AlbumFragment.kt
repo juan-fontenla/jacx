@@ -2,9 +2,7 @@ package com.apm.jacx
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -35,6 +33,7 @@ class AlbumFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        setHasOptionsMenu(true);
     }
 
     override fun onCreateView(
@@ -92,5 +91,10 @@ class AlbumFragment : Fragment() {
         button.setOnClickListener {
             Toast.makeText(context, "Añadir foto", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_search_input, menu);
+        return super.onCreateOptionsMenu(menu, inflater)
     }
 }
