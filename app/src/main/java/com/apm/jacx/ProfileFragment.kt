@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.spotify.sdk.android.auth.AuthorizationClient
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,6 +49,12 @@ class ProfileFragment : Fragment() {
         logoutBtn!!.setOnClickListener {
             val intent = Intent(activity, LoginActivity::class.java)
             startActivity(intent)
+        }
+
+        val logoutSpotify = getView()?.findViewById<Button>(R.id.logout_spotify)
+        logoutSpotify?.setOnClickListener {
+            // TODO: Se debe eliminar el token de la base de datos
+            AuthorizationClient.clearCookies(context)
         }
 
         val resetPasswordBtn = getView()?.findViewById<TextView>(R.id.change_password)

@@ -80,4 +80,5 @@
     <string name="my_album_text">My album</string>
     <string name="own_trips_title">Planned trips</string>
     <string name="searchPin">Search by PIN</string>
+    <string name="Logout_Spotify">Logout Spotify</string>
 </resources>

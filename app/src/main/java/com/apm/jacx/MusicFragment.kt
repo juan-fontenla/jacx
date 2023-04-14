@@ -11,6 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.adapter.ItemSongAdapter
 import com.apm.jacx.data.Datasource
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.spotify.android.appremote.api.ConnectionParams
+import com.spotify.android.appremote.api.Connector
+import com.spotify.android.appremote.api.SpotifyAppRemote
+import com.spotify.protocol.types.Track
+import com.spotify.sdk.android.auth.AccountsQueryParameters.CLIENT_ID
+import com.spotify.sdk.android.auth.AccountsQueryParameters.REDIRECT_URI
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -28,6 +34,10 @@ class MusicFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private val CLIENT_ID = "84d6e78f634c4bf593e20545c8768c47"
+    private val REDIRECT_URI = "https://jacx.apm.com/callback"
+    private var spotifyAppRemote: SpotifyAppRemote? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -35,6 +45,41 @@ class MusicFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
         setHasOptionsMenu(true);
+
+        // Spotify
+        val connectionParams = ConnectionParams.Builder(CLIENT_ID)
+            .setRedirectUri(REDIRECT_URI)
+            .showAuthView(true)
+            .build()
+
+        SpotifyAppRemote.connect(context, connectionParams, object : Connector.ConnectionListener {
+            override fun onConnected(appRemote: SpotifyAppRemote) {
+                spotifyAppRemote = appRemote
+                Log.d("MainActivity", "Connected! Yay!")
+                // Now you can start interacting with App Remote
+                connected()
+            }
+
+            override fun onFailure(throwable: Throwable) {
+                Log.e("MainActivity", throwable.message, throwable)
+                // Something went wrong when attempting to connect! Handle errors here
+            }
+        })
+        //
+    }
+
+    private fun connected() {
+        spotifyAppRemote?.let {
+            // Play a playlist
+            val playlistURI = "spotify:playlist:37i9dQZF1DX2sUQwD7tbmL"
+            it.playerApi.play(playlistURI)
+            // Subscribe to PlayerState
+            it.playerApi.subscribeToPlayerState().setEventCallback {
+                val track: Track = it.track
+                Log.d("MainActivity", track.name + " by " + track.artist.name)
+            }
+        }
+
     }
 
     override fun onCreateView(
@@ -47,6 +92,13 @@ class MusicFragment : Fragment() {
         createListenerAddButton(viewFragment)
         createListenerSpotifyButton(viewFragment)
         return viewFragment
+    }
+
+    override fun onStop() {
+        super.onStop()
+        spotifyAppRemote?.let {
+            SpotifyAppRemote.disconnect(it)
+        }
     }
 
     companion object {
