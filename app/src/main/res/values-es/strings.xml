@@ -81,4 +81,5 @@
     <string name="my_album_text">Mi album</string>
     <string name="own_trips_title">Viajes planificados</string>
     <string name="searchPin">Search by PIN</string>
+    <string name="map_view">Map</string>
 </resources>
