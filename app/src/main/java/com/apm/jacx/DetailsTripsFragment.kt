@@ -29,6 +29,7 @@ class DetailsTripsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val mapFragment : Fragment = MapFragment()
         val transaction : FragmentTransaction = childFragmentManager.beginTransaction()
         transaction.replace(R.id.include, mapFragment).commit()

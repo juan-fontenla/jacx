@@ -14,6 +14,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
@@ -42,5 +43,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
    override fun onMapReady(googleMap: GoogleMap) {
        mMap = googleMap
+
+       val madrid = LatLng(40.41797506186007, -3.710449757116284)
+       mMap.addMarker(
+           MarkerOptions()
+               .position(madrid)
+       )
+       mMap.moveCamera(CameraUpdateFactory.newLatLng(madrid))
    }
 }

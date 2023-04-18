@@ -25,6 +25,9 @@ class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
     private val navListener = NavigationBarView.OnItemSelectedListener {
         lateinit var selectedFragment: Fragment
         when (it.itemId) {
+            R.id.map_view -> {
+                selectedFragment = MapFragment()
+            }
             R.id.friend_trip -> {
                 selectedFragment = TripFriendFragment()
             }
