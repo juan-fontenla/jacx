@@ -6,17 +6,18 @@ import android.view.*
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.apm.jacx.adapter.ItemPlayListAdapter
 import com.apm.jacx.adapter.ItemSongAdapter
 import com.apm.jacx.data.Datasource
+import com.apm.jacx.spotify.MusicViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.Track
-import com.spotify.sdk.android.auth.AccountsQueryParameters.CLIENT_ID
-import com.spotify.sdk.android.auth.AccountsQueryParameters.REDIRECT_URI
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -30,13 +31,16 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class MusicFragment : Fragment() {
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
     private val CLIENT_ID = "84d6e78f634c4bf593e20545c8768c47"
-    private val REDIRECT_URI = "https://jacx.apm.com/callback"
+    private val REDIRECT_URI = "jacx://authcallback"
     private var spotifyAppRemote: SpotifyAppRemote? = null
+
+    private val viewModel: MusicViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +72,26 @@ class MusicFragment : Fragment() {
         //
     }
 
+    // esto lo carga!
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        viewModel.loading.observe(viewLifecycleOwner) {
+//            Toast.makeText(context, "Cargando...", Toast.LENGTH_SHORT).show();
+//
+//        }
+//        viewModel.error.observe(viewLifecycleOwner) {
+//            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+//        }
+
+        // Esto se cargará cada vez que se cargue el fragment
+//        viewModel.playList.observe(viewLifecycleOwner){
+//            val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_songs)
+//            recyclerView?.adapter = context?.let { ItemSongAdapter(it, myDataset) }
+//            Toast.makeText(context, "Peticion realizada con exito", Toast.LENGTH_SHORT).show();
+//        }
+    }
+
     private fun connected() {
+
         spotifyAppRemote?.let {
             // Play a playlist
             val playlistURI = "spotify:playlist:37i9dQZF1DX2sUQwD7tbmL"
@@ -122,20 +145,27 @@ class MusicFragment : Fragment() {
     }
 
     private fun loadMusicFragmentData(viewFragment: View) {
+
+        Toast.makeText(context, "Reproduciendose en Spotify", Toast.LENGTH_SHORT).show();
+
+//        viewModel.playList.observe(viewLifecycleOwner){
+//            Toast.makeText(context, "Peticion realizada con exito", Toast.LENGTH_SHORT).show();
+//            Log.d("PlayList", it.size.toString())
+//        }
+
         // Initialize data.
-        val myDataset = Datasource().loadSongs()
-        val numberOfColumns = 2
+//        val myDataset = Datasource().loadSongs()
+//        val numberOfColumns = 2
+//
+//        Log.d("Song dataset loaded", myDataset.toString())
+//
+//        val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_songs)
+//        recyclerView?.adapter = context?.let { ItemSongAdapter(it, myDataset) }
+//
+//        // Use this setting to improve performance if you know that changes
+//        // in content do not change the layout size of the RecyclerView
+//        recyclerView.setHasFixedSize(true)
 
-        Log.d("Song dataset loaded", myDataset.toString())
-
-        val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_songs)
-        recyclerView?.adapter = context?.let { ItemSongAdapter(it, myDataset) }
-
-        // Use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        //recyclerView.setHasFixedSize(true)
-
-        Toast.makeText(context, "Datos de música cargados", Toast.LENGTH_SHORT).show();
     }
 
     private fun createListenerAddButton(viewFragment: View) {

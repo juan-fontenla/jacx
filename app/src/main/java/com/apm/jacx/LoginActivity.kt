@@ -14,7 +14,7 @@ class LoginActivity : AppCompatActivity() {
     // Request code will be used to verify if result comes from the login activity. Can be set to any integer.
     private val REQUEST_CODE = 45897640
     private val CLIENT_ID = "84d6e78f634c4bf593e20545c8768c47"
-    private val REDIRECT_URI = "https://jacx.apm.com/callback"
+    private val REDIRECT_URI = "jacx://authcallback"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +47,14 @@ class LoginActivity : AppCompatActivity() {
         spotifyBtn.setOnClickListener {
             // Inicializamos login spotify.
             val builder = AuthorizationRequest.Builder(CLIENT_ID, AuthorizationResponse.Type.TOKEN, REDIRECT_URI);
-            builder.setScopes(arrayOf("streaming"))
+            builder.setShowDialog(false)
+            // Se añaden los siguientes scopes según las funcinalidades que queremos realizar:
+            // https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists
+            builder.setScopes(arrayOf(
+                "streaming",
+                "playlist-read-private",
+                "playlist-read-collaborative")
+            )
             val request = builder.build()
             AuthorizationClient.openLoginActivity(this, REQUEST_CODE, request)
 
@@ -64,14 +71,18 @@ class LoginActivity : AppCompatActivity() {
                 AuthorizationResponse.Type.TOKEN -> {
                     // Sesión iniciada de forma correcta!
                     val token = response.accessToken
+
                     // TODO: Aquí debemos guardadr el token en la base datos.
                     Toast.makeText(applicationContext, token, Toast.LENGTH_LONG).show();
-                    
+                    // Almacenamos el token
+                    MainApplication.TOKEN = token
+
                     // Redirigimos a la actividad principal.
                     val intentMain = Intent(this, MainActivity::class.java)
                     startActivity(intentMain)
                 }
                 AuthorizationResponse.Type.ERROR -> {
+                    println(response.error)
                     Toast.makeText(applicationContext, "Error: " + response.error, Toast.LENGTH_LONG).show();
                 }
                 else -> {
