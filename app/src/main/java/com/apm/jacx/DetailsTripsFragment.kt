@@ -1,5 +1,9 @@
 package com.apm.jacx
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -9,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -68,16 +73,13 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
         mMap = googleMap
     }
 
-    fun updateLocation(lat: Double, lng: Double) {
-        val location = LatLng(lat,lng)
+    @SuppressLint("MissingPermission")
+    fun updateLocation(location: Location) {
+        val position = LatLng(location.latitude, location.longitude)
         if(::mMap.isInitialized) {
-
-            if (userMarker == null) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15f))
-                userMarker = mMap.addMarker(MarkerOptions().position(location))
-            } else {
-                userMarker?.position = location
-            }
+            mMap.isMyLocationEnabled = true
+            // TODO move camera if position is centered
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f))
         }
     }
 }

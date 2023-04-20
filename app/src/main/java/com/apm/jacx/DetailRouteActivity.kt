@@ -248,10 +248,8 @@ class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
 
             if (location != null) {
                 Log.d("LOCATION", location.toString())
-                val lat = location.latitude
-                val lng = location.longitude
                 val detailsTripsFragment = supportFragmentManager.findFragmentById(R.id.main_view_container_trip) as DetailsTripsFragment
-                detailsTripsFragment.updateLocation(lat, lng)
+                detailsTripsFragment.updateLocation(location)
             }
         }
     }
