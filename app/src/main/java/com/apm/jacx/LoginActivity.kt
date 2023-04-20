@@ -73,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
                     val token = response.accessToken
 
                     // TODO: Aquí debemos guardadr el token en la base datos.
-                    Toast.makeText(applicationContext, token, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(applicationContext, token, Toast.LENGTH_LONG).show();
                     // Almacenamos el token
                     MainApplication.TOKEN = token
 

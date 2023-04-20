@@ -61,7 +61,8 @@ class MusicFragment : Fragment() {
                 spotifyAppRemote = appRemote
                 Log.d("MainActivity", "Connected! Yay!")
                 // Now you can start interacting with App Remote
-                connected()
+                // El metodo connected nos permite reproducir musica aleatoria.
+                // connected()
             }
 
             override fun onFailure(throwable: Throwable) {
@@ -70,24 +71,6 @@ class MusicFragment : Fragment() {
             }
         })
         //
-    }
-
-    // esto lo carga!
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        viewModel.loading.observe(viewLifecycleOwner) {
-//            Toast.makeText(context, "Cargando...", Toast.LENGTH_SHORT).show();
-//
-//        }
-//        viewModel.error.observe(viewLifecycleOwner) {
-//            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
-//        }
-
-        // Esto se cargará cada vez que se cargue el fragment
-//        viewModel.playList.observe(viewLifecycleOwner){
-//            val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_songs)
-//            recyclerView?.adapter = context?.let { ItemSongAdapter(it, myDataset) }
-//            Toast.makeText(context, "Peticion realizada con exito", Toast.LENGTH_SHORT).show();
-//        }
     }
 
     private fun connected() {
@@ -146,26 +129,17 @@ class MusicFragment : Fragment() {
 
     private fun loadMusicFragmentData(viewFragment: View) {
 
-        Toast.makeText(context, "Reproduciendose en Spotify", Toast.LENGTH_SHORT).show();
+        viewModel.playList.observe(viewLifecycleOwner) {
 
-//        viewModel.playList.observe(viewLifecycleOwner){
-//            Toast.makeText(context, "Peticion realizada con exito", Toast.LENGTH_SHORT).show();
-//            Log.d("PlayList", it.size.toString())
-//        }
-
-        // Initialize data.
-//        val myDataset = Datasource().loadSongs()
-//        val numberOfColumns = 2
-//
-//        Log.d("Song dataset loaded", myDataset.toString())
-//
-//        val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_songs)
-//        recyclerView?.adapter = context?.let { ItemSongAdapter(it, myDataset) }
-//
-//        // Use this setting to improve performance if you know that changes
-//        // in content do not change the layout size of the RecyclerView
-//        recyclerView.setHasFixedSize(true)
-
+            val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_songs)
+            Log.d("Playlist disponibles en Spotify", it.toString())
+            recyclerView?.adapter = context?.let { viewModel.playList.value?.let { it1 ->
+                ItemPlayListAdapter(it,
+                    it1
+                )
+            } }
+            recyclerView.setHasFixedSize(true)
+        }
     }
 
     private fun createListenerAddButton(viewFragment: View) {
@@ -178,7 +152,9 @@ class MusicFragment : Fragment() {
     private fun createListenerSpotifyButton(viewFragment: View) {
         val button : Button = viewFragment.findViewById(R.id.spotify_button)
         button.setOnClickListener {
-            Toast.makeText(context, "Conectando con spotify", Toast.LENGTH_SHORT).show();
+            Log.d("Reproduciendo en Spotify", "Connected! Yay!")
+            connected()
+            Toast.makeText(context, "Reproduciendo musica en Spotify", Toast.LENGTH_SHORT).show();
         }
     }
 
