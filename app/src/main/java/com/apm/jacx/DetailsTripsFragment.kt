@@ -10,6 +10,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 
 
 class DetailsTripsFragment : Fragment() {
@@ -25,6 +26,13 @@ class DetailsTripsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_details_trips, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val mapFragment : Fragment = MapFragment()
+        val transaction : FragmentTransaction = childFragmentManager.beginTransaction()
+        transaction.replace(R.id.include, mapFragment).commit()
     }
 
     // Acceso a crear una nueva ruta del viaje

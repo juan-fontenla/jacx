@@ -82,4 +82,5 @@
     <string name="own_trips_title">Viajes planificados</string>
     <string name="searchPin">Search by PIN</string>
     <string name="Logout_Spotify">Logout Spotify</string>
+    <string name="map_view">Map</string>
 </resources>
