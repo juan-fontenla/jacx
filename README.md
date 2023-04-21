@@ -1,6 +1,4 @@
-# jacx
-
-# jacx
+# JACX
 
 ## Spotify
 A la hora de comprobar el funcionamiento en Spotify es necesario realizar los siguientes pasos:
