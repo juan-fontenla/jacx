@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="key" translatable="false" templateMergeStrategy="preserve">AIzaSyBnbbo2SEsPMB6u4Wgjd8xKdDLDA7ZaoA0</string>
+    <string name="client_id" translatable="false">113947876199-deqolag6b5h7qvh7ptcnafk6oagligke.apps.googleusercontent.com</string>
 </resources>
