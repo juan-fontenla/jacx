@@ -11,7 +11,7 @@ class AuthorizationInterceptor : Interceptor {
             chain
                 .request()
                 .newBuilder()
-                .addHeader("Authorization", "Bearer ${MainApplication.TOKEN}")
+                .addHeader("Authorization", "Bearer ${MainApplication.TOKEN_SPOTIFY}")
                 .build()
         )
 }

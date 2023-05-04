@@ -7,7 +7,8 @@ import androidx.appcompat.app.AppCompatDelegate
 class MainApplication : Application() {
 
     companion object {
-        var TOKEN: String? = null
+        var TOKEN_SPOTIFY: String? = null
+        var TOKEN_GOOGLE: String? = null
     }
 
     override fun onCreate() {

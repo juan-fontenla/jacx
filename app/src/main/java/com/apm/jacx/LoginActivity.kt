@@ -1,15 +1,21 @@
 package com.apm.jacx
 
+
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
+
 
 class LoginActivity : AppCompatActivity() {
     // Request code will be used to verify if result comes from the login activity. Can be set to any integer.
@@ -39,9 +45,16 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+
+        val mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
         val googleBtn: Button = findViewById(R.id.connect_google)
         googleBtn.setOnClickListener {
-            Toast.makeText(applicationContext, "Conectando con Google", Toast.LENGTH_SHORT).show();
+            val signInIntent: Intent = mGoogleSignInClient.signInIntent
+            startActivityForResult(signInIntent, REQUEST_CODE)
         }
 
         val spotifyBtn: Button = findViewById(R.id.connect_spotify)
@@ -58,7 +71,6 @@ class LoginActivity : AppCompatActivity() {
             )
             val request = builder.build()
             AuthorizationClient.openLoginActivity(this, REQUEST_CODE, request)
-
         }
     }
 
@@ -68,29 +80,76 @@ class LoginActivity : AppCompatActivity() {
         // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
             val response = AuthorizationClient.getResponse(resultCode, intent)
-            when (response.type) {
-                AuthorizationResponse.Type.TOKEN -> {
-                    // Sesión iniciada de forma correcta!
-                    val token = response.accessToken
+            handleSignInResultSpotify(response)
+        }
 
-                    // TODO: Aquí debemos guardadr el token en la base datos.
-                    // Toast.makeText(applicationContext, token, Toast.LENGTH_LONG).show();
-                    // Almacenamos el token
-                    MainApplication.TOKEN = token
-
-                    // Redirigimos a la actividad principal.
-                    val intentMain = Intent(this, MainActivity::class.java)
-                    startActivity(intentMain)
-                }
-                AuthorizationResponse.Type.ERROR -> {
-                    println(response.error)
-                    Toast.makeText(applicationContext, "Error: " + response.error, Toast.LENGTH_LONG).show();
-                }
-                else -> {
-                    Toast.makeText(applicationContext, "Error desconocido: " + response.error, Toast.LENGTH_LONG).show();
-                }
-            }
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == REQUEST_CODE) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(intent)
+            handleSignInResultGoogle(task);
         }
     }
 
+    private fun handleSignInResultSpotify(response: AuthorizationResponse) {
+        when (response.type) {
+            AuthorizationResponse.Type.TOKEN -> {
+                // Sesión iniciada de forma correcta!
+                val token = response.accessToken
+
+                // TODO: Aquí debemos guardar el token en la base datos.
+                // Toast.makeText(applicationContext, token, Toast.LENGTH_LONG).show();
+                // Almacenamos el token
+                MainApplication.TOKEN_SPOTIFY = token
+
+                // Redirigimos a la actividad principal.
+                val intentMain = Intent(this, MainActivity::class.java)
+                startActivity(intentMain)
+            }
+            AuthorizationResponse.Type.ERROR -> {
+                println(response.error)
+                Toast.makeText(
+                    applicationContext,
+                    "Error: " + response.error,
+                    Toast.LENGTH_LONG
+                ).show();
+            }
+            else -> {
+                Toast.makeText(
+                    applicationContext,
+                    "Error desconocido: " + response.error,
+                    Toast.LENGTH_LONG
+                ).show();
+            }
+        }
+    }
+    private fun handleSignInResultGoogle(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            Toast.makeText(
+                applicationContext,
+                "Sesion iniciada: " + account,
+                Toast.LENGTH_LONG
+            ).show();
+
+            // TODO: Aquí debemos guardar el token en la base datos.
+            // Almacenamos el token
+            MainApplication.TOKEN_SPOTIFY = account.idToken
+
+            // Signed in successfully, show authenticated UI.
+            val intentMain = Intent(this, MainActivity::class.java)
+            startActivity(intentMain)
+
+        } catch (e: ApiException) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Toast.makeText(
+                applicationContext,
+                "Error desconocido: " + e.message,
+                Toast.LENGTH_LONG
+            ).show();
+        }
+    }
 }
+
