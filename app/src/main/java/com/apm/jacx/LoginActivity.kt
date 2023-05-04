@@ -14,16 +14,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.spotify.sdk.android.auth.AccountsQueryParameters.CLIENT_ID
+import com.spotify.sdk.android.auth.AccountsQueryParameters.REDIRECT_URI
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
+import com.spotify.sdk.android.auth.LoginActivity.REQUEST_CODE
 
 
 class LoginActivity : AppCompatActivity() {
-    // Request code will be used to verify if result comes from the login activity. Can be set to any integer.
-    private val REQUEST_CODE = 45897640
-    private val CLIENT_ID = "84d6e78f634c4bf593e20545c8768c47"
-    private val REDIRECT_URI = "jacx://authcallback"
+    private val REQUEST_CODE_GOOGLE = 45897640
+
+    private val REQUEST_CODE_SPOTIFY = 65290045
+    private val CLIENT_ID_SPOTIFY = "84d6e78f634c4bf593e20545c8768c47"
+    private val REDIRECT_URI_SPOTIFY = "jacx://authcallback"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +54,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // GOOGLE:
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .build()
@@ -59,13 +64,15 @@ class LoginActivity : AppCompatActivity() {
         val googleBtn: Button = findViewById(R.id.connect_google)
         googleBtn.setOnClickListener {
             val signInIntent: Intent = mGoogleSignInClient.signInIntent
-            startActivityForResult(signInIntent, REQUEST_CODE)
+            startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE)
         }
+        // END GOOGLE
 
+        // SPOTIFY:
         val spotifyBtn: Button = findViewById(R.id.connect_spotify)
         spotifyBtn.setOnClickListener {
             // Inicializamos login spotify.
-            val builder = AuthorizationRequest.Builder(CLIENT_ID, AuthorizationResponse.Type.TOKEN, REDIRECT_URI);
+            val builder = AuthorizationRequest.Builder(CLIENT_ID_SPOTIFY, AuthorizationResponse.Type.TOKEN, REDIRECT_URI_SPOTIFY);
             builder.setShowDialog(false)
             // Se añaden los siguientes scopes según las funcinalidades que queremos realizar:
             // https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists
@@ -75,21 +82,20 @@ class LoginActivity : AppCompatActivity() {
                 "playlist-read-collaborative")
             )
             val request = builder.build()
-            AuthorizationClient.openLoginActivity(this, REQUEST_CODE, request)
+            AuthorizationClient.openLoginActivity(this, REQUEST_CODE_SPOTIFY, request)
         }
+        // END SPOTIFY
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
 
-        // Check if result comes from the correct activity
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == REQUEST_CODE_SPOTIFY) {
             val response = AuthorizationClient.getResponse(resultCode, intent)
             handleSignInResultSpotify(response)
         }
 
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == REQUEST_CODE_GOOGLE) {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(intent)
