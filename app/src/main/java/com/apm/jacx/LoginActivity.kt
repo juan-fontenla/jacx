@@ -3,10 +3,12 @@ package com.apm.jacx
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.apm.jacx.internalStorage.AppPreferences
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -25,6 +27,9 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Inicializamos el singleton que gestiona el almacenamiento interno:
+        AppPreferences.setup(applicationContext)
+
         setContentView(R.layout.activity_login)
 
         val loginBtn: Button = findViewById(R.id.button_login)
@@ -95,13 +100,10 @@ class LoginActivity : AppCompatActivity() {
     private fun handleSignInResultSpotify(response: AuthorizationResponse) {
         when (response.type) {
             AuthorizationResponse.Type.TOKEN -> {
-                // Sesión iniciada de forma correcta!
-                val token = response.accessToken
 
-                // TODO: Aquí debemos guardar el token en la base datos.
-                // Toast.makeText(applicationContext, token, Toast.LENGTH_LONG).show();
-                // Almacenamos el token
-                MainApplication.TOKEN_SPOTIFY = token
+                // Almacenamos el token en el almacenamiento interno
+                Log.d( "token spotify:", response.accessToken);
+                AppPreferences.TOKEN_SPOTIFY = response.accessToken;
 
                 // Redirigimos a la actividad principal.
                 val intentMain = Intent(this, MainActivity::class.java)
@@ -133,9 +135,8 @@ class LoginActivity : AppCompatActivity() {
                 Toast.LENGTH_LONG
             ).show();
 
-            // TODO: Aquí debemos guardar el token en la base datos.
-            // Almacenamos el token
-            MainApplication.TOKEN_SPOTIFY = account.idToken
+            // Almacenamos el token en el almacenamiento interno
+            AppPreferences.TOKEN_GOOGLE = account.idToken;
 
             // Signed in successfully, show authenticated UI.
             val intentMain = Intent(this, MainActivity::class.java)
