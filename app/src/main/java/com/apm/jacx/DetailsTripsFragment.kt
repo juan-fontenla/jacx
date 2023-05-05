@@ -3,6 +3,7 @@ package com.apm.jacx
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -21,16 +22,24 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import com.google.maps.android.PolyUtil
+import kotlinx.coroutines.*
+import okhttp3.*
+import org.json.JSONObject
+import java.io.IOException
 
 
 class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var mapFragment: SupportMapFragment
+    private lateinit var origin: String
+    private lateinit var waypoints: String
+    private lateinit var destination: String
+    private lateinit var route: PolylineOptions
     private var userMarker: Marker? = null
+    private val client = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +56,9 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Send query to Google Maps API to get route polyline to print in map
+        initialDataFetch()
 
         mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -71,6 +83,9 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.uiSettings.isZoomControlsEnabled = true
+        mMap.uiSettings.isRotateGesturesEnabled = true
+        printRoute() // Print route if already exists
     }
 
     @SuppressLint("MissingPermission")
@@ -78,8 +93,87 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
         val position = LatLng(location.latitude, location.longitude)
         if(::mMap.isInitialized) {
             mMap.isMyLocationEnabled = true
-            // TODO move camera if position is centered
+            // TODO move camera if position is centered and navigation enabled
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f))
         }
     }
+
+    private fun initialDataFetch() = runBlocking {
+        // Get key points and send query to Google Maps API
+        withContext(Dispatchers.IO) {
+            getKeyPoints()
+        }
+        requestRoute()
+    }
+
+    private fun getKeyPoints() {
+        // TODO get points from server
+        origin = "43.27,-8.54"
+        waypoints = "42.03,-8.7|41.53,-8.65"
+        destination = "41.16,-8.7"
+    }
+
+    private fun requestRoute() = runBlocking {
+        // Build url
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host("maps.googleapis.com")
+            .addPathSegment("maps")
+            .addPathSegment("api")
+            .addPathSegment("directions")
+            .addPathSegment("json")
+            .addQueryParameter("origin", origin)
+            .addQueryParameter("waypoints", waypoints)
+            .addQueryParameter("destination", destination)
+            .addQueryParameter("key", getString(R.string.key))
+            .build()
+
+        // Perform request
+        val request = Request.Builder().url(url).build()
+        withContext(Dispatchers.IO) {
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Toast.makeText(activity, "Error on route calculation", Toast.LENGTH_LONG)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    // Get JSON response
+                    val json = response.body!!.string()
+                    val jsonObject = JSONObject(json)
+                    // Check status code
+                    if (jsonObject.getString("status") != "OK") {
+                        Log.e("ROUTE", "Error on response: " + jsonObject.getString("status"))
+                        return
+                    }
+                    // Get and print polyline calculated
+                    val jsonRoute = jsonObject.getJSONArray("routes").getJSONObject(0)
+                    val polyline = jsonRoute.getJSONObject("overview_polyline").getString("points")
+                    val points = PolyUtil.decode(polyline)
+                    route = PolylineOptions().addAll(points).width(8f).color(Color.BLUE).geodesic(true)
+                    printRoute()
+                }
+            })
+        }
+    }
+
+    private fun printRoute() {
+        if (this::mMap.isInitialized && this::route.isInitialized) {
+            activity?.runOnUiThread {
+                mMap.addPolyline(route)
+                // Update camera to match route
+                val builder = LatLngBounds.builder()
+                for (point in route.points) {
+                    builder.include(point)
+                }
+                val bounds = builder.build()
+                val padding = 100
+                val cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding)
+                mMap.moveCamera(cameraUpdate)
+            }
+        } else {
+            Log.w("DetailsTripFragment", "Map or route not initialized!")
+        }
+    }
+
+
 }
