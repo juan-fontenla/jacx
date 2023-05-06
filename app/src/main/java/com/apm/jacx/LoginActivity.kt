@@ -14,12 +14,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.spotify.sdk.android.auth.AccountsQueryParameters.CLIENT_ID
-import com.spotify.sdk.android.auth.AccountsQueryParameters.REDIRECT_URI
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
-import com.spotify.sdk.android.auth.LoginActivity.REQUEST_CODE
 
 
 class LoginActivity : AppCompatActivity() {
@@ -63,8 +60,17 @@ class LoginActivity : AppCompatActivity() {
 
         val googleBtn: Button = findViewById(R.id.connect_google)
         googleBtn.setOnClickListener {
-            val signInIntent: Intent = mGoogleSignInClient.signInIntent
-            startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE)
+            val account = GoogleSignIn.getLastSignedInAccount(this)
+            if (account == null)
+            {
+                val signInIntent: Intent = mGoogleSignInClient.signInIntent
+                startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE)
+            }
+            else
+            {
+                val intentMain = Intent(this, MainActivity::class.java)
+                startActivity(intentMain)
+            }
         }
         // END GOOGLE
 
