@@ -23,6 +23,7 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.maps.android.PolyUtil
 import kotlinx.coroutines.*
 import okhttp3.*
@@ -32,12 +33,14 @@ import java.io.IOException
 
 class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
 
+    private lateinit var navigationButton: FloatingActionButton
     private lateinit var mMap: GoogleMap
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var origin: String
     private lateinit var waypoints: String
     private lateinit var destination: String
     private lateinit var route: PolylineOptions
+    private var navigation = false
     private var userMarker: Marker? = null
     private val client = OkHttpClient()
 
@@ -56,6 +59,9 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        navigationButton = requireView().findViewById<FloatingActionButton>(R.id.navigation)
+        navigationButton!!.setOnClickListener{ onNavigationButtonClick() }
 
         // Send query to Google Maps API to get route polyline to print in map
         initialDataFetch()
@@ -95,6 +101,18 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
             mMap.isMyLocationEnabled = true
             // TODO move camera if position is centered and navigation enabled
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f))
+        }
+    }
+
+    private fun onNavigationButtonClick() {
+        if (navigation) {
+            (activity as DetailRouteActivity).disableNavigation()
+            navigation = false
+            navigationButton.setImageResource(R.drawable.baseline_play_arrow_24)
+        } else {
+            (activity as DetailRouteActivity).enableNavigation()
+            navigation = true
+            navigationButton.setImageResource(R.drawable.baseline_pause_24)
         }
     }
 

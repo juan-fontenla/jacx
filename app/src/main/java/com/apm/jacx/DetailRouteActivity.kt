@@ -29,6 +29,7 @@ private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
 
 class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
 
+    private var navigation = false
     private var userPositionServiceBound = false
     private var userPositionService: UserPositionService? = null
     private lateinit var userPositionBroadcastReceiver: UserPositionBroadcastReceiver
@@ -80,17 +81,15 @@ class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
 
     override fun onResume() {
         super.onResume()
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-            userPositionBroadcastReceiver,
-            IntentFilter(
-                UserPositionService.ACTION_FOREGROUND_ONLY_LOCATION_BROADCAST)
-        )
+        if (navigation) {
+            registerReceiver()
+        }
     }
 
     override fun onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(
-            userPositionBroadcastReceiver
-        )
+        if (navigation) {
+            unregisterReceiver()
+        }
         super.onPause()
     }
 
@@ -103,30 +102,29 @@ class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
         super.onStop()
     }
 
-    /*
-    @SuppressLint("MissingPermission")
-    private fun requestLocation() {
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000).build()
+    public fun enableNavigation() {
+        navigation = true
+        registerReceiver()
+    }
 
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            object : LocationCallback() {
-                override fun onLocationResult(locationResult: LocationResult) {
-                    locationResult ?: return
-                    for (location in locationResult.locations) {
-                        Log.d("LOCATION", location.toString())
-                        val lat = location.latitude
-                        val lng = location.longitude
-                        val detailsTripsFragment = supportFragmentManager.findFragmentById(R.id.main_view_container_trip) as DetailsTripsFragment
-                        detailsTripsFragment.updateLocation(lat, lng)
-                    }
-                }
-            },
-            null
+    public fun disableNavigation() {
+        navigation = false
+        unregisterReceiver()
+    }
+
+    private fun registerReceiver() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            userPositionBroadcastReceiver,
+            IntentFilter(
+                UserPositionService.ACTION_FOREGROUND_ONLY_LOCATION_BROADCAST)
         )
     }
-    */
 
+    private fun unregisterReceiver() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+            userPositionBroadcastReceiver
+        )
+    }
 
     private fun foregroundPermissionApproved(): Boolean {
         return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(
