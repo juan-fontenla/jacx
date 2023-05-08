@@ -213,7 +213,7 @@ class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
         lateinit var selectedFragment: Fragment
         when (it.itemId) {
             R.id.map_view -> {
-                selectedFragment = MapFragment()
+                selectedFragment = DetailsTripsFragment()
             }
             R.id.friend_trip -> {
                 selectedFragment = TripFriendFragment()
