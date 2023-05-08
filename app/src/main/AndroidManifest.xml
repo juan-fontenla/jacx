@@ -32,21 +32,8 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value=""/>
-
         <activity
             android:name=".DetailRouteActivity"
-            android:exported="false" />
-        <activity
-            android:name=".DetailTripAlbum"
-            android:exported="false" />
-        <activity
-            android:name=".DetailTripMusic"
-            android:exported="false" />
-        <activity
-            android:name=".ItineraryActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
