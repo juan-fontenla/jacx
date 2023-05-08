@@ -1,6 +1,8 @@
 package com.apm.jacx
 
+import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 private const val ARG_PARAM1 = "param1"
@@ -32,9 +40,13 @@ class ItineraryFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val viewFragment = inflater.inflate(R.layout.fragment_itinerary, container, false)
+
+        // Init Places SDK
+        Places.initialize(requireContext(), getString(R.string.key))
+
         createNewRoute(viewFragment)
         deleteStopRoute(viewFragment)
-        addNewRoute(viewFragment)
+        addWaypoint(viewFragment)
         saveRoute(viewFragment)
 
         return viewFragment
@@ -74,14 +86,35 @@ class ItineraryFragment : Fragment() {
 
     }
 
-    private fun addNewRoute(viewFragment: View) {
+    private fun addWaypoint(viewFragment: View) {
 
         val btnAddRoute : FloatingActionButton = viewFragment.findViewById(R.id.btn_add_route_trip_friend)
         btnAddRoute.setOnClickListener {
-            Toast.makeText(activity, "Añadir ruta", Toast.LENGTH_SHORT).show();
+            val fields = listOf(Place.Field.ID, Place.Field.NAME)
+            val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                .build(activity)
+            startAutocomplete.launch(intent)
+
         }
 
     }
+
+    private val startAutocomplete =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                if (intent != null) {
+                    val place = Autocomplete.getPlaceFromIntent(intent)
+                    Log.i(
+                        "ItineraryFragment", "Place: ${place.name}, ${place.id}"
+                    )
+                }
+            } else if (result.resultCode == Activity.RESULT_CANCELED) {
+                // The user canceled the operation.
+                Log.i("ItineraryFragment", "User canceled autocomplete")
+            }
+        }
+
 
     private fun saveRoute(viewFragment: View) {
 
