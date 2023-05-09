@@ -41,7 +41,7 @@
                     tools:text="title_song" />
 
                 <TextView
-                    android:id="@+id/artist_song"
+                    android:id="@+id/totalCanciones"
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
                     tools:text="artist_song" />
@@ -76,7 +76,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/linearLayout"
                 app:layout_constraintTop_toTopOf="@+id/linearLayout"
-                app:srcCompat="@android:drawable/ic_media_play" />
+                app:srcCompat="@drawable/music_playlist"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

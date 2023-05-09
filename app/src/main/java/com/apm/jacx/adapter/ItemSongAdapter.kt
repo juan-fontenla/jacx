@@ -1,12 +1,9 @@
 package com.apm.jacx.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +18,7 @@ class ItemSongAdapter(
 
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val titleSongText: TextView = view.findViewById(R.id.title_song)
-        val artistSongText: TextView = view.findViewById(R.id.artist_song)
+        val artistSongText: TextView = view.findViewById(R.id.totalCanciones)
         val songButton: FloatingActionButton = view.findViewById(R.id.play_song)
         // val image_song: ImageView = view.findViewById(R.id.image_song)
     }
