@@ -1,11 +1,21 @@
 package com.apm.jacx
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -20,16 +30,15 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class TripFormFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var origin : String
+    private lateinit var destination : String
+
+    private lateinit var tappedInput : EditText
+    private var selectedPoint : LatLng? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -38,6 +47,8 @@ class TripFormFragment : Fragment() {
     ): View? {
         val mainActivity : MainActivity = activity as MainActivity
         mainActivity.showUpButton()
+        // Init Places SDK
+        Places.initialize(requireContext(), getString(R.string.key))
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_trip_form, container, false)
     }
@@ -47,6 +58,28 @@ class TripFormFragment : Fragment() {
 
         val createButton = getView()?.findViewById<MaterialButton>(R.id.createButton)
         createButton!!.setOnClickListener{ onCreateButtonClick() }
+        // Autocomplete fields
+        val fields = listOf(Place.Field.LAT_LNG, Place.Field.NAME)
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+            .build(activity)
+        val setOriginInput = getView()?.findViewById<EditText>(R.id.startInput)
+        setOriginInput!!.setOnClickListener {
+            tappedInput = setOriginInput
+            startAutocomplete.launch(intent)
+            if (selectedPoint != null) {
+                origin = "${selectedPoint!!.latitude},${selectedPoint!!.longitude}"
+            }
+            selectedPoint = null
+        }
+        val setDestinationInput = getView()?.findViewById<EditText>(R.id.endInput)
+        setDestinationInput!!.setOnClickListener {
+            tappedInput = setDestinationInput
+            startAutocomplete.launch(intent)
+            if (selectedPoint != null) {
+                destination = "${selectedPoint!!.latitude},${selectedPoint!!.longitude}"
+            }
+            selectedPoint = null
+        }
     }
 
     override fun onDestroyView() {
@@ -59,6 +92,26 @@ class TripFormFragment : Fragment() {
         val intent = Intent(activity, DetailRouteActivity::class.java)
         startActivity(intent)
     }
+
+    private fun onInputClick(editText: EditText) {
+
+    }
+
+    private val startAutocomplete =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // Process selected waypoint
+                val intent = result.data
+                if (intent != null) {
+                    val place = Autocomplete.getPlaceFromIntent(intent)
+                    selectedPoint = place.latLng
+                    tappedInput.setText(place.name)
+                }
+            } else if (result.resultCode == Activity.RESULT_CANCELED) {
+                // The user canceled the operation.
+                Log.i("TripFormFragment", "User canceled autocomplete")
+            }
+        }
 
     companion object {
         /**
