@@ -1,7 +1,6 @@
 package com.apm.jacx.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.*
 import com.apm.jacx.spotify.PlayList
@@ -16,7 +16,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.Track
 import com.squareup.picasso.Picasso
-
 
 
 class ItemPlayListAdapter(
@@ -77,10 +76,24 @@ class ItemPlayListAdapter(
         }
 
         // TODO: Falta conseguir mostrar la nueva pantalla para mostrar las canciones
-        val searchByPinButton = holder.songButton
-        searchByPinButton!!.setOnClickListener{
-            val intent = Intent(context, DetailRouteActivity::class.java)
-            context.startActivity(intent)
+        // TODO: Creo que está :-)
+
+        holder.songButton.setOnClickListener {
+            Toast.makeText(context, "Abriendo!: " + item.name, Toast.LENGTH_SHORT).show();
+
+            // Creamos unha instacia do fragmento
+            val framentToLoad = TracksFragment()
+
+            // Chamamos a esta función para cargar os datos do item que se está pulsando
+            framentToLoad.loadPlaylist(item)
+
+            val activity = holder.itemView.context as AppCompatActivity
+
+            // O reemplazamos. Faise de forma similar a que utilzia
+            activity.supportFragmentManager.beginTransaction()
+                .replace(R.id.main_view_container, framentToLoad)
+                .addToBackStack(null)
+                .commit()
         }
 
     }
