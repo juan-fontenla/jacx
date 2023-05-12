@@ -23,61 +23,46 @@
 
             <LinearLayout
                 android:id="@+id/linearLayout"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_width="208dp"
+                android:layout_height="47dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="17dp"
                 android:layout_marginBottom="16dp"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@+id/image_song"
-                app:layout_constraintEnd_toStartOf="@+id/play_song"
-                app:layout_constraintStart_toEndOf="@+id/image_song"
-                app:layout_constraintTop_toTopOf="@+id/image_song">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/title_song"
+                    android:id="@+id/title_spotify_song"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
+                    android:layout_height="wrap_content"
                     tools:text="title_song" />
 
                 <TextView
-                    android:id="@+id/totalCanciones"
+                    android:id="@+id/artist_spotify_song"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    tools:text="artist_song" />
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    tools:text="artist_spotify_song" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/image_song"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:contentDescription="@string/dest_image_song"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/linearLayout"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/song"
-                tools:srcCompat="@drawable/song" />
-
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/play_song"
+                android:id="@+id/previewUrl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:clickable="true"
-                android:contentDescription="@string/dest_play_button"
-                android:focusable="true"
-                app:backgroundTint="@color/green"
-                app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/linearLayout"
-                app:layout_constraintTop_toTopOf="@+id/linearLayout"
-                app:srcCompat="@drawable/music_playlist"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/song" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
