@@ -87,6 +87,11 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
         return super.onCreateOptionsMenu(menu, inflater)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        turnOffNavigation()
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isZoomControlsEnabled = true
@@ -123,16 +128,21 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
 
     private fun onNavigationButtonClick() {
         if (navigation) {
-            (activity as DetailRouteActivity).disableNavigation()
-            navigation = false
-            navigationButton.setImageResource(R.drawable.baseline_play_arrow_24)
-            lastTimeOutOfRoute = null
-            isTimerRunning = false
+            turnOffNavigation()
         } else {
             (activity as DetailRouteActivity).enableNavigation()
+            Log.d("DetailsTripsFragment", "Navigation enabled")
             navigation = true
             navigationButton.setImageResource(R.drawable.baseline_pause_24)
         }
+    }
+
+    private fun turnOffNavigation() {
+        (activity as DetailRouteActivity).disableNavigation()
+        navigation = false
+        navigationButton.setImageResource(R.drawable.baseline_play_arrow_24)
+        lastTimeOutOfRoute = null
+        isTimerRunning = false
     }
 
     private fun initialDataFetch() = runBlocking {
