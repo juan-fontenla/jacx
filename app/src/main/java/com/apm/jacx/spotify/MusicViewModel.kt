@@ -28,9 +28,6 @@ class MusicViewModel : ViewModel() {
     val tracks = MutableLiveData<List<TrackItem>>()
     val playList = MutableLiveData<List<PlayList>>()
 
-    private lateinit var originalTracklist: List<TrackItem>
-    private lateinit var tracklist: MutableList<TrackItem>
-
     init {
         loading.value = true
         viewModelScope.launch {
@@ -59,14 +56,14 @@ class MusicViewModel : ViewModel() {
                     .build()
 
                 val spotifyApi = retrofit.create(SpotifyApi::class.java)
-                val tracks = mutableListOf<TrackItem>()
 
                 playList.value = spotifyApi.getMePlaylists().getOrThrow().items
 
-                // TODO: Muestra por consola el valor de los diferentes items
+                // TODO: Muestra por consola el valor de los diferentes items (previewUrl)
+                // Obtiene los valores de las diferentes tracks de una playlist
                 playList.value!!.forEach { p ->
                     run {
-                        tracks.addAll(spotifyApi.getPlaylistTracks(p.id, 100, 0).getOrThrow().toTrackItems())
+                        tracks.value = spotifyApi.getPlaylistTracks(p.id, 100, 0).getOrThrow().toTrackItems()
                     }
                 }
 

@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.adapter.ItemPlayListAdapter
+import com.apm.jacx.adapter.TrackAdapter
 import com.apm.jacx.spotify.MusicViewModel
+import com.apm.jacx.spotify.domain.PlaylistTracksViewModel
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
@@ -37,7 +39,6 @@ class MusicFragment : Fragment() {
     private var spotifyAppRemote: SpotifyAppRemote? = null
 
     private val viewModel: MusicViewModel by viewModels()
-//    private val tracksViewModel: PlaylistTracksViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +93,6 @@ class MusicFragment : Fragment() {
         // Inflate the layout for this fragment
         val viewFragment = inflater.inflate(R.layout.fragment_music, container, false)
         loadMusicFragmentData(viewFragment)
-//        createListenerAddButton(viewFragment)
         createListenerSpotifyButton(viewFragment)
         return viewFragment
     }
@@ -137,20 +137,6 @@ class MusicFragment : Fragment() {
             } }
             recyclerView.setHasFixedSize(true)
         }
-
-//            tracksViewModel.tracks.observe(viewLifecycleOwner) {
-//                Log.d("canciones", it.toString())
-////            val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_songs)
-////            Log.d("canciones", it.toString())
-////            recyclerView?.adapter = context?.let { tracksViewModel.tracks.value?.let { it1 ->
-////                TrackAdapter(it,
-////                    it1
-////                )
-////            } }
-////            recyclerView.setHasFixedSize(true)
-//        }
-
-
 
     }
 

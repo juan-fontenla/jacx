@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.adapter.ItemPlayListAdapter
 import com.apm.jacx.adapter.TrackAdapter
@@ -40,19 +41,17 @@ class TracksFragment : Fragment() {
 
     private fun loadTracksFragmentData(viewFragment: View) {
         playlist?.let { Log.d("Playlist: ", it.id) }
-        // TODO: Aquí tracks.value vale null :-(
 
-        Log.d("Tracks: ", viewModel.tracks.value.toString());
-
-        val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_tracks)
-        recyclerView?.adapter = context?.let {
-            viewModel.tracks.value?.let { it ->
-                TrackAdapter(
-                    requireContext(),
-                    it
+        // EStá mostrando todas las canciones en ambas playList pero se muestran
+        viewModel.tracks.observe(viewLifecycleOwner) {
+            val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_tracks)
+            recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+            recyclerView?.adapter = context?.let { viewModel.tracks.value?.let { it1 ->
+                TrackAdapter(it,
+                    it1
                 )
-            }
-        }
-        recyclerView.setHasFixedSize(true)
+            } }
+            recyclerView.setHasFixedSize(true)
+         }
     }
 }
