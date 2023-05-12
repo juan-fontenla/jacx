@@ -23,16 +23,15 @@
 
             <LinearLayout
                 android:id="@+id/linearLayout"
-                android:layout_width="240dp"
+                android:layout_width="208dp"
                 android:layout_height="47dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="17dp"
                 android:layout_marginBottom="16dp"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@+id/icon_spotify_song"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/icon_spotify_song"
-                app:layout_constraintTop_toTopOf="@+id/icon_spotify_song">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/title_spotify_song"
@@ -48,20 +47,20 @@
                     tools:text="artist_spotify_song" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/icon_spotify_song"
-                android:layout_width="59dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="16dp"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/previewUrl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:contentDescription="@string/dest_image_song"
+                android:clickable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/linearLayout"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/linearLayout"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/song"
-                tools:srcCompat="@drawable/song" />
+                app:srcCompat="@drawable/song" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

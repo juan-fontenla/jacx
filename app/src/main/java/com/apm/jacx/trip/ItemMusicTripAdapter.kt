@@ -16,7 +16,7 @@ class ItemMusicTripAdapter(
 ) : RecyclerView.Adapter<ItemMusicTripAdapter.ItemViewHolder>() {
 
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        val portadaView: ImageView = view.findViewById(R.id.icon_spotify_song)
+//        val portadaView: ImageView = view.findViewById(R.id.icon_spotify_song)
         val tituloCancionView: TextView = view.findViewById(R.id.title_spotify_song)
         val autorCancionView: TextView = view.findViewById(R.id.artist_spotify_song)
     }

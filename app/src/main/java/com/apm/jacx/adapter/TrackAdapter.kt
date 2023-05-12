@@ -1,14 +1,19 @@
 package com.apm.jacx.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.R
+import com.apm.jacx.TracksFragment
 import com.apm.jacx.spotify.TrackItem
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.Track
 import com.squareup.picasso.Picasso
@@ -38,8 +43,9 @@ class TrackAdapter (
 
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val titleSongText: TextView = view.findViewById(R.id.title_spotify_song)
-        val image_song: ImageView = view.findViewById(R.id.icon_spotify_song)
         val artist: TextView = view.findViewById(R.id.artist_spotify_song)
+        val previewUrl: FloatingActionButton = view.findViewById(R.id.previewUrl)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -57,14 +63,11 @@ class TrackAdapter (
         holder.titleSongText.text = item.name
         holder.artist.text = item.artists
 
-        // Comprobamos si la playlist creada en Spotify tiene asociada una imagne o todavía no
-        if (item.uri != null && item.uri.isNotEmpty()) {
-            Picasso.get().load(item.uri[0].toString()).into(holder.image_song)
-        } else {
-            // Cargar una imagen por defecto cuando la playlist no existan canciones
-            Picasso.get().load(R.drawable.image_default).into(holder.image_song)
-        }
-
-
+//        holder.previewUrl.setOnClickListener {
+//            spotifyAppRemote?.let {
+//                it.playerApi.play(item.uri)
+//            }
+//
+//        }
     }
 }
