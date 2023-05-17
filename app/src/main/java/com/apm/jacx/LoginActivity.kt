@@ -9,11 +9,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.apm.jacx.internalStorage.AppPreferences
+import com.apm.jacx.validations.ValidationUtils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.textfield.TextInputEditText
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
@@ -33,10 +35,19 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
+        val userName = findViewById<TextInputEditText>(R.id.user_name)
+        val password = findViewById<TextInputEditText>(R.id.user_password)
+
         val loginBtn: Button = findViewById(R.id.button_login)
         loginBtn.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            if (ValidationUtils.validateName(userName) && ValidationUtils.validatePassword(password)) {
+                Toast.makeText(applicationContext, userName.text, Toast.LENGTH_SHORT).show();
+                Toast.makeText(applicationContext, password.text, Toast.LENGTH_SHORT).show();
+
+                //TODO: Añadir peticion back
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
         }
 
         val signUpBtn: Button = findViewById(R.id.button_signup)

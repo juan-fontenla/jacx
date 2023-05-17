@@ -83,5 +83,10 @@
     <string name="searchPin">Search by PIN</string>
     <string name="Logout_Spotify">Logout Spotify</string>
     <string name="map_view">Map</string>
+    <string name="birthdate_error">Es necesario introducir una fecha de nacimiento</string>
+    <string name="email_error">Es necesario introducir un correo</string>
+    <string name="name_error">Es necesario introducir un nombre de usuario</string>
+    <string name="password_error">Es necesario introducir una contraseña</string>
+    <string name="email_error_match">El correo introducido no es válido. Ej:name@mail.com</string>
     <string name="navigation">Navegación</string>
 </resources>
