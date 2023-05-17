@@ -90,4 +90,10 @@
     <string name="permission_denied_explanation">Permission was denied, but is needed for core functionality.</string>
     <string name="permission_rationale">Location permission needed for core functionality</string>
     <string name="ok">OK</string>
+    <string name="birthdate_error"> It is mandatory to introduce a password </string>
+    <string name="email_error">It is mandatory to introduce an email</string>
+    <string name="password_error">It is mandatory to introduce a password</string>
+    <string name="email_error_match">The email introduced is not valid. Ex:name@mail.com</string>
+    <string name="name_error">It is mandatory to introduce an user name</string>
+
 </resources>
