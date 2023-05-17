@@ -1,43 +1,46 @@
 package com.apm.jacx
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.Toast
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.maps.android.PolyUtil
 import kotlinx.coroutines.*
 import okhttp3.*
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 
 class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
 
+    private val COUNTDOWN_TIME = 5000L
+    private lateinit var navigationButton: FloatingActionButton
     private lateinit var mMap: GoogleMap
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var origin: String
     private lateinit var waypoints: String
     private lateinit var destination: String
     private lateinit var route: PolylineOptions
+    private lateinit var printedRoute: Polyline
+    private lateinit var userPosition: LatLng
+    private var isTimerRunning = false
+    private var lastTimeOutOfRoute : LocalTime? = null
+    private var navigation = false
     private var userMarker: Marker? = null
     private val client = OkHttpClient()
 
@@ -56,6 +59,9 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        navigationButton = requireView().findViewById<FloatingActionButton>(R.id.navigation)
+        navigationButton!!.setOnClickListener{ onNavigationButtonClick() }
 
         // Send query to Google Maps API to get route polyline to print in map
         initialDataFetch()
@@ -81,6 +87,11 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
         return super.onCreateOptionsMenu(menu, inflater)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        turnOffNavigation()
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isZoomControlsEnabled = true
@@ -90,12 +101,48 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     fun updateLocation(location: Location) {
-        val position = LatLng(location.latitude, location.longitude)
+        userPosition = LatLng(location.latitude, location.longitude)
         if(::mMap.isInitialized) {
             mMap.isMyLocationEnabled = true
             // TODO move camera if position is centered and navigation enabled
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f))
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userPosition, 15f))
         }
+        // Check user follows route
+        if (PolyUtil.isLocationOnPath(userPosition, route.points, true, 10.0)) {
+            lastTimeOutOfRoute = null
+            isTimerRunning = false
+        } else {
+            if (!isTimerRunning) {
+                lastTimeOutOfRoute = LocalTime.now()
+                isTimerRunning = true
+            } else {
+                if (Duration.between(lastTimeOutOfRoute, LocalTime.now()).toMillis() > COUNTDOWN_TIME) {
+                    origin = "${userPosition.latitude},${userPosition.longitude}"
+                    isTimerRunning = false
+                    lastTimeOutOfRoute = null
+                    requestRoute()
+                }
+            }
+        }
+    }
+
+    private fun onNavigationButtonClick() {
+        if (navigation) {
+            turnOffNavigation()
+        } else {
+            (activity as DetailRouteActivity).enableNavigation()
+            Log.d("DetailsTripsFragment", "Navigation enabled")
+            navigation = true
+            navigationButton.setImageResource(R.drawable.baseline_pause_24)
+        }
+    }
+
+    private fun turnOffNavigation() {
+        (activity as DetailRouteActivity).disableNavigation()
+        navigation = false
+        navigationButton.setImageResource(R.drawable.baseline_play_arrow_24)
+        lastTimeOutOfRoute = null
+        isTimerRunning = false
     }
 
     private fun initialDataFetch() = runBlocking {
@@ -114,6 +161,10 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun requestRoute() = runBlocking {
+        // Clear route if exists
+        if (::printedRoute.isInitialized) {
+            printedRoute.remove()
+        }
         // Build url
         val url = HttpUrl.Builder()
             .scheme("https")
@@ -147,8 +198,17 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
                     }
                     // Get and print polyline calculated
                     val jsonRoute = jsonObject.getJSONArray("routes").getJSONObject(0)
-                    val polyline = jsonRoute.getJSONObject("overview_polyline").getString("points")
-                    val points = PolyUtil.decode(polyline)
+                    val jsonLegs = jsonRoute.getJSONArray("legs")
+                    val points = mutableListOf<LatLng>()
+                    for (i in 0 until jsonLegs.length()) {
+                        val leg = jsonLegs.getJSONObject(i)
+                        val steps = leg.getJSONArray("steps")
+                        for (i in 0 until steps.length()) {
+                            val step = steps.getJSONObject(i)
+                            val polyline = step.getJSONObject("polyline").getString("points")
+                            points.addAll(PolyUtil.decode(polyline))
+                        }
+                    }
                     route = PolylineOptions().addAll(points).width(8f).color(Color.BLUE).geodesic(true)
                     printRoute()
                 }
@@ -159,7 +219,7 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
     private fun printRoute() {
         if (this::mMap.isInitialized && this::route.isInitialized) {
             activity?.runOnUiThread {
-                mMap.addPolyline(route)
+                printedRoute = mMap.addPolyline(route)
                 // Update camera to match route
                 val builder = LatLngBounds.builder()
                 for (point in route.points) {

@@ -7,13 +7,11 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.adapter.ItemPlayListAdapter
-import com.apm.jacx.adapter.ItemSongAdapter
-import com.apm.jacx.data.Datasource
+import com.apm.jacx.adapter.TrackAdapter
 import com.apm.jacx.spotify.MusicViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.apm.jacx.spotify.domain.PlaylistTracksViewModel
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
@@ -95,7 +93,6 @@ class MusicFragment : Fragment() {
         // Inflate the layout for this fragment
         val viewFragment = inflater.inflate(R.layout.fragment_music, container, false)
         loadMusicFragmentData(viewFragment)
-        createListenerAddButton(viewFragment)
         createListenerSpotifyButton(viewFragment)
         return viewFragment
     }
@@ -140,13 +137,7 @@ class MusicFragment : Fragment() {
             } }
             recyclerView.setHasFixedSize(true)
         }
-    }
 
-    private fun createListenerAddButton(viewFragment: View) {
-        val button : FloatingActionButton = viewFragment.findViewById(R.id.add_song_button)
-        button.setOnClickListener {
-            Toast.makeText(context, "Añadir cancion", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private fun createListenerSpotifyButton(viewFragment: View) {

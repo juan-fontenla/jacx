@@ -1,7 +1,6 @@
 package com.apm.jacx.adapter
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,14 +8,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.apm.jacx.R
+import com.apm.jacx.*
 import com.apm.jacx.spotify.PlayList
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.Track
 import com.squareup.picasso.Picasso
-import java.net.URL
 
 
 class ItemPlayListAdapter(
@@ -46,6 +45,7 @@ class ItemPlayListAdapter(
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val titleSongText: TextView = view.findViewById(R.id.title_song)
         val image_song: ImageView = view.findViewById(R.id.image_song)
+        val totalCanciones: TextView = view.findViewById(R.id.totalCanciones)
         val songButton: FloatingActionButton = view.findViewById(R.id.play_song)
 
     }
@@ -60,19 +60,41 @@ class ItemPlayListAdapter(
         return dataset.size
     }
 
+    // Este método nos permite recuperar el contenido de una playlist para mostrar posteriormente en el recyclerview
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
+
         holder.titleSongText.text = item.name
+        holder.totalCanciones.text = item.tracks.total.toString() + " canciones"
 
-        println("---- desde aqui es el contenido de la playlist:")
-        println(item)
-
-        // TODO: falta mostrar la imagen del album
-        Picasso.get().load(item.images[0].url).into(holder.image_song);
-
-        // A traves de este enlace reproducimos la playlist
-        holder.songButton.setOnClickListener {
-            Toast.makeText(context, "${item.name}", Toast.LENGTH_SHORT).show();
+        // Comprobamos si la playlist creada en Spotify tiene asociada una imagne o todavía no
+        if (item.images != null && item.images.isNotEmpty()) {
+            Picasso.get().load(item.images[0].url).into(holder.image_song)
+        } else {
+            // Cargar una imagen por defecto cuando la playlist no existan canciones
+            Picasso.get().load(R.drawable.image_default).into(holder.image_song)
         }
+
+        // TODO: Falta conseguir mostrar la nueva pantalla para mostrar las canciones
+        // TODO: Creo que está :-)
+
+        holder.songButton.setOnClickListener {
+            Toast.makeText(context, "Abriendo!: " + item.name, Toast.LENGTH_SHORT).show();
+
+            // Creamos unha instacia do fragmento
+            val framentToLoad = TracksFragment()
+
+            // Chamamos a esta función para cargar os datos do item que se está pulsando
+            framentToLoad.loadPlaylist(item)
+
+            val activity = holder.itemView.context as AppCompatActivity
+
+            // O reemplazamos. Faise de forma similar a que utilzia
+            activity.supportFragmentManager.beginTransaction()
+                .replace(R.id.main_view_container, framentToLoad)
+                .addToBackStack(null)
+                .commit()
+        }
+
     }
 }

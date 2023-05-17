@@ -88,4 +88,5 @@
     <string name="name_error">Es necesario introducir un nombre de usuario</string>
     <string name="password_error">Es necesario introducir una contraseña</string>
     <string name="email_error_match">El correo introducido no es válido. Ej:name@mail.com</string>
+    <string name="navigation">Navegación</string>
 </resources>
