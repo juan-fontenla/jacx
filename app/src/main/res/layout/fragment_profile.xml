@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
     <TextView
-        android:id="@+id/text_name"
+        android:id="@+id/firstname_profile"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_login"
+        android:id="@+id/lastname_profile"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -31,10 +31,10 @@
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toBottomOf="@+id/text_name" />
+        app:layout_constraintTop_toBottomOf="@+id/firstname_profile" />
 
     <TextView
-        android:id="@+id/text_mail"
+        android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
@@ -43,10 +43,10 @@
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/icon_mail"
-        app:layout_constraintTop_toBottomOf="@+id/text_login" />
+        app:layout_constraintTop_toBottomOf="@+id/lastname_profile" />
 
     <TextView
-        android:id="@+id/text_date"
+        android:id="@+id/birthday_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -55,7 +55,7 @@
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/icon_calendar"
-        app:layout_constraintTop_toBottomOf="@+id/text_mail" />
+        app:layout_constraintTop_toBottomOf="@+id/email" />
 
     <TextView
         android:id="@+id/change_password"
@@ -68,7 +68,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_date" />
+        app:layout_constraintTop_toBottomOf="@+id/birthday_profile" />
 
     <Button
         android:id="@+id/logout"
@@ -92,9 +92,9 @@
         android:layout_marginTop="70dp"
         android:foregroundTint="#000000"
         android:tint="#000000"
-        app:layout_constraintEnd_toStartOf="@+id/text_mail"
+        app:layout_constraintEnd_toStartOf="@+id/email"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_login"
+        app:layout_constraintTop_toBottomOf="@+id/lastname_profile"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
     <ImageView
@@ -104,7 +104,7 @@
         android:layout_marginStart="72dp"
         android:layout_marginTop="18dp"
         android:tint="#000000"
-        app:layout_constraintEnd_toStartOf="@+id/text_date"
+        app:layout_constraintEnd_toStartOf="@+id/birthday_profile"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/icon_mail"
@@ -116,7 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="75dp"
         android:layout_marginTop="72dp"
-        app:layout_constraintEnd_toStartOf="@+id/text_name"
+        app:layout_constraintEnd_toStartOf="@+id/firstname_profile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/profile_foreground" />

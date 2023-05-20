@@ -20,19 +20,15 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
-import org.json.JSONObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonCancellable.cancel
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.io.IOException
-import kotlin.coroutines.coroutineContext
 
 
 class LoginActivity : AppCompatActivity() {
@@ -55,32 +51,8 @@ class LoginActivity : AppCompatActivity() {
         val loginBtn: Button = findViewById(R.id.button_login)
         loginBtn.setOnClickListener {
             if (ValidationUtils.validateName(userName) && ValidationUtils.validatePassword(password)) {
-
                 Toast.makeText(this, "validacion correcta", Toast.LENGTH_SHORT).show()
-                // Petición al backend.
-                // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
-                CoroutineScope(Dispatchers.Main).launch {
-                    try {
-                        // Ejemplo de solicitud POST con cuerpo JSON
-                        val jsonBody = JSONObject().apply {
-                            put("username", userName.text?.trim())
-                            put("password", password.text?.trim())
-                        }.toString()
-                        val responsePost = ApiClient.post("/login", jsonBody)
-                        val jsonObject: JsonObject = Gson().fromJson(responsePost, JsonObject::class.java)
-
-                        AppPreferences.TOKEN_BD =  jsonObject.get("token").asString
-
-                        val intent = Intent(applicationContext, MainActivity::class.java)
-                        startActivity(intent)
-                    } catch (e: IOException) {
-                        // Manejar errores de red aquí
-                        Log.d("Error de red", e.toString())
-                    } catch (e: Exception) {
-                        // Manejar otros errores aquí
-                        Log.d("Error en la peticion", e.toString())
-                    }
-                }
+                login(userName.text?.trim(), password.text?.trim())
             }
         }
 
@@ -144,6 +116,54 @@ class LoginActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         lifecycleScope.cancel() // Cancelar todas las corutinas cuando se destruye la actividad
+    }
+
+    private fun login(username: CharSequence?, password: CharSequence?) {
+        // Petición al backend.
+        // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val jsonBody = JSONObject().apply {
+                    put("username", username)
+                    put("password", password)
+                }.toString()
+                val responsePost = ApiClient.post("/login", jsonBody)
+                val jsonObject: JsonObject = Gson().fromJson(responsePost, JsonObject::class.java)
+
+                AppPreferences.TOKEN_BD = jsonObject.get("token").asString
+                loadUserInformation(username.toString())
+
+            } catch (e: IOException) {
+                // Manejar errores de red aquí
+                Log.d("Error de red", e.toString())
+            } catch (e: Exception) {
+                // Manejar otros errores aquí
+                Log.d("Error en la peticion", e.toString())
+            }
+        }
+    }
+
+    // Carga los datos del usuario y los almacena en almacenamiento interno
+    private fun loadUserInformation(username: String) {
+        // Petición al backend.
+        // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val responseGet = ApiClient.get("/user/$username")
+                AppPreferences.USER_INFORMATION = responseGet
+
+                Log.d("Informacion de usuario", AppPreferences.USER_INFORMATION.toString())
+
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                startActivity(intent)
+            } catch (e: IOException) {
+                // Manejar errores de red aquí
+                Log.d("Error de red", e.toString())
+            } catch (e: Exception) {
+                // Manejar otros errores aquí
+                Log.d("Error en la peticion", e.toString())
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
