@@ -82,6 +82,7 @@
     <string name="own_trips_title">Viajes planificados</string>
     <string name="searchPin">Search by PIN</string>
     <string name="Logout_Spotify">Logout Spotify</string>
+    <string name="Logout_Google">Logout Google</string>
     <string name="map_view">Map</string>
     <string name="birthdate_error">Es necesario introducir una fecha de nacimiento</string>
     <string name="email_error">Es necesario introducir un correo</string>
@@ -89,4 +90,12 @@
     <string name="password_error">Es necesario introducir una contraseña</string>
     <string name="email_error_match">El correo introducido no es válido. Ej:name@mail.com</string>
     <string name="navigation">Navegación</string>
+    <string name="preference_file_key">com.example.android.while_in_use_location.PREFERENCE_FILE_KEY</string>
+    <string name="stop_location_updates_button_text">Se dejaron de recibir actualizadones de localizacion</string>
+    <string name="launch_activity">Lanzando actividad</string>
+    <string name="no_location_text">No hay localización actual</string>
+    <string name="settings">Ajustes</string>
+    <string name="permission_denied_explanation">Permiso denegado, es necesario para la funcionalidad core.</string>
+    <string name="permission_rationale">Es necesario el permiso de localizacion para la funcionalidad core.</string>
+    <string name="ok">OK</string>
 </resources>

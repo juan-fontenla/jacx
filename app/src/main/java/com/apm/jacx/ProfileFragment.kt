@@ -8,6 +8,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.spotify.sdk.android.auth.AuthorizationClient
 
 
@@ -45,10 +49,27 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+        val mGoogleSignInClient = context?.let { GoogleSignIn.getClient(it, gso) }
+
         val logoutBtn = getView()?.findViewById<Button>(R.id.logout)
         logoutBtn!!.setOnClickListener {
             val intent = Intent(activity, LoginActivity::class.java)
             startActivity(intent)
+        }
+
+        val logoutGoogle = getView()?.findViewById<Button>(R.id.logout_google)
+        logoutGoogle?.setOnClickListener {
+            getActivity()?.let { it1 ->
+                mGoogleSignInClient?.signOut()?.addOnCompleteListener(it1, object : OnCompleteListener<Void?> {
+                    override fun onComplete(p0: Task<Void?>) {
+                        //TODO: ELIMINAR TOKEN DE BASE DE DATOS
+                        AuthorizationClient.clearCookies(context)
+                    }
+                })
+            }
         }
 
         val logoutSpotify = getView()?.findViewById<Button>(R.id.logout_spotify)
