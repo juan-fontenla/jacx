@@ -8,6 +8,8 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.apm.jacx.client.ApiClient
 import com.apm.jacx.internalStorage.AppPreferences
 import com.apm.jacx.validations.ValidationUtils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -16,9 +18,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputEditText
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
+import org.json.JSONObject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable.cancel
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
+import java.io.IOException
+import kotlin.coroutines.coroutineContext
 
 
 class LoginActivity : AppCompatActivity() {
@@ -41,12 +55,32 @@ class LoginActivity : AppCompatActivity() {
         val loginBtn: Button = findViewById(R.id.button_login)
         loginBtn.setOnClickListener {
             if (ValidationUtils.validateName(userName) && ValidationUtils.validatePassword(password)) {
-                Toast.makeText(applicationContext, userName.text, Toast.LENGTH_SHORT).show();
-                Toast.makeText(applicationContext, password.text, Toast.LENGTH_SHORT).show();
 
-                //TODO: Añadir peticion back
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                Toast.makeText(this, "validacion correcta", Toast.LENGTH_SHORT).show()
+                // Petición al backend.
+                // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
+                CoroutineScope(Dispatchers.Main).launch {
+                    try {
+                        // Ejemplo de solicitud POST con cuerpo JSON
+                        val jsonBody = JSONObject().apply {
+                            put("username", userName.text?.trim())
+                            put("password", password.text?.trim())
+                        }.toString()
+                        val responsePost = ApiClient.post("/login", jsonBody)
+                        val jsonObject: JsonObject = Gson().fromJson(responsePost, JsonObject::class.java)
+
+                        AppPreferences.TOKEN_BD =  jsonObject.get("token").asString
+
+                        val intent = Intent(applicationContext, MainActivity::class.java)
+                        startActivity(intent)
+                    } catch (e: IOException) {
+                        // Manejar errores de red aquí
+                        Log.d("Error de red", e.toString())
+                    } catch (e: Exception) {
+                        // Manejar otros errores aquí
+                        Log.d("Error en la peticion", e.toString())
+                    }
+                }
             }
         }
 
@@ -72,13 +106,10 @@ class LoginActivity : AppCompatActivity() {
         val googleBtn: Button = findViewById(R.id.connect_google)
         googleBtn.setOnClickListener {
             val account = GoogleSignIn.getLastSignedInAccount(this)
-            if (account == null)
-            {
+            if (account == null) {
                 val signInIntent: Intent = mGoogleSignInClient.signInIntent
                 startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE)
-            }
-            else
-            {
+            } else {
                 val intentMain = Intent(this, MainActivity::class.java)
                 startActivity(intentMain)
             }
@@ -89,19 +120,30 @@ class LoginActivity : AppCompatActivity() {
         val spotifyBtn: Button = findViewById(R.id.connect_spotify)
         spotifyBtn.setOnClickListener {
             // Inicializamos login spotify.
-            val builder = AuthorizationRequest.Builder(CLIENT_ID_SPOTIFY, AuthorizationResponse.Type.TOKEN, REDIRECT_URI_SPOTIFY);
+            val builder = AuthorizationRequest.Builder(
+                CLIENT_ID_SPOTIFY,
+                AuthorizationResponse.Type.TOKEN,
+                REDIRECT_URI_SPOTIFY
+            );
             builder.setShowDialog(false)
             // Se añaden los siguientes scopes según las funcinalidades que queremos realizar:
             // https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists
-            builder.setScopes(arrayOf(
-                "streaming",
-                "playlist-read-private",
-                "playlist-read-collaborative")
+            builder.setScopes(
+                arrayOf(
+                    "streaming",
+                    "playlist-read-private",
+                    "playlist-read-collaborative"
+                )
             )
             val request = builder.build()
             AuthorizationClient.openLoginActivity(this, REQUEST_CODE_SPOTIFY, request)
         }
         // END SPOTIFY
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycleScope.cancel() // Cancelar todas las corutinas cuando se destruye la actividad
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
@@ -125,13 +167,14 @@ class LoginActivity : AppCompatActivity() {
             AuthorizationResponse.Type.TOKEN -> {
 
                 // Almacenamos el token en el almacenamiento interno
-                Log.d( "token spotify:", response.accessToken);
+                Log.d("token spotify:", response.accessToken);
                 AppPreferences.TOKEN_SPOTIFY = response.accessToken;
 
                 // Redirigimos a la actividad principal.
                 val intentMain = Intent(this, MainActivity::class.java)
                 startActivity(intentMain)
             }
+
             AuthorizationResponse.Type.ERROR -> {
                 println(response.error)
                 Toast.makeText(
@@ -140,6 +183,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show();
             }
+
             else -> {
                 Toast.makeText(
                     applicationContext,
@@ -149,6 +193,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun handleSignInResultGoogle(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
