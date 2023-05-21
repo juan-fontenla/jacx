@@ -65,14 +65,14 @@ class ProfileFragment : Fragment() {
         val birthday : String = userInformation.get("birthday").asString.format(dateFormatter)
         val email = userInformation.get("email").asString
 
-        val textView1 = view.findViewById<TextView>(R.id.text_name)
-        textView1.text = firstname
-        val textView2 =view.findViewById<TextView>(R.id.text_login)
-        textView2.text = lastname
-        val textView3 =view.findViewById<TextView>(R.id.text_mail)
-        textView3.text = email
-        val textView4 =view.findViewById<TextView>(R.id.text_date)
-        textView4.text = birthday
+        val firstnameText = view.findViewById<TextView>(R.id.text_name)
+        firstnameText.text = firstname
+        val lastnameText =view.findViewById<TextView>(R.id.text_login)
+        lastnameText.text = lastname
+        val emailText =view.findViewById<TextView>(R.id.text_mail)
+        emailText.text = email
+        val birthdayText =view.findViewById<TextView>(R.id.text_date)
+        birthdayText.text = birthday
 
         val logoutBtn = getView()?.findViewById<Button>(R.id.logout)
         logoutBtn!!.setOnClickListener {
