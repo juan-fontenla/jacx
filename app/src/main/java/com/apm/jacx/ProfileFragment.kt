@@ -11,6 +11,10 @@ import androidx.fragment.app.Fragment
 import com.apm.jacx.internalStorage.AppPreferences
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.spotify.sdk.android.auth.AuthorizationClient
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -74,10 +78,28 @@ class ProfileFragment : Fragment() {
         val birthdayText =view.findViewById<TextView>(R.id.text_date)
         birthdayText.text = birthday
 
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+        val mGoogleSignInClient = context?.let { GoogleSignIn.getClient(it, gso) }
+
+
         val logoutBtn = getView()?.findViewById<Button>(R.id.logout)
         logoutBtn!!.setOnClickListener {
             val intent = Intent(activity, LoginActivity::class.java)
             startActivity(intent)
+        }
+
+        val logoutGoogle = getView()?.findViewById<Button>(R.id.logout_google)
+        logoutGoogle?.setOnClickListener {
+            getActivity()?.let { it1 ->
+                mGoogleSignInClient?.signOut()?.addOnCompleteListener(it1, object : OnCompleteListener<Void?> {
+                    override fun onComplete(p0: Task<Void?>) {
+                        //TODO: ELIMINAR TOKEN DE BASE DE DATOS
+                        AuthorizationClient.clearCookies(context)
+                    }
+                })
+            }
         }
 
         val logoutSpotify = getView()?.findViewById<Button>(R.id.logout_spotify)
