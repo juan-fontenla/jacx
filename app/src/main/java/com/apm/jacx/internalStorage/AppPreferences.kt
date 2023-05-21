@@ -32,8 +32,7 @@ object AppPreferences {
         set(value) = Key.USER_INFORMATION.setString(value)
 
     private enum class Key {
-        TOKEN_SPOTIFY, TOKEN_GOOGLE, TOKEN_BD,
-        USER_INFORMATION;
+        TOKEN_SPOTIFY, TOKEN_GOOGLE, TOKEN_BD, USER_INFORMATION;
 
         fun getBoolean(): Boolean? =
             if (sharedPreferences!!.contains(name)) sharedPreferences!!.getBoolean(
