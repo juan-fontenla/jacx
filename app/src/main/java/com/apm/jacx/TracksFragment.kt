@@ -6,16 +6,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.adapter.ItemPlayListAdapter
 import com.apm.jacx.adapter.TrackAdapter
+import com.apm.jacx.spotify.MediaServiceLifecycle
 import com.apm.jacx.spotify.MusicViewModel
 import com.apm.jacx.spotify.PlayList
 
 
 class TracksFragment : Fragment() {
+
+    private val mediaServiceLifecycle: MediaServiceLifecycle by lazy {
+        // Inicializacion MediaServiceLifecycle
+        MediaServiceLifecycle()
+    }
 
     private var playlist: PlayList? = null;
     private val viewModel: MusicViewModel by viewModels()
@@ -39,7 +47,9 @@ class TracksFragment : Fragment() {
         return viewFragment
     }
 
+
     private fun loadTracksFragmentData(viewFragment: View) {
+
         playlist?.let { Log.d("Playlist: ", it.id) }
 
         // EStá mostrando todas las canciones en ambas playList pero se muestran
@@ -48,7 +58,8 @@ class TracksFragment : Fragment() {
             recyclerView.layoutManager = LinearLayoutManager(requireActivity())
             recyclerView?.adapter = context?.let { viewModel.tracks.value?.let { it1 ->
                 TrackAdapter(it,
-                    it1
+                    it1,
+                    mediaServiceLifecycle
                 )
             } }
             recyclerView.setHasFixedSize(true)
