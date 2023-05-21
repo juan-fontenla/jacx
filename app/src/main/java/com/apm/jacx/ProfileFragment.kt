@@ -8,11 +8,16 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.apm.jacx.internalStorage.AppPreferences
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.spotify.sdk.android.auth.AuthorizationClient
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -49,10 +54,35 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Inicializamos lo informacion del usuario
+        val userInformation: JsonObject =
+            Gson().fromJson(AppPreferences.USER_INFORMATION, JsonObject::class.java)
+
+        val firstname = userInformation.get("firstName").asString
+        val lastname = userInformation.get("lastName").asString
+        // Obtén el idioma actual de la aplicación
+        val currentLocale: Locale = Locale.getDefault()
+        // Crea un objeto DateTimeFormatter con el formato largo en el idioma actual
+        val dateFormatter: DateTimeFormatter =
+            DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", currentLocale)
+        // Formatea la fecha en un String
+        val birthday : String = userInformation.get("birthday").asString.format(dateFormatter)
+        val email = userInformation.get("email").asString
+
+        val firstnameText = view.findViewById<TextView>(R.id.text_name)
+        firstnameText.text = firstname
+        val lastnameText =view.findViewById<TextView>(R.id.text_login)
+        lastnameText.text = lastname
+        val emailText =view.findViewById<TextView>(R.id.text_mail)
+        emailText.text = email
+        val birthdayText =view.findViewById<TextView>(R.id.text_date)
+        birthdayText.text = birthday
+
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .build()
         val mGoogleSignInClient = context?.let { GoogleSignIn.getClient(it, gso) }
+
 
         val logoutBtn = getView()?.findViewById<Button>(R.id.logout)
         logoutBtn!!.setOnClickListener {
