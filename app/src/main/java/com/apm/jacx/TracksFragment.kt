@@ -50,11 +50,10 @@ class TracksFragment : Fragment() {
 
 
     private fun loadTracksFragmentData(viewFragment: View) {
-
-        playlist?.let { Log.d("Playlist: ", it.id) }
-
+        playlist?.id?.let { viewModel.initTracksMutableData(it) }
         // EStá mostrando todas las canciones en ambas playList pero se muestran
         viewModel.tracks.observe(viewLifecycleOwner) {
+            Log.d("Tracks", it.toString());
             val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_tracks)
             recyclerView.layoutManager = LinearLayoutManager(requireActivity())
             recyclerView?.adapter = context?.let { viewModel.tracks.value?.let { it1 ->

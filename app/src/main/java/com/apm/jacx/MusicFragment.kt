@@ -129,6 +129,7 @@ class MusicFragment : Fragment() {
     }
 
     private fun loadMusicFragmentData(viewFragment: View) {
+        viewModel.initPlaylistMutableData()
         viewModel.playList.observe(viewLifecycleOwner) {
             val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_songs)
             Log.d("Playlist disponibles en Spotify", it.toString())
