@@ -69,9 +69,9 @@ class ProfileFragment : Fragment() {
         val birthday : String = userInformation.get("birthday").asString.format(dateFormatter)
         val email = userInformation.get("email").asString
 
-        val firstnameText = view.findViewById<TextView>(R.id.profile_name)
+        val firstnameText = view.findViewById<TextView>(R.id.signup_name)
         firstnameText.text = firstname
-        val lastnameText =view.findViewById<TextView>(R.id.profile_lastname)
+        val lastnameText =view.findViewById<TextView>(R.id.signup_lastname)
         lastnameText.text = lastname
         val emailText =view.findViewById<TextView>(R.id.profile_email)
         emailText.text = email
@@ -90,7 +90,7 @@ class ProfileFragment : Fragment() {
             startActivity(intent)
         }
 
-        val logoutGoogle = getView()?.findViewById<Button>(R.id.profile_logout_google)
+        val logoutGoogle = getView()?.findViewById<Button>(R.id.logout_google)
         logoutGoogle?.setOnClickListener {
             getActivity()?.let { it1 ->
                 mGoogleSignInClient?.signOut()?.addOnCompleteListener(it1, object : OnCompleteListener<Void?> {

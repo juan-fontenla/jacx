@@ -159,9 +159,11 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: IOException) {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
+                Toast.makeText(applicationContext, "Error de red", Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
+                Toast.makeText(applicationContext, "Error en la peticion", Toast.LENGTH_LONG).show()
             }
         }
     }

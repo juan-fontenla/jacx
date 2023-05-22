@@ -19,9 +19,31 @@ internal object ValidationUtils {
         }
     }
 
-    fun validateName(userName: TextInputEditText): Boolean {
+    fun validateUsername(userName: TextInputEditText): Boolean {
         return if (userName.text.isNullOrBlank()) {
             userName.error = "Es necesario introducir un nombre de usuario"
+            userName.requestFocus();
+            false
+        } else {
+            userName.error = null
+            true
+        }
+    }
+
+    fun validateName(userName: TextInputEditText): Boolean {
+        return if (userName.text.isNullOrBlank()) {
+            userName.error = "Es necesario introducir un nombre"
+            userName.requestFocus();
+            false
+        } else {
+            userName.error = null
+            true
+        }
+    }
+
+    fun validateLastname(userName: TextInputEditText): Boolean {
+        return if (userName.text.isNullOrBlank()) {
+            userName.error = "Es necesario introducir los apellidos"
             userName.requestFocus();
             false
         } else {

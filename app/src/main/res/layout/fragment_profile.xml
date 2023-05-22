@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
     <TextView
-        android:id="@+id/profile_name"
+        android:id="@+id/signup_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/profile_lastname"
+        android:id="@+id/signup_lastname"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -31,7 +31,7 @@
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toBottomOf="@+id/profile_name" />
+        app:layout_constraintTop_toBottomOf="@+id/signup_name" />
 
     <TextView
         android:id="@+id/profile_email"
@@ -43,7 +43,7 @@
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/icon_mail"
-        app:layout_constraintTop_toBottomOf="@+id/profile_lastname" />
+        app:layout_constraintTop_toBottomOf="@+id/signup_lastname" />
 
     <TextView
         android:id="@+id/profile_birthday"
@@ -94,7 +94,7 @@
         android:tint="#000000"
         app:layout_constraintEnd_toStartOf="@+id/profile_email"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_lastname"
+        app:layout_constraintTop_toBottomOf="@+id/signup_lastname"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
     <ImageView
@@ -116,7 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="75dp"
         android:layout_marginTop="72dp"
-        app:layout_constraintEnd_toStartOf="@+id/profile_name"
+        app:layout_constraintEnd_toStartOf="@+id/signup_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/profile_foreground" />
@@ -131,10 +131,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_logout_google" />
+        app:layout_constraintTop_toBottomOf="@+id/logout_google" />
 
     <Button
-        android:id="@+id/profile_logout_google"
+        android:id="@+id/logout_google"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"

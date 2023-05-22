@@ -98,4 +98,6 @@
     <string name="permission_denied_explanation">Permiso denegado, es necesario para la funcionalidad core.</string>
     <string name="permission_rationale">Es necesario el permiso de localizacion para la funcionalidad core.</string>
     <string name="ok">OK</string>
+    <string name="lastname">Apellidos</string>
+    <string name="seleccionar_fecha">Seleccionar fecha</string>
 </resources>
