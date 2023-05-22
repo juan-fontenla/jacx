@@ -69,13 +69,13 @@ class ProfileFragment : Fragment() {
         val birthday : String = userInformation.get("birthday").asString.format(dateFormatter)
         val email = userInformation.get("email").asString
 
-        val firstnameText = view.findViewById<TextView>(R.id.text_name)
+        val firstnameText = view.findViewById<TextView>(R.id.profile_name)
         firstnameText.text = firstname
-        val lastnameText =view.findViewById<TextView>(R.id.text_login)
+        val lastnameText =view.findViewById<TextView>(R.id.profile_lastname)
         lastnameText.text = lastname
-        val emailText =view.findViewById<TextView>(R.id.text_mail)
+        val emailText =view.findViewById<TextView>(R.id.profile_email)
         emailText.text = email
-        val birthdayText =view.findViewById<TextView>(R.id.text_date)
+        val birthdayText =view.findViewById<TextView>(R.id.profile_birthday)
         birthdayText.text = birthday
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -84,13 +84,13 @@ class ProfileFragment : Fragment() {
         val mGoogleSignInClient = context?.let { GoogleSignIn.getClient(it, gso) }
 
 
-        val logoutBtn = getView()?.findViewById<Button>(R.id.logout)
+        val logoutBtn = getView()?.findViewById<Button>(R.id.profile_logout)
         logoutBtn!!.setOnClickListener {
             val intent = Intent(activity, LoginActivity::class.java)
             startActivity(intent)
         }
 
-        val logoutGoogle = getView()?.findViewById<Button>(R.id.logout_google)
+        val logoutGoogle = getView()?.findViewById<Button>(R.id.profile_logout_google)
         logoutGoogle?.setOnClickListener {
             getActivity()?.let { it1 ->
                 mGoogleSignInClient?.signOut()?.addOnCompleteListener(it1, object : OnCompleteListener<Void?> {
@@ -102,13 +102,13 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        val logoutSpotify = getView()?.findViewById<Button>(R.id.logout_spotify)
+        val logoutSpotify = getView()?.findViewById<Button>(R.id.profile_logout_spotify)
         logoutSpotify?.setOnClickListener {
             // TODO: Se debe eliminar el token de la base de datos
             AuthorizationClient.clearCookies(context)
         }
 
-        val resetPasswordBtn = getView()?.findViewById<TextView>(R.id.change_password)
+        val resetPasswordBtn = getView()?.findViewById<TextView>(R.id.profile_change_password)
         resetPasswordBtn!!.setOnClickListener {
             val intent = Intent(activity, ResetPasswordActivity::class.java)
             startActivity(intent)
