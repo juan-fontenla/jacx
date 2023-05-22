@@ -40,11 +40,12 @@ class TracksFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val viewFragment = inflater.inflate(R.layout.fragment_tracks, container, false)
-        loadTracksFragmentData(viewFragment)
+        return inflater.inflate(R.layout.fragment_tracks, container, false)
+    }
 
-        // Inflate the layout for this fragment
-        return viewFragment
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadTracksFragmentData(view)
     }
 
 

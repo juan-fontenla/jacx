@@ -91,10 +91,14 @@ class MusicFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val viewFragment = inflater.inflate(R.layout.fragment_music, container, false)
-        loadMusicFragmentData(viewFragment)
-        createListenerSpotifyButton(viewFragment)
-        return viewFragment
+        return inflater.inflate(R.layout.fragment_music, container, false)
+    }
+
+    // Ciclo de vida: Aquí se deben realizar los cambios iniciales de la interfaz
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadMusicFragmentData(view)
+        createListenerSpotifyButton(view)
     }
 
     override fun onStop() {
@@ -125,9 +129,7 @@ class MusicFragment : Fragment() {
     }
 
     private fun loadMusicFragmentData(viewFragment: View) {
-
         viewModel.playList.observe(viewLifecycleOwner) {
-
             val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_songs)
             Log.d("Playlist disponibles en Spotify", it.toString())
             recyclerView?.adapter = context?.let { viewModel.playList.value?.let { it1 ->
@@ -137,7 +139,6 @@ class MusicFragment : Fragment() {
             } }
             recyclerView.setHasFixedSize(true)
         }
-
     }
 
     private fun createListenerSpotifyButton(viewFragment: View) {
