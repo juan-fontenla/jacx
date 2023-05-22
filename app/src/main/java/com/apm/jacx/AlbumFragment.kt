@@ -1,15 +1,27 @@
 package com.apm.jacx
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.health.connect.datatypes.units.Length
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.apm.jacx.adapter.ItemPhotoAdapter
-import com.apm.jacx.data.Datasource
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.io.ByteArrayOutputStream
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,6 +39,8 @@ class AlbumFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private val REQUEST_IMAGE = 100
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -36,16 +50,6 @@ class AlbumFragment : Fragment() {
         setHasOptionsMenu(true);
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val viewFragment = inflater.inflate(R.layout.fragment_album, container, false)
-        loadAlbumFragmentData(viewFragment)
-        createListenerAddButton(viewFragment)
-        return viewFragment
-    }
 
     companion object {
         /**
@@ -67,10 +71,58 @@ class AlbumFragment : Fragment() {
             }
     }
 
-    private fun loadAlbumFragmentData(viewFragment: View) {
-        // Initialize data.
-        val myDataset = Datasource().loadPhotos()
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_album, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Solicitar permisos si no están concedidos
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                REQUEST_IMAGE
+            )
+        } else {
+            Toast.makeText(activity, "Permission denied", Toast.LENGTH_LONG)
+        }
+
+        val button = requireView().findViewById<FloatingActionButton>(R.id.add_photo_button)
+        button.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(intent, REQUEST_IMAGE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        val image = requireView().findViewById<ImageView>(R.id.imageView2)
+
+        if (requestCode == REQUEST_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            val imageUri: Uri? = data.data
+            val bitmap = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(imageUri!!))
+            //imagen redimensionada para que se muestre en la pantalla
+            val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 150, 150, true)
+            image?.setImageBitmap(resizedBitmap)
+
+            // TODO: Save image in bd
+            val imageToBase64 = bitmapToBase64(bitmap)
+            Log.d("Image on base64", imageToBase64.toString())
+        }
+    }
+    private fun loadAlbumFragmentData(imageView: View) {
+        // Initialize data.
+        /*val myDataset = Datasource().loadPhotos()
 
         Log.d("Photos dataset loaded", myDataset.toString())
 
@@ -83,18 +135,23 @@ class AlbumFragment : Fragment() {
         // in content do not change the layout size of the RecyclerView
         //recyclerView.setHasFixedSize(true)
 
-        Toast.makeText(context, "Datos de fotos cargados", Toast.LENGTH_SHORT).show();
-    }
-
-    private fun createListenerAddButton(viewFragment: View) {
-        val button : FloatingActionButton = viewFragment.findViewById(R.id.add_photo_button)
-        button.setOnClickListener {
-            Toast.makeText(context, "Añadir foto", Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(context, "Datos de fotos cargados", Toast.LENGTH_SHORT).show();*/
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_search_input, menu);
         return super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    fun bitmapToBase64(bitmap: Bitmap): String {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+        return Base64.encodeToString(byteArray, Base64.DEFAULT)
+    }
+
+    fun base64ToBitmap(base64String: String): Bitmap {
+        val decodedString = Base64.decode(base64String, Base64.DEFAULT)
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
     }
 }

@@ -9,6 +9,8 @@ android {
     namespace 'com.apm.jacx'
     compileSdkPreview "UpsideDownCake"
 
+    buildFeatures{viewBinding true}
+    
     defaultConfig {
         applicationId "com.apm.jacx"
         minSdk 26
