@@ -17,61 +17,63 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.HTTP
 import java.io.IOException
 
 
-// Recupera las playList de un usuario
 class MusicViewModel : ViewModel() {
-
-    val loading = MutableLiveData<Boolean>()
-    val error = MutableLiveData<String>()
     val tracks = MutableLiveData<List<TrackItem>>()
     val playList = MutableLiveData<List<PlayList>>()
 
+    private var spotifyApi : SpotifyApi;
+
     init {
-        loading.value = true
+        val httpLoggingInterceptor = HttpLoggingInterceptor().setLevel(
+            HttpLoggingInterceptor.Level.BODY)
+
+        val okHttpClient = OkHttpClient
+            .Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(AuthorizationInterceptor())
+            .build()
+
+        val gson = GsonBuilder()
+            .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+            .serializeNulls()
+            .setLenient()
+            .create()
+
+        val retrofit = Retrofit
+            .Builder()
+            .baseUrl("https://api.spotify.com/v1/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(ResultCallAdapterFactory())
+            .client(okHttpClient)
+            .build()
+
+        spotifyApi = retrofit.create(SpotifyApi::class.java)
+    }
+
+    fun initPlaylistMutableData() {
         viewModelScope.launch {
             try {
-                val httpLoggingInterceptor = HttpLoggingInterceptor().setLevel(
-                    HttpLoggingInterceptor.Level.BODY)
-
-                val okHttpClient = OkHttpClient
-                    .Builder()
-                    .addInterceptor(httpLoggingInterceptor)
-                    .addInterceptor(AuthorizationInterceptor())
-                    .build()
-
-                val gson = GsonBuilder()
-                    .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
-                    .serializeNulls()
-                    .setLenient()
-                    .create()
-
-                val retrofit = Retrofit
-                    .Builder()
-                    .baseUrl("https://api.spotify.com/v1/")
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .addCallAdapterFactory(ResultCallAdapterFactory())
-                    .client(okHttpClient)
-                    .build()
-
-                val spotifyApi = retrofit.create(SpotifyApi::class.java)
-
                 playList.value = spotifyApi.getMePlaylists().getOrThrow().items
-
-                // TODO: Muestra por consola el valor de los diferentes items (previewUrl)
-                // Obtiene los valores de las diferentes tracks de una playlist
-                playList.value!!.forEach { p ->
-                    run {
-                        tracks.value = spotifyApi.getPlaylistTracks(p.id, 100, 0).getOrThrow().toTrackItems()
-                    }
-                }
-
-                loading.value = false
             } catch (e: HttpException) {
-                error.value = "HTTP fallo"
+                Log.d("Spotify API", "HTTP fallo")
             } catch (e: IOException) {
-                error.value = "No hay conexión a internet"
+                Log.d("Spotify API", "No hay conexión a internet")
+            }
+        }
+    }
+
+    fun initTracksMutableData(playlistId: String) {
+        viewModelScope.launch {
+            try {
+                tracks.value = spotifyApi.getPlaylistTracks(playlistId, 100, 0).getOrThrow().toTrackItems()
+            } catch (e: HttpException) {
+                Log.d("Spotify API", "HTTP fallo")
+            } catch (e: IOException) {
+                Log.d("Spotify API", "No hay conexión a internet")
             }
         }
     }

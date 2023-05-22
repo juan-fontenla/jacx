@@ -5,27 +5,29 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.R
-import com.apm.jacx.TracksFragment
+import com.apm.jacx.spotify.MediaServiceLifecycle
 import com.apm.jacx.spotify.TrackItem
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.Track
-import com.squareup.picasso.Picasso
 
 class TrackAdapter (
     private val context: Context,
-    private val dataset: List<TrackItem>
+    private val dataset: List<TrackItem>,
+    private val mediaService: MediaServiceLifecycle
 ) : RecyclerView.Adapter<TrackAdapter.ItemViewHolder>() {
 
     private val CLIENT_ID = "84d6e78f634c4bf593e20545c8768c47"
     private val REDIRECT_URI = "jacx://authcallback"
     private var spotifyAppRemote: SpotifyAppRemote? = null
+    private val mediaServiceLifecycle: MediaServiceLifecycle? = null
+
 
     private fun connected() {
 
@@ -45,7 +47,6 @@ class TrackAdapter (
         val titleSongText: TextView = view.findViewById(R.id.title_spotify_song)
         val artist: TextView = view.findViewById(R.id.artist_spotify_song)
         val previewUrl: FloatingActionButton = view.findViewById(R.id.previewUrl)
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -63,11 +64,15 @@ class TrackAdapter (
         holder.titleSongText.text = item.name
         holder.artist.text = item.artists
 
-//        holder.previewUrl.setOnClickListener {
-//            spotifyAppRemote?.let {
-//                it.playerApi.play(item.uri)
-//            }
-//
-//        }
+        /* Solo algunas canciones tienen previewUrl para poder escuchar fuera de Spotify */
+        holder.previewUrl.setOnClickListener {
+            if (item.previewUrl == null) {
+                mediaService.stop()
+                Toast.makeText(context, "Esta canción no está disponible", Toast.LENGTH_SHORT).show();
+            } else {
+                mediaService.play(item.previewUrl, position)
+            }
+        }
+
     }
 }

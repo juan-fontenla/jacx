@@ -23,25 +23,6 @@ class ItemPlayListAdapter(
     private val dataset: List<PlayList>
 ) : RecyclerView.Adapter<ItemPlayListAdapter.ItemViewHolder>() {
 
-    private val CLIENT_ID = "84d6e78f634c4bf593e20545c8768c47"
-    private val REDIRECT_URI = "jacx://authcallback"
-    private var spotifyAppRemote: SpotifyAppRemote? = null
-
-    private fun connected() {
-
-        spotifyAppRemote?.let {
-            // Play a playlist
-            val playlistURI = "spotify:playlist:37i9dQZF1DX2sUQwD7tbmL"
-            it.playerApi.play(playlistURI)
-            // Subscribe to PlayerState
-            it.playerApi.subscribeToPlayerState().setEventCallback {
-                val track: Track = it.track
-                Log.d("MainActivity", track.name + " by " + track.artist.name)
-            }
-        }
-
-    }
-
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val titleSongText: TextView = view.findViewById(R.id.title_song)
         val image_song: ImageView = view.findViewById(R.id.image_song)
@@ -68,28 +49,20 @@ class ItemPlayListAdapter(
         holder.totalCanciones.text = item.tracks.total.toString() + " canciones"
 
         // Comprobamos si la playlist creada en Spotify tiene asociada una imagne o todavía no
-        if (item.images != null && item.images.isNotEmpty()) {
+        if (item.images.isNotEmpty()) {
             Picasso.get().load(item.images[0].url).into(holder.image_song)
         } else {
             // Cargar una imagen por defecto cuando la playlist no existan canciones
             Picasso.get().load(R.drawable.image_default).into(holder.image_song)
         }
 
-        // TODO: Falta conseguir mostrar la nueva pantalla para mostrar las canciones
-        // TODO: Creo que está :-)
-
         holder.songButton.setOnClickListener {
             Toast.makeText(context, "Abriendo!: " + item.name, Toast.LENGTH_SHORT).show();
-
             // Creamos unha instacia do fragmento
             val framentToLoad = TracksFragment()
-
             // Chamamos a esta función para cargar os datos do item que se está pulsando
             framentToLoad.loadPlaylist(item)
-
             val activity = holder.itemView.context as AppCompatActivity
-
-            // O reemplazamos. Faise de forma similar a que utilzia
             activity.supportFragmentManager.beginTransaction()
                 .replace(R.id.main_view_container, framentToLoad)
                 .addToBackStack(null)
