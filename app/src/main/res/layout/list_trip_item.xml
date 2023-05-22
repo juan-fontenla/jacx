@@ -44,8 +44,33 @@
                 app:layout_constraintBottom_toTopOf="@+id/image_of_trip"
                 app:layout_constraintStart_toStartOf="@+id/image_of_trip"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0"
-                tools:text="Viaje 00" />
+                app:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:id="@+id/startDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toTopOf="@+id/image_of_trip"
+                app:layout_constraintStart_toEndOf="@+id/title_trip"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:id="@+id/endDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toTopOf="@+id/image_of_trip"
+                app:layout_constraintStart_toEndOf="@+id/startDate"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

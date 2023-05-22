@@ -8,8 +8,16 @@ import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.adapter.ItemTripAdapter
+import com.apm.jacx.client.ApiClient
 import com.apm.jacx.data.Datasource
+import com.apm.jacx.model.Trip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.runBlocking
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import org.json.JSONArray
+import java.io.IOException
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,6 +33,7 @@ class TripsFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var tripList: MutableList<Trip> = mutableListOf<Trip>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +60,23 @@ class TripsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val viewFragment = inflater.inflate(R.layout.fragment_trips, container, false)
-        loadTripsFragmentData(viewFragment)
+        fetchTripsData(viewFragment)
         return viewFragment
+    }
+
+    private fun fetchTripsData(viewFragment: View) = runBlocking{
+        try {
+            val responseBody = ApiClient.get("/route/owner")
+            val jsonTripList = JSONArray(responseBody)
+            for (i in 0 until jsonTripList.length()) {
+                val jsonTrip = jsonTripList.getJSONObject(i)
+                tripList.add(Trip(jsonTrip))
+            }
+            val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_own_trips)
+            recyclerView?.adapter = context?.let { ItemTripAdapter(it, tripList) }
+        } catch (e: Exception) {
+            Log.e("TripsFragment", "Error fetching trips")
+        }
     }
 
     private fun onJoinButtonClick() {
@@ -89,20 +113,6 @@ class TripsFragment : Fragment() {
             }
     }
 
-    private fun loadTripsFragmentData(viewFragment: View ) {
-        // Initialize data.
-        val myDataset = Datasource().loadTrips()
-
-        Log.d("Trips dataset loaded", myDataset.toString())
-
-        val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_own_trips)
-        recyclerView?.adapter = context?.let { ItemTripAdapter(it, myDataset) }
-
-        // Use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        // recyclerView.setHasFixedSize(true)
-
-    }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_search_input, menu);
         return super.onCreateOptionsMenu(menu, inflater)

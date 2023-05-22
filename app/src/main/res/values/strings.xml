@@ -97,4 +97,6 @@
     <string name="email_error_match">The email introduced is not valid. Ex:name@mail.com</string>
     <string name="name_error">It is mandatory to introduce an user name</string>
     <string name="navigation">Navegación</string>
+    <string name="trip_form_errors">Errores en el formulario</string>
+    <string name="network_err">Error on server request</string>
 </resources>

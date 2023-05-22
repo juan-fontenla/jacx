@@ -36,7 +36,7 @@ class ItemTripAdapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
-        holder.textTrip.text = item.title
+        holder.textTrip.text = item.name
         holder.cardTrip.setOnClickListener {
             val intent = Intent(context, DetailRouteActivity::class.java)
             context.startActivity(intent)
