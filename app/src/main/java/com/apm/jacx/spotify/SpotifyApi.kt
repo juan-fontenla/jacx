@@ -11,12 +11,6 @@ interface SpotifyApi {
     @GET("me/playlists")
     suspend fun getMePlaylists(): Result<MePlaylistsResponse>
 
-    // Es necesario para reconocer la playList que estamos clickando.
-//    @GET("playlists/{playlist_id}")
-//    suspend fun getPlaylistById(
-//        @Path("playlist_id") playlistId: String
-//    ): Response<PlayList>
-
     // Recuperamos las canciones correspondientes a esta playlis_id
     @GET("playlists/{id}/tracks")
     suspend fun getPlaylistTracks(
