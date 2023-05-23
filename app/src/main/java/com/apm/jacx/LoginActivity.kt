@@ -64,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
 
         val resetPasswordLink: TextView = findViewById(R.id.Reset_password)
         resetPasswordLink.setOnClickListener {
-            val intent = Intent(this, ResetPasswordActivity::class.java)
+            val intent = Intent(this, PasswordEmailActivity::class.java)
             startActivity(intent)
         }
 

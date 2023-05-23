@@ -100,4 +100,5 @@
     <string name="ok">OK</string>
     <string name="lastname">Apellidos</string>
     <string name="seleccionar_fecha">Seleccionar fecha</string>
+    <string name="send">Send mail</string>
 </resources>
