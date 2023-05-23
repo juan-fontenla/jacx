@@ -28,7 +28,6 @@ class ItemFriendAdapter(
 ) : RecyclerView.Adapter<ItemFriendAdapter.ItemViewHolder>() {
 
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        val photoView: ImageView = view.findViewById(R.id.iV_perfil_trip_friend)
         val userNameView: TextView = view.findViewById(R.id.tV_userName_trip_friend)
         val emailView: TextView = view.findViewById(R.id.tV_email_userName_trip_friend)
     }
@@ -44,42 +43,12 @@ class ItemFriendAdapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
-
-        getFriends("ana")
-        holder.userNameView.setOnClickListener {
-            Toast.makeText(context, "Este email se corresponde con ${item.id}", Toast.LENGTH_SHORT).show();
-        }
+        holder.userNameView.text = item.username
+        holder.emailView.text = item.email
     }
 
     override fun getItemCount(): Int {
         return dataset.size
-    }
-
-    private fun getFriends(username: CharSequence?) {
-        // Petición al backend.
-        // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                val jsonBody = JSONObject().apply {
-                    put("username", username)
-                }.toString()
-                val responsePost = ApiClient.post("/friends", jsonBody)
-                val jsonObject: JsonObject = Gson().fromJson(responsePost, JsonObject::class.java)
-                println(jsonObject)
-
-
-                
-
-
-
-            } catch (e: IOException) {
-                // Manejar errores de red aquí
-                Log.d("Error de red", e.toString())
-            } catch (e: Exception) {
-                // Manejar otros errores aquí
-                Log.d("Error en la peticion", e.toString())
-            }
-        }
     }
 
 }
