@@ -97,6 +97,7 @@
     <string name="email_error_match">The email introduced is not valid. Ex:name@mail.com</string>
     <string name="name_error">It is mandatory to introduce an user name</string>
     <string name="navigation">Navegación</string>
+
     <string name="lastname">Lastname</string>
     <string name="seleccionar_fecha">Seleccionar fecha</string>
     <string name="title_activity_email_password">EmailPasswordActivity</string>
@@ -105,7 +106,6 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
@@ -144,4 +144,6 @@
     </string>
     <string name="title_activity_password_email">PasswordEmailActivity</string>
     <string name="send">Send mail</string>
+    <string name="trip_form_errors">Errores en el formulario</string>
+    <string name="network_err">Error on server request</string>
 </resources>
