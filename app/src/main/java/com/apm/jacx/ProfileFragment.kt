@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -117,8 +118,8 @@ class ProfileFragment : Fragment() {
             AuthorizationClient.clearCookies(context)
         }
 
-        val resetPasswordBtn = getView()?.findViewById<TextView>(R.id.profile_change_password)
-        resetPasswordBtn!!.setOnClickListener {
+        val changePasswordBtn = getView()?.findViewById<TextView>(R.id.profile_change_password)
+        changePasswordBtn!!.setOnClickListener {
             val intent = Intent(activity, ResetPasswordActivity::class.java)
             startActivity(intent)
         }
@@ -133,6 +134,11 @@ class ProfileFragment : Fragment() {
     private fun deleteToken() {
         CoroutineScope(Dispatchers.Main).launch {
             try {
+                val btn = view?.findViewById<Button>(R.id.profile_logout)
+                btn?.visibility = View.INVISIBLE
+                val spinner = view?.findViewById<ProgressBar>(R.id.logout_spinner)
+                spinner?.visibility = View.VISIBLE
+
                 val jsonBody = JSONObject().apply {}.toString()
                 val responsePost = ApiClient.post("/logout", jsonBody)
                 Gson().fromJson(responsePost, JsonObject::class.java)
@@ -140,6 +146,9 @@ class ProfileFragment : Fragment() {
                 // Eliminamos el token del almacenamiento interno y sus datos asociados
                 AppPreferences.USER_INFORMATION = null
                 AppPreferences.TOKEN_BD = null
+
+                btn?.visibility = View.VISIBLE
+                spinner?.visibility = View.INVISIBLE
 
                 val intent = Intent(context, LoginActivity::class.java)
                 startActivity(intent)
@@ -151,6 +160,11 @@ class ProfileFragment : Fragment() {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
                 Toast.makeText(context, "Error en la peticion", Toast.LENGTH_LONG).show()
+            } finally {
+                val btn = view?.findViewById<Button>(R.id.profile_logout)
+                btn?.visibility = View.INVISIBLE
+                val spinner = view?.findViewById<ProgressBar>(R.id.logout_spinner)
+                spinner?.visibility = View.VISIBLE
             }
         }
     }

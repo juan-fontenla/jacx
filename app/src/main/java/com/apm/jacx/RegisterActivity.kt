@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.DatePicker
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.apm.jacx.client.ApiClient
@@ -109,6 +111,11 @@ class RegisterActivity : AppCompatActivity() {
         // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
         CoroutineScope(Dispatchers.Main).launch {
             try {
+                val btn = findViewById<Button>(R.id.signup_button_form)
+                btn.visibility = View.INVISIBLE
+                val spinner = findViewById<ProgressBar>(R.id.signup_button_form_spinner)
+                spinner.visibility = View.VISIBLE
+
                 val jsonBody = JSONObject().apply {
                     put("username", username)
                     put("password", password)
@@ -120,19 +127,24 @@ class RegisterActivity : AppCompatActivity() {
                 val responsePost = ApiClient.post("/user", jsonBody)
                 Gson().fromJson(responsePost, JsonObject::class.java)
 
-                val intent = Intent(applicationContext, LoginActivity::class.java)
+                val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
                 startActivity(intent)
 
-                Toast.makeText(applicationContext, "Usuario $username creado!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@RegisterActivity, "Usuario $username creado!", Toast.LENGTH_LONG).show()
 
             } catch (e: IOException) {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
-                Toast.makeText(applicationContext, "Error de red", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@RegisterActivity, "Error de red", Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
-                Toast.makeText(applicationContext, "Error en la peticion", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@RegisterActivity, "Error en la peticion", Toast.LENGTH_LONG).show()
+            } finally {
+                val btn = findViewById<Button>(R.id.signup_button_form)
+                btn.visibility = View.VISIBLE
+                val spinner = findViewById<ProgressBar>(R.id.signup_button_form_spinner)
+                spinner.visibility = View.INVISIBLE
             }
         }
     }

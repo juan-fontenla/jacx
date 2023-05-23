@@ -62,27 +62,45 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:text="@string/change_password"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/logout_google"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_birthday" />
 
-    <Button
-        android:id="@+id/profile_logout"
+    <RelativeLayout
+        android:id="@+id/buttonContainer3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="80dp"
-        android:text="@string/button_logout"
-        android:textColor="@color/black"
+        android:layout_marginBottom="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/profile_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:text="@string/button_logout"
+            android:textColor="@color/black"
+            android:visibility="visible"
+            app:rippleColor="@color/green"
+            app:strokeColor="@color/green" />
+
+        <ProgressBar
+            android:id="@+id/logout_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/icon_mail"
@@ -91,11 +109,11 @@
         android:layout_marginStart="72dp"
         android:layout_marginTop="70dp"
         android:foregroundTint="#000000"
-        android:tint="#000000"
         app:layout_constraintEnd_toStartOf="@+id/profile_email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signup_lastname"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@android:drawable/ic_dialog_email"
+        app:tint="#000000" />
 
     <ImageView
         android:id="@+id/icon_calendar"
@@ -103,12 +121,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
         android:layout_marginTop="18dp"
-        android:tint="#000000"
         app:layout_constraintEnd_toStartOf="@+id/profile_birthday"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/icon_mail"
-        app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+        app:srcCompat="@android:drawable/ic_menu_my_calendar"
+        app:tint="#000000" />
 
     <ImageView
         android:id="@+id/imageView4"
@@ -125,25 +143,20 @@
         android:id="@+id/profile_logout_spotify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/Logout_Spotify"
-        app:layout_constraintBottom_toTopOf="@+id/profile_logout"
+        app:layout_constraintBottom_toTopOf="@+id/buttonContainer3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logout_google" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/logout_google"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/Logout_Google"
         app:layout_constraintBottom_toTopOf="@+id/profile_logout_spotify"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_change_password" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

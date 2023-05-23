@@ -1,11 +1,15 @@
 package com.apm.jacx
 
 import android.content.Intent
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.apm.jacx.client.ApiClient
@@ -45,20 +49,32 @@ class PasswordEmailActivity : AppCompatActivity() {
     private fun sendMail(username: String) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
+                val btn = findViewById<Button>(R.id.button_mail)
+                btn.visibility = View.INVISIBLE
+                val spinner = findViewById<ProgressBar>(R.id.send_mail_spinner)
+                spinner.visibility = View.VISIBLE
+
                 val jsonBody = JSONObject().apply {}.toString()
                 val responsePost = ApiClient.post("/resetPassword/$username", jsonBody)
                 Gson().fromJson(responsePost, JsonObject::class.java)
+
 
                 val intent = Intent(applicationContext, LoginActivity::class.java)
                 startActivity(intent)
             } catch (e: IOException) {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
-                Toast.makeText(applicationContext, "Error de red", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@PasswordEmailActivity, "Error de red", Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
-                Toast.makeText(applicationContext, "Error en la peticion", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@PasswordEmailActivity, "Error en la peticion", Toast.LENGTH_LONG).show()
+            } finally {
+                val btn = findViewById<Button>(R.id.button_mail)
+                btn.visibility = View.VISIBLE
+                val spinner = findViewById<ProgressBar>(R.id.send_mail_spinner)
+                spinner.visibility = View.INVISIBLE
+                findViewById<TextInputEditText>(R.id.password_email_register_username).setText("")
             }
         }
     }

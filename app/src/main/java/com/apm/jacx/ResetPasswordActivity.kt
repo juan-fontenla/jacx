@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.apm.jacx.client.ApiClient
@@ -56,22 +58,32 @@ class ResetPasswordActivity : AppCompatActivity() {
     private fun changePassword(password: String) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
+                val btn = findViewById<Button>(R.id.confirm)
+                btn.visibility = View.INVISIBLE
+                val spinner = findViewById<ProgressBar>(R.id.change_password_spinner)
+                spinner.visibility = View.VISIBLE
+
                 val jsonBody = JSONObject().apply {
                     put("password", password)
                 }.toString()
                 val responsePost = ApiClient.post("/user/password", jsonBody)
                 Gson().fromJson(responsePost, JsonObject::class.java)
 
-                val intent = Intent(applicationContext, LoginActivity::class.java)
+                val intent = Intent(this@ResetPasswordActivity, LoginActivity::class.java)
                 startActivity(intent)
             } catch (e: IOException) {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
-                Toast.makeText(applicationContext, "Error de red", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ResetPasswordActivity, "Error de red", Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
-                Toast.makeText(applicationContext, "Error en la peticion", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ResetPasswordActivity, "Error en la peticion", Toast.LENGTH_LONG).show()
+            } finally {
+                val btn = findViewById<Button>(R.id.confirm)
+                btn.visibility = View.VISIBLE
+                val spinner = findViewById<ProgressBar>(R.id.change_password_spinner)
+                spinner.visibility = View.INVISIBLE
             }
         }
     }
