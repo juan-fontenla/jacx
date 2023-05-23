@@ -4,7 +4,9 @@ package com.apm.jacx
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -64,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
 
         val resetPasswordLink: TextView = findViewById(R.id.Reset_password)
         resetPasswordLink.setOnClickListener {
-            val intent = Intent(this, ResetPasswordActivity::class.java)
+            val intent = Intent(this, PasswordEmailActivity::class.java)
             startActivity(intent)
         }
 
@@ -123,6 +125,11 @@ class LoginActivity : AppCompatActivity() {
         // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
         CoroutineScope(Dispatchers.Main).launch {
             try {
+                val loginBtn = findViewById<Button>(R.id.button_login)
+                loginBtn.visibility = View.INVISIBLE
+                val spinner = findViewById<ProgressBar>(R.id.login_spinner)
+                spinner.visibility = View.VISIBLE
+
                 val jsonBody = JSONObject().apply {
                     put("username", username)
                     put("password", password)
@@ -136,9 +143,21 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: IOException) {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
+                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG).show()
+                val loginBtn = findViewById<Button>(R.id.button_login)
+                loginBtn.visibility = View.VISIBLE
+                val spinner = findViewById<ProgressBar>(R.id.login_spinner)
+                spinner.visibility = View.INVISIBLE
+                resetInputs()
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
+                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG).show()
+                val loginBtn = findViewById<Button>(R.id.button_login)
+                loginBtn.visibility = View.VISIBLE
+                val spinner = findViewById<ProgressBar>(R.id.login_spinner)
+                spinner.visibility = View.INVISIBLE
+                resetInputs()
             }
         }
     }
@@ -159,11 +178,28 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: IOException) {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
+                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
+                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG).show()
+
+            } finally {
+                val loginBtn = findViewById<Button>(R.id.button_login)
+                loginBtn.visibility = View.VISIBLE
+                val spinner = findViewById<ProgressBar>(R.id.login_spinner)
+                spinner.visibility = View.INVISIBLE
+                resetInputs()
             }
         }
+    }
+
+    private fun resetInputs() {
+        val userName = findViewById<TextInputEditText>(R.id.user_name)
+        userName.setText("")
+        val password = findViewById<TextInputEditText>(R.id.user_password)
+        password.setText("")
+        userName.requestFocus()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {

@@ -98,6 +98,9 @@
     <string name="permission_denied_explanation">Permiso denegado, es necesario para la funcionalidad core.</string>
     <string name="permission_rationale">Es necesario el permiso de localizacion para la funcionalidad core.</string>
     <string name="ok">OK</string>
+    <string name="lastname">Apellidos</string>
+    <string name="seleccionar_fecha">Seleccionar fecha</string>
+    <string name="send">Send mail</string>
     <string name="trip_form_errors">Errores en el formulario</string>
     <string name="network_err">Error on server request</string>
 </resources>
