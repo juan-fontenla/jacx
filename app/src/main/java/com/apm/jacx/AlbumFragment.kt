@@ -6,22 +6,30 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.health.connect.datatypes.units.Length
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.apm.jacx.client.ApiClient
+import com.apm.jacx.data.Datasource
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -75,29 +83,34 @@ class AlbumFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_album, container, false)
+        val view = inflater.inflate(R.layout.fragment_album, container, false)
+
+        getAlbumImages()
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Solicitar permisos si no están concedidos
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_IMAGE
-            )
-        } else {
-            Toast.makeText(activity, "Permission denied", Toast.LENGTH_LONG)
-        }
-
         val button = requireView().findViewById<FloatingActionButton>(R.id.add_photo_button)
         button.setOnClickListener {
+            // Solicitar permisos si no están concedidos
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    REQUEST_IMAGE
+                )
+
+            } else {
+                Toast.makeText(activity, "Permission denied", Toast.LENGTH_LONG)
+            }
+
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(intent, REQUEST_IMAGE)
         }
@@ -106,27 +119,31 @@ class AlbumFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        val image = requireView().findViewById<ImageView>(R.id.imageView2)
-
         if (requestCode == REQUEST_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             val imageUri: Uri? = data.data
             val bitmap = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(imageUri!!))
             //imagen redimensionada para que se muestre en la pantalla
-            val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 150, 150, true)
-            image?.setImageBitmap(resizedBitmap)
+            //val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 150, 150, true)
 
-            // TODO: Save image in bd
             val imageToBase64 = bitmapToBase64(bitmap)
-            Log.d("Image on base64", imageToBase64.toString())
+            uploadImage(imageToBase64)
+            getAlbumImages()
         }
     }
-    private fun loadAlbumFragmentData(imageView: View) {
+    private fun loadAlbumFragmentData(jsonArray: JsonArray) {
         // Initialize data.
-        /*val myDataset = Datasource().loadPhotos()
+        val imageView = view?.findViewById<ImageView>(R.id.imageView2)
 
-        Log.d("Photos dataset loaded", myDataset.toString())
+        val myDataset = Datasource().loadPhotos(jsonArray)
+        if (myDataset.isEmpty()) {
+            val messageTextView = view?.findViewById<TextView>(R.id.albumText)
+            messageTextView?.text = "No hay imágenes todavía"
+        } else {
+            imageView?.setImageBitmap(base64ToBitmap(myDataset[0].base64))
+        }
 
-        val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_photos)
+
+        /*val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_photos)
         val numberOfColumns = 3
         recyclerView?.layoutManager = GridLayoutManager(context, numberOfColumns)
         recyclerView?.adapter = context?.let { ItemPhotoAdapter(it, myDataset) }
@@ -153,5 +170,52 @@ class AlbumFragment : Fragment() {
     fun base64ToBitmap(base64String: String): Bitmap {
         val decodedString = Base64.decode(base64String, Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+    }
+
+    private fun uploadImage(imageInput: String) {
+        // Petición al backend.
+        // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val jsonBody = JSONObject().apply {
+                    put("base64", imageInput)
+                }.toString()
+
+                ApiClient.post("/image", jsonBody)
+
+            } catch (e: IOException) {
+                // Manejar errores de red aquí
+                Log.d("Error de red", e.toString())
+            } catch (e: Exception) {
+                // Manejar otros errores aquí
+                Log.d("Error en la peticion", e.toString())
+            }
+        }
+    }
+
+    private fun getAlbumImages(){
+        // Petición al backend.
+        // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val responseGet = ApiClient.get("/images")
+
+                val jsonArray: JsonArray = Gson().fromJson(responseGet, JsonArray::class.java)
+                if (jsonArray.size() == 0) {
+                    val messageTextView = view?.findViewById<TextView>(R.id.albumText)
+                    messageTextView?.text = "No hay imágenes todavía"
+                }
+                else {
+                    loadAlbumFragmentData(jsonArray)
+                }
+
+            } catch (e: IOException) {
+                // Manejar errores de red aquí
+                Log.d("Error de red", e.toString())
+            } catch (e: Exception) {
+                // Manejar otros errores aquí
+                Log.d("Error en la peticion", e.toString())
+            }
+        }
     }
 }
