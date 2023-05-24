@@ -1,32 +1,42 @@
 package com.apm.jacx
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
+import com.apm.jacx.client.ApiClient
+import com.apm.jacx.internalStorage.AppPreferences
+import com.apm.jacx.trip.DataSourceTrip
+import com.apm.jacx.trip.Friend
+import com.apm.jacx.trip.ItemFriendAdapter
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.tasks.Task
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.spotify.sdk.android.auth.AuthorizationClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.io.IOException
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [NewFriendFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+/* Permite asociar un amigo al viaje */
 class NewFriendFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -40,25 +50,59 @@ class NewFriendFragment : Fragment() {
     // Modificase a vista aquí:
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val usernameFriend = getView()?.findViewById<TextView>(R.id.username_friend)
+
+        /* Asociar por userName a un nuevo amigo en el viaje */
+        val buttonNewFriend = getView()?.findViewById<Button>(R.id.button_new_friend)
+        buttonNewFriend!!.setOnClickListener {
+//            TODO: muestra un error 500 de red pero recupera bien el dato del input
+            createNewFriend(usernameFriend!!.text?.trim())
+
+            /* Volvemos a mostrar la lista de amigos */
+            val fragmentToLoad = TripFriendFragment()
+            val activity = context as AppCompatActivity
+            activity.supportFragmentManager.beginTransaction()
+                .replace(R.id.main_view_container, fragmentToLoad)
+                .addToBackStack(null)
+                .commit()
+
+            Toast.makeText(context, "Nuevo amigo", Toast.LENGTH_SHORT).show();
+        }
+
+        /* Volver a la pantalla anterior */
+        val buttonBack = getView()?.findViewById<Button>(R.id.button_back)
+        buttonBack!!.setOnClickListener {
+            val fragmentToLoad = TripFriendFragment()
+            val activity = context as AppCompatActivity
+            activity.supportFragmentManager.beginTransaction()
+                .replace(R.id.main_view_container, fragmentToLoad)
+                .addToBackStack(null)
+                .commit()
+        }
+
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NewFriendFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            NewFriendFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    /* Asociamos un nuevo amigo al viaje */
+    private fun createNewFriend(username: CharSequence?) {
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val jsonBody = JSONObject().apply {
+                    put("username", username)
+                }.toString()
+
+                val responsePost = ApiClient.post("/friend", jsonBody)
+
+                Log.d("POST FRIENDS", responsePost)
+
+
+            } catch (e: IOException) {
+                // Manejar errores de red aquí
+                Log.d("Error de red", e.toString())
+            } catch (e: Exception) {
+                // Manejar otros errores aquí
+                Log.d("Error en la peticion", e.toString())
             }
+        }
     }
 }

@@ -98,4 +98,7 @@
     <string name="permission_denied_explanation">Permiso denegado, es necesario para la funcionalidad core.</string>
     <string name="permission_rationale">Es necesario el permiso de localizacion para la funcionalidad core.</string>
     <string name="ok">OK</string>
+    <string name="new_friend">¿A que amigo quieres añadir?</string>
+    <string name="username_friend">Indica su nombre de usuario</string>
+    <string name="save_friend">Guardar amigo</string>
 </resources>
