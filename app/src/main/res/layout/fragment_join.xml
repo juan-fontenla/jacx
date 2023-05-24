@@ -21,7 +21,7 @@
         android:id="@+id/pinContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tripFormTitle">
@@ -46,10 +46,10 @@
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:clickable="true"
+            android:contentDescription="@string/searchPin"
             android:focusable="true"
             android:minWidth="48dp"
             android:minHeight="48dp"
-            android:contentDescription="@string/searchPin"
             app:layout_constraintBottom_toBottomOf="@+id/pinInput"
             app:layout_constraintStart_toEndOf="@id/pinInput"
             app:layout_constraintTop_toTopOf="parent"
@@ -61,27 +61,28 @@
         android:id="@+id/orText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:text="@string/or"
         android:textSize="24sp"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/pinContainer" />
 
-    <ImageButton
+    <Button
         android:id="@+id/qrButton"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:src="@drawable/baseline_qr_code"
-        android:contentDescription="@string/qrScan"
-        android:background="@null"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawable="@drawable/baseline_qr_code_scanner_24"
+        android:drawablePadding="10dp"
+        android:padding="10dp"
+        android:text="Scan QR"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/orText" />
+        app:layout_constraintTop_toBottomOf="@+id/orText"
+        app:layout_constraintVertical_bias="0.13" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

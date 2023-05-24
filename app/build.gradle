@@ -102,6 +102,10 @@ dependencies {
     // Dependencias para las peticiones al backend
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+
+    // Dependencias para QR
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+
     androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
