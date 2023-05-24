@@ -1,5 +1,8 @@
 package com.apm.jacx.util
 
+import android.app.Activity
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 import com.apm.jacx.model.Waypoint
 import com.google.android.libraries.places.api.model.Place
 import org.json.JSONObject
@@ -31,6 +34,15 @@ class Util {
                 stringBuilder.append(digit)
             }
             return stringBuilder.toString()
+        }
+
+        // Cerrar teclado
+        fun hideKeyboard(activity: Activity) {
+            val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val currentFocusView = activity.currentFocus
+            if (currentFocusView != null) {
+                inputMethodManager.hideSoftInputFromWindow(currentFocusView.windowToken, 0)
+            }
         }
     }
 }

@@ -22,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="200dp"
+        app:layout_constraintBottom_toTopOf="@+id/qrButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tripFormTitle">
@@ -40,40 +41,45 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/searchPin"
+
+        <RelativeLayout
+            android:id="@+id/buttonContainer21"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:clickable="true"
-            android:contentDescription="@string/searchPin"
-            android:focusable="true"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/pinInput"
             app:layout_constraintStart_toEndOf="@id/pinInput"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/baseline_search_24" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/searchPin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:clickable="true"
+                android:contentDescription="@string/searchPin"
+                android:focusable="true"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                app:srcCompat="@drawable/baseline_search_24" />
+
+            <ProgressBar
+                android:id="@+id/pin_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+
+        </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/orText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/or"
-        android:textSize="24sp"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pinContainer" />
 
     <Button
         android:id="@+id/qrButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="272dp"
         android:drawable="@drawable/baseline_qr_code_scanner_24"
         android:drawablePadding="10dp"
         android:padding="10dp"
@@ -82,7 +88,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/orText"
-        app:layout_constraintVertical_bias="0.13" />
+        app:layout_constraintTop_toBottomOf="@+id/pinContainer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
