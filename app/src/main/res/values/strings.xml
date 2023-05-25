@@ -96,5 +96,6 @@
     <string name="password_error">It is mandatory to introduce a password</string>
     <string name="email_error_match">The email introduced is not valid. Ex:name@mail.com</string>
     <string name="name_error">It is mandatory to introduce an user name</string>
-    <string name="navigation">Navegación</string>
+    <string name="navigation">Navigation</string>
+    <string name="album_text">Trips Album</string>
 </resources>

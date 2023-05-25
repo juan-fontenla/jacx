@@ -14,18 +14,6 @@ class Datasource {
         val photoList = object : TypeToken<List<Photo>>() {}.type
 
         return gson.fromJson(jsonArray, photoList)
-
-        /*for (jsonElement: JsonElement in jsonArray) {
-            if (jsonElement is JsonObject) {
-                val id = jsonElement.get("id").asInt
-                val base64 = jsonElement.get("base64").asString
-                val photo = Photo(id, base64)
-                photoList.add(photo)
-            }
-        } return photoList*/
-
-
-
     }
 
     fun loadTrips(): List<Trip> {
