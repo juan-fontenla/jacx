@@ -17,6 +17,7 @@ import com.apm.jacx.client.ApiClient
 import com.apm.jacx.model.Waypoint
 import com.apm.jacx.util.Util
 import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.PhotoMetadata
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
@@ -25,6 +26,7 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.net.URLEncoder
 import java.time.LocalDate
 
 // TODO: Rename parameter arguments, choose names that match
@@ -62,7 +64,7 @@ class TripFormFragment : Fragment() {
         val createButton = getView()?.findViewById<MaterialButton>(R.id.createButton)
         createButton!!.setOnClickListener{ onCreateButtonClick() }
         // Autocomplete fields
-        val fields = listOf(Place.Field.LAT_LNG, Place.Field.NAME, Place.Field.ICON_URL, Place.Field.ICON_BACKGROUND_COLOR)
+        val fields = listOf(Place.Field.LAT_LNG, Place.Field.NAME, Place.Field.ICON_BACKGROUND_COLOR, Place.Field.PHOTO_METADATAS)
         val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
             .build(activity)
         val setOriginInput = getView()?.findViewById<EditText>(R.id.startInput)
@@ -114,11 +116,13 @@ class TripFormFragment : Fragment() {
 
         // Send request
         try {
+            Log.d("asdfasdf", newTrip.toString())
             ApiClient.post("/route", newTrip.toString())
             // Start new activity
             val intent = Intent(activity, DetailRouteActivity::class.java)
             startActivity(intent)
         } catch (e: IOException) {
+            Log.e("TripFormFragment", "Error: " + e.message)
             Toast.makeText(context, R.string.network_err, Toast.LENGTH_LONG).show()
         }
     }

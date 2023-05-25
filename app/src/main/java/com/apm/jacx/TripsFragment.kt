@@ -75,7 +75,7 @@ class TripsFragment : Fragment() {
             val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_own_trips)
             recyclerView?.adapter = context?.let { ItemTripAdapter(it, tripList) }
         } catch (e: Exception) {
-            Log.e("TripsFragment", "Error fetching trips")
+            Log.e("TripsFragment", "Error fetching trips: " + e.message)
         }
     }
 
