@@ -74,9 +74,7 @@ class TripFriendFragment : Fragment() {
             val fragmentToLoad = NewFriendFragment()
             val activity = context as AppCompatActivity
             activity.supportFragmentManager.beginTransaction()
-                // TODO ÑAPA para que corra sen que casque e programar máis rapido
-                // .replace(R.id.main_view_container_trip, fragmentToLoad)
-                .replace(R.id.main_view_container, fragmentToLoad)
+                .replace(R.id.main_view_container_trip, fragmentToLoad)
                 .addToBackStack(null)
                 .commit()
             Toast.makeText(context, "Añadir amigos", Toast.LENGTH_SHORT).show();
