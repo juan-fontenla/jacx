@@ -68,6 +68,9 @@ class TripsFragment : Fragment() {
         try {
             val responseBody = ApiClient.get("/route/owner")
             val jsonTripList = JSONArray(responseBody)
+            if (jsonTripList.length() == 0) {
+                Toast.makeText(context, "There are no trips yet", Toast.LENGTH_SHORT).show()
+            }
             for (i in 0 until jsonTripList.length()) {
                 val jsonTrip = jsonTripList.getJSONObject(i)
                 tripList.add(Trip(jsonTrip))
