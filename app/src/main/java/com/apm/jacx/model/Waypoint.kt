@@ -1,5 +1,6 @@
 package com.apm.jacx.model
 
+import android.util.Log
 import org.json.JSONObject
 
 class Waypoint(json: JSONObject) {
@@ -12,22 +13,22 @@ class Waypoint(json: JSONObject) {
     var color: Int? = null
 
     init {
-        if (json.has("id")) {
+        if (json.has("id") && !json.isNull("id")) {
             id = json.get("id") as Int
         }
-        if (json.has("name")) {
+        if (json.has("name") && !json.isNull("name")) {
             name = json.get("name") as String
         }
-        if (json.has("orderPosition")) {
+        if (json.has("orderPosition") && !json.isNull("orderPosition")) {
             orderPosition = json.get("orderPosition") as Int
         }
-        if (json.has("point")) {
+        if (json.has("point") && !json.isNull("point")) {
             point = json.get("point") as String
         }
-        if (json.has("url")) {
+        if (json.has("url") && !json.isNull("url")) {
             url = json.get("url") as String
         }
-        if (json.has("color")) {
+        if (json.has("color") && !json.isNull("color")) {
             color = json.get("color") as Int
         }
     }

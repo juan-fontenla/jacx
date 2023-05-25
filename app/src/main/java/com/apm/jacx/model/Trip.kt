@@ -17,7 +17,7 @@ class Trip(json: JSONObject) {
         name = json.get("name") as String
         begin = Waypoint(json.get("begin") as JSONObject)
         finish = Waypoint(json.get("finish") as JSONObject)
-        startDate = json.get("startDate") as LocalDate
-        endDate = json.get("endDate") as LocalDate
+        startDate = LocalDate.parse(json.get("startDate") as String)
+        endDate = LocalDate.parse(json.get("endDate") as String)
     }
 }
