@@ -56,31 +56,31 @@ class NewFriendFragment : Fragment() {
         /* Asociar por userName a un nuevo amigo en el viaje */
         val buttonNewFriend = getView()?.findViewById<Button>(R.id.button_new_friend)
         buttonNewFriend!!.setOnClickListener {
-//            TODO: muestra un error 500 de red pero recupera bien el dato del input
             createNewFriend(usernameFriend!!.text?.trim())
-
-            /* Volvemos a mostrar la lista de amigos */
-            val fragmentToLoad = TripFriendFragment()
-            val activity = context as AppCompatActivity
-            activity.supportFragmentManager.beginTransaction()
-                .replace(R.id.main_view_container, fragmentToLoad)
-                .addToBackStack(null)
-                .commit()
-
-            Toast.makeText(context, "Nuevo amigo", Toast.LENGTH_SHORT).show();
+            backToFragment()
+//            Toast.makeText(context, "Nuevo amigo", Toast.LENGTH_SHORT).show();
         }
 
         /* Volver a la pantalla anterior */
         val buttonBack = getView()?.findViewById<Button>(R.id.button_back)
         buttonBack!!.setOnClickListener {
-            val fragmentToLoad = TripFriendFragment()
-            val activity = context as AppCompatActivity
-            activity.supportFragmentManager.beginTransaction()
-                .replace(R.id.main_view_container, fragmentToLoad)
-                .addToBackStack(null)
-                .commit()
+           backToFragment()
         }
 
+    }
+
+    /* Volvemos al fragment para mostrar la lista de amigos */
+    private fun backToFragment() {
+        val fragmentToLoad = TripFriendFragment()
+        val activity = context as AppCompatActivity
+        activity.supportFragmentManager.beginTransaction()
+            .replace(R.id.main_view_container, fragmentToLoad)
+            .addToBackStack(null)
+            .commit()
+
+        /* Actualizamos la lista con el valor añadido */
+        /* TODO: No recarga la lista de amigos */
+//        fragmentToLoad.loadFriendFragmentData(viewFragment)
     }
 
     /* Asociamos un nuevo amigo al viaje */
@@ -92,9 +92,7 @@ class NewFriendFragment : Fragment() {
                 }.toString()
 
                 val responsePost = ApiClient.post("/friend", jsonBody)
-
                 Log.d("POST FRIENDS", responsePost)
-
 
             } catch (e: IOException) {
                 // Manejar errores de red aquí
