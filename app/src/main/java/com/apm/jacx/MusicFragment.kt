@@ -9,9 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.adapter.ItemPlayListAdapter
-import com.apm.jacx.adapter.TrackAdapter
 import com.apm.jacx.spotify.MusicViewModel
-import com.apm.jacx.spotify.domain.PlaylistTracksViewModel
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote

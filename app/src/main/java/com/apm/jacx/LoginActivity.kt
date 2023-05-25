@@ -100,13 +100,14 @@ class LoginActivity : AppCompatActivity() {
                 REDIRECT_URI_SPOTIFY
             );
             builder.setShowDialog(false)
-            // Se añaden los siguientes scopes según las funcinalidades que queremos realizar:
-            // https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists
+            // Se añaden los siguientes scopes según las funcinalidades que queremos realizar
             builder.setScopes(
                 arrayOf(
                     "streaming",
                     "playlist-read-private",
-                    "playlist-read-collaborative"
+                    "playlist-read-collaborative",
+                    "user-read-private",
+                    "user-read-email"
                 )
             )
             val request = builder.build()
@@ -143,7 +144,8 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: IOException) {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
-                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG)
+                    .show()
                 val loginBtn = findViewById<Button>(R.id.button_login)
                 loginBtn.visibility = View.VISIBLE
                 val spinner = findViewById<ProgressBar>(R.id.login_spinner)
@@ -152,7 +154,8 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
-                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG)
+                    .show()
                 val loginBtn = findViewById<Button>(R.id.button_login)
                 loginBtn.visibility = View.VISIBLE
                 val spinner = findViewById<ProgressBar>(R.id.login_spinner)
@@ -178,11 +181,13 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: IOException) {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
-                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG)
+                    .show()
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
-                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG)
+                    .show()
 
             } finally {
                 val loginBtn = findViewById<Button>(R.id.button_login)
@@ -192,6 +197,10 @@ class LoginActivity : AppCompatActivity() {
                 resetInputs()
             }
         }
+    }
+
+    private fun loadUserInformationSpotify() {
+
     }
 
     private fun resetInputs() {
