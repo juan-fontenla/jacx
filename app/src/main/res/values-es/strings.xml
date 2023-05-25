@@ -101,4 +101,15 @@
     <string name="new_friend">¿A que amigo quieres añadir?</string>
     <string name="username_friend">Indica su nombre de usuario</string>
     <string name="save_friend">Guardar amigo</string>
+    <string name="album_text">Album de viajes</string>
+    <string name="lastname">Apellidos</string>
+    <string name="seleccionar_fecha">Seleccionar fecha</string>
+    <string name="send">Send mail</string>
+    <string name="trip_form_errors">Errores en el formulario</string>
+    <string name="network_err">Error on server request</string>
+    <string name="no_music">Sin música</string>
+    <string name="first_fragment_label">Primer Fragmento</string>
+    <string name="second_fragment_label">Segundo Fragmento</string>
+    <string name="next">Siguiente</string>
+    <string name="previous">Anterior</string>
 </resources>

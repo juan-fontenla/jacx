@@ -1,5 +1,6 @@
 package com.apm.jacx.client
 
+import android.util.Log
 import com.apm.jacx.internalStorage.AppPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -12,7 +13,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 
 object ApiClient {
-    private val BASE_URL = "jacx-back-production.up.railway.app"
+    private const val BASE_URL = "jacx-back-production.up.railway.app"
+    private const val SCHEME = "https"
 
     private val client = OkHttpClient.Builder().build()
 
@@ -25,14 +27,14 @@ object ApiClient {
     }
 
     suspend fun get(path: String): String = withContext(Dispatchers.IO) {
-        val url = HttpUrl.Builder().scheme("https").host(BASE_URL).addPathSegments("api$path").build()
+        val url = HttpUrl.Builder().scheme(SCHEME).host(BASE_URL).addPathSegments("api$path").build()
         val request = Request.Builder().url(url).headers(setupHeaders()).get().build()
 
         executeRequest(request)
     }
 
     suspend fun post(path: String, jsonBody: String): String = withContext(Dispatchers.IO) {
-        val url = HttpUrl.Builder().scheme("https").host(BASE_URL).addPathSegments("api$path").build()
+        val url = HttpUrl.Builder().scheme(SCHEME).host(BASE_URL).addPathSegments("api$path").build()
         val request = Request.Builder().url(url).headers(setupHeaders())
             .post(jsonBody.toRequestBody("application/json".toMediaType()))
             .build()
@@ -41,7 +43,7 @@ object ApiClient {
     }
 
     suspend fun put(path: String, jsonBody: String): String = withContext(Dispatchers.IO) {
-        val url = HttpUrl.Builder().scheme("https").host(BASE_URL).addPathSegments("api$path").build()
+        val url = HttpUrl.Builder().scheme(SCHEME).host(BASE_URL).addPathSegments("api$path").build()
         val request = Request.Builder().url(url).headers(setupHeaders())
             .put(jsonBody.toRequestBody("application/json".toMediaType()))
             .build()

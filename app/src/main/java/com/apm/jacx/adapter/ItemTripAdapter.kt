@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.DetailRouteActivity
 import com.apm.jacx.R
 import com.apm.jacx.model.Trip
+import com.squareup.picasso.Picasso
 
 class ItemTripAdapter(
     private val context: Context,
@@ -22,6 +23,9 @@ class ItemTripAdapter(
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val cardTrip: CardView  = view.findViewById(R.id.card_trip)
         val textTrip: TextView = view.findViewById(R.id.title_trip)
+        val startDate: TextView = view.findViewById(R.id.startDate)
+        val endDate: TextView = view.findViewById(R.id.endDate)
+        val image: ImageView = view.findViewById(R.id.image_of_trip)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -36,7 +40,10 @@ class ItemTripAdapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
-        holder.textTrip.text = item.title
+        holder.textTrip.text = item.name
+        holder.startDate.text = item.startDate.toString()
+        holder.endDate.text = item.endDate.toString()
+        Picasso.get().load(item.finish.url).into(holder.image)
         holder.cardTrip.setOnClickListener {
             val intent = Intent(context, DetailRouteActivity::class.java)
             context.startActivity(intent)

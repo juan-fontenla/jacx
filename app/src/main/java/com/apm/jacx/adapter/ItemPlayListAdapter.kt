@@ -1,7 +1,6 @@
 package com.apm.jacx.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.*
-import com.apm.jacx.spotify.PlayList
+import com.apm.jacx.spotify.domain.PlayList
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.spotify.android.appremote.api.SpotifyAppRemote
-import com.spotify.protocol.types.Track
 import com.squareup.picasso.Picasso
 
 

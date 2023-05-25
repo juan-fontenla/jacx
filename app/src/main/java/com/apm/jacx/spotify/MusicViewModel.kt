@@ -4,32 +4,35 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.apm.jacx.internalStorage.AppPreferences
 import com.apm.jacx.spotify.adapter.ResultCallAdapterFactory
-import com.apm.jacx.spotify.domain.PlaylistItem
+import com.apm.jacx.spotify.domain.PlayList
+import com.apm.jacx.spotify.domain.TrackItem
 import com.apm.jacx.spotify.interceptor.AuthorizationInterceptor
+import com.apm.jacx.spotify.response.MeResponse
 import com.google.gson.FieldNamingPolicy
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.HTTP
 import java.io.IOException
 
 
 class MusicViewModel : ViewModel() {
     val tracks = MutableLiveData<List<TrackItem>>()
     val playList = MutableLiveData<List<PlayList>>()
+    val me = MutableLiveData<MeResponse>()
 
-    private var spotifyApi : SpotifyApi;
+    private var spotifyApi: SpotifyApi;
 
     init {
         val httpLoggingInterceptor = HttpLoggingInterceptor().setLevel(
-            HttpLoggingInterceptor.Level.BODY)
+            HttpLoggingInterceptor.Level.BODY
+        )
 
         val okHttpClient = OkHttpClient
             .Builder()
@@ -69,7 +72,20 @@ class MusicViewModel : ViewModel() {
     fun initTracksMutableData(playlistId: String) {
         viewModelScope.launch {
             try {
-                tracks.value = spotifyApi.getPlaylistTracks(playlistId, 100, 0).getOrThrow().toTrackItems()
+                tracks.value =
+                    spotifyApi.getPlaylistTracks(playlistId, 100, 0).getOrThrow().toTrackItems()
+            } catch (e: HttpException) {
+                Log.d("Spotify API", "HTTP fallo")
+            } catch (e: IOException) {
+                Log.d("Spotify API", "No hay conexión a internet")
+            }
+        }
+    }
+
+    fun getSpotifyUserInformation() {
+        viewModelScope.launch {
+            try {
+                me.value = spotifyApi.getUserInformation().getOrThrow()
             } catch (e: HttpException) {
                 Log.d("Spotify API", "HTTP fallo")
             } catch (e: IOException) {
