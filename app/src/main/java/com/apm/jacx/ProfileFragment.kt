@@ -69,8 +69,7 @@ class ProfileFragment : Fragment() {
         view.findViewById<Button>(R.id.logout_google).isEnabled = AppPreferences.TOKEN_GOOGLE != null
 
         // Inicializamos lo informacion del usuario
-        val userInformation: JsonObject =
-            Gson().fromJson(AppPreferences.USER_INFORMATION, JsonObject::class.java)
+       val userInformation: JsonObject = Gson().fromJson(AppPreferences.USER_INFORMATION, JsonObject::class.java)
 
         val firstname = if (!userInformation.get("firstName").isJsonNull) {
             userInformation.get("firstName").asString

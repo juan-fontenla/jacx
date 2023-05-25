@@ -93,6 +93,7 @@ class LoginActivity : AppCompatActivity() {
                 val signInIntent: Intent = mGoogleSignInClient.signInIntent
                 startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE)
             } else {
+                login("${account.displayName}-google", "O6EEy732JL3oPuBg")
                 val intentMain = Intent(this, MainActivity::class.java)
                 startActivity(intentMain)
             }
@@ -175,7 +176,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     // Carga los datos del usuario y los almacena en almacenamiento interno
-    private fun loadUserInformation(username: String) {
+    fun loadUserInformation(username: String) {
         // Petición al backend.
         // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
         CoroutineScope(Dispatchers.Main).launch {
@@ -254,6 +255,45 @@ class LoginActivity : AppCompatActivity() {
         userName.requestFocus()
     }
 
+    private fun checkAccountAndLoginGoogle() {
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        val email = account?.email
+        val displayName = account?.givenName
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                // Comprobamos si existe el usuario de spotify
+                val responseGet = ApiClient.get("/user/$displayName-google")
+                if (responseGet.isBlank()) {
+                    // Si no existe el usuario se crea
+                    val jsonBody = JSONObject().apply {
+                        put("username", "$displayName-google")
+                        put("password", "O6EEy732JL3oPuBg")
+                        put("firstName", displayName)
+                        put("email", email)
+                    }.toString()
+                    ApiClient.post("/user", jsonBody)
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Usuario $displayName-google creado!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+                login("$displayName-google", "O6EEy732JL3oPuBg")
+
+            } catch (e: IOException) {
+                // Manejar errores de red aquí
+                Log.d("Error de red", e.toString())
+                Toast.makeText(this@LoginActivity, "Error de red", Toast.LENGTH_LONG).show()
+            } catch (e: Exception) {
+                // Manejar otros errores aquí
+                Log.d("Error en la peticion", e.toString())
+                Toast.makeText(this@LoginActivity, "Error en la peticion", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
 
@@ -316,6 +356,8 @@ class LoginActivity : AppCompatActivity() {
 
             // Almacenamos el token en el almacenamiento interno
             AppPreferences.TOKEN_GOOGLE = account.idToken
+
+            checkAccountAndLoginGoogle()
 
             // Signed in successfully, show authenticated UI.
             val intentMain = Intent(this, MainActivity::class.java)
