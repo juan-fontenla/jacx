@@ -10,8 +10,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
-import android.util.Log
 import android.view.*
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -145,8 +145,6 @@ public class AlbumFragment : Fragment() {
         // Use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView?.setHasFixedSize(true)
-
-        Toast.makeText(context, "Datos de fotos cargados", Toast.LENGTH_SHORT).show();
     }
 
     fun bitmapToBase64(bitmap: Bitmap): String {
@@ -161,6 +159,9 @@ public class AlbumFragment : Fragment() {
         // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
         CoroutineScope(Dispatchers.Main).launch {
             try {
+                val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
+                spinner.visibility = View.VISIBLE
+
                 val jsonBody = JSONObject().apply {
                     put("base64", imageInput)
                 }.toString()
@@ -168,12 +169,22 @@ public class AlbumFragment : Fragment() {
                 ApiClient.post("/image", jsonBody)
                 getAlbumImages()
 
+                spinner.visibility = View.INVISIBLE
+
             } catch (e: IOException) {
                 // Manejar errores de red aquí
-                Log.d("Error de red", e.toString())
+                Toast.makeText(context, "There was a problem uploading the image", Toast.LENGTH_LONG)
+                    .show()
+                val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
+                spinner.visibility = View.INVISIBLE
             } catch (e: Exception) {
                 // Manejar otros errores aquí
-                Log.d("Error en la peticion", e.toString())
+                Toast.makeText(context, "There was a problem uploading the image", Toast.LENGTH_LONG)
+                    .show()
+                val button = requireView().findViewById<FloatingActionButton>(R.id.add_photo_button)
+                button.visibility = View.VISIBLE
+                val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
+                spinner.visibility = View.INVISIBLE
             }
         }
     }
@@ -183,22 +194,32 @@ public class AlbumFragment : Fragment() {
         // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
         CoroutineScope(Dispatchers.Main).launch {
             try {
+                val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
+                spinner.visibility = View.VISIBLE
                 val responseGet = ApiClient.get("/images")
 
                 val jsonArray: JsonArray = Gson().fromJson(responseGet, JsonArray::class.java)
                 if (jsonArray.size() == 0) {
-                    Toast.makeText(context, "Todavía no hay imágenes", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "There are no images", Toast.LENGTH_SHORT).show()
                 }
                 else {
                     loadAlbumFragmentData(jsonArray)
                 }
 
+                spinner.visibility = View.INVISIBLE
+
             } catch (e: IOException) {
                 // Manejar errores de red aquí
-                Log.d("Error de red", e.toString())
+                Toast.makeText(context, "There was a problem loading the images", Toast.LENGTH_LONG)
+                    .show()
+                val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
+                spinner.visibility = View.INVISIBLE
             } catch (e: Exception) {
                 // Manejar otros errores aquí
-                Log.d("Error en la peticion", e.toString())
+                Toast.makeText(context, "There was a problem loading the image", Toast.LENGTH_LONG)
+                    .show()
+                val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
+                spinner.visibility = View.INVISIBLE
             }
         }
     }

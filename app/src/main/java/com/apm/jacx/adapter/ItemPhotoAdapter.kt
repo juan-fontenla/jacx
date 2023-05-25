@@ -11,17 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
-import com.apm.jacx.AlbumFragment
 import com.apm.jacx.R
 import com.apm.jacx.client.ApiClient
 import com.apm.jacx.model.Photo
-import com.google.gson.Gson
-import com.google.gson.JsonArray
-import com.spotify.protocol.types.Album
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +49,7 @@ class ItemPhotoAdapter(
         holder.photoView.setImageBitmap(base64ToBitmap(item.base64))
 
         holder.photoView.setOnClickListener {
-            showDeleteConfirmationDialog(item.id)
+            showDeleteConfirmationDialog(item.id, it)
         }
     }
 
@@ -62,34 +58,41 @@ class ItemPhotoAdapter(
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
     }
 
-    private fun deleteImage(id: Int){
+    private fun deleteImage(id: Int, view: View){
         // Petición al backend.
         // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
         CoroutineScope(Dispatchers.Main).launch {
             try {
+                val spinner = view.findViewById<ProgressBar>(R.id.progressBar)
+                spinner.visibility = View.VISIBLE
+
                 val jsonBody = JSONObject().apply {
                     put("id", id)
                 }.toString()
 
                 ApiClient.delete("/image", jsonBody)
 
+                spinner.visibility = View.INVISIBLE
+
             } catch (e: IOException) {
-                // Manejar errores de red aquí
-                Log.d("Error de red", e.toString())
+                Toast.makeText(context, "There was a problem deleting the image", Toast.LENGTH_LONG)
+                    .show()
+                val spinner = view.findViewById<ProgressBar>(R.id.progressBar)
+                spinner.visibility = View.INVISIBLE
             } catch (e: Exception) {
-                // Manejar otros errores aquí
-                Log.d("Error en la peticion", e.toString())
+                Toast.makeText(context, "There was a problem deleting the image", Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }
 
-    private fun showDeleteConfirmationDialog(id: Int) {
+    private fun showDeleteConfirmationDialog(id: Int, view: View) {
         val alertDialogBuilder = AlertDialog.Builder(context)
         alertDialogBuilder.setTitle("Delete Image")
         alertDialogBuilder.setMessage("¿Are you sure you want to delete the image?")
         alertDialogBuilder.setPositiveButton("Yes") { _: DialogInterface, _: Int ->
             // Acción a realizar si se confirma la eliminación
-            deleteImage(id)
+            deleteImage(id, view)
         }
         alertDialogBuilder.setNegativeButton("No", null)
         val alertDialog = alertDialogBuilder.create()
