@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import com.apm.jacx.client.ApiClient
+import com.apm.jacx.model.Trip
 import com.apm.jacx.model.Waypoint
 import com.apm.jacx.util.Util
 import com.google.android.libraries.places.api.Places
@@ -116,10 +117,11 @@ class TripFormFragment : Fragment() {
 
         // Send request
         try {
-            Log.d("asdfasdf", newTrip.toString())
-            ApiClient.post("/route", newTrip.toString())
+            val responseBody = JSONObject(ApiClient.post("/route", newTrip.toString()))
+            val trip = Trip(responseBody)
             // Start new activity
             val intent = Intent(activity, DetailRouteActivity::class.java)
+            intent.putExtra("routeId", trip.id)
             startActivity(intent)
         } catch (e: IOException) {
             Log.e("TripFormFragment", "Error: " + e.message)

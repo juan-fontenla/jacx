@@ -16,7 +16,10 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.apm.jacx.view_model.ActivityViewModel
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapsSdkInitializedCallback
@@ -29,6 +32,10 @@ private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
 
 class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
 
+    // Route data related
+    private var routeId : Int = 0
+    private lateinit var myViewModel: ActivityViewModel
+    // Geolocation related
     private var navigation = false
     private var userPositionServiceBound = false
     private var userPositionService: UserPositionService? = null
@@ -54,6 +61,22 @@ class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_route)
+
+        routeId = intent.getIntExtra("routeId", 0)
+        //Init view model
+        myViewModel = ViewModelProvider(this)[ActivityViewModel::class.java]
+
+        // Observa el LiveData del ViewModel y reacciona cuando se reciba una nueva respuesta
+        myViewModel.apiResult.observe(this) { result ->
+            // Actualiza el fragmento con el resultado de la API
+            val fragment =
+                supportFragmentManager.findFragmentById(R.id.main_view_container_trip) as DetailRouteFragment
+            fragment.setTripData(result)
+        }
+
+        myViewModel.makeApiRequest(routeId)
+
+        // Geolocation
 
         MapsInitializer.initialize(applicationContext, MapsInitializer.Renderer.LATEST, this)
 

@@ -4,11 +4,11 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.apm.jacx.model.Trip
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -18,15 +18,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.maps.android.PolyUtil
 import kotlinx.coroutines.*
 import okhttp3.*
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.time.Duration
-import java.time.LocalDateTime
 import java.time.LocalTime
 
 
-class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
+class DetailsTripsFragment : Fragment(), DetailRouteFragment, OnMapReadyCallback {
 
     private val COUNTDOWN_TIME = 5000L
     private lateinit var navigationButton: FloatingActionButton
@@ -43,6 +41,11 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
     private var navigation = false
     private var userMarker: Marker? = null
     private val client = OkHttpClient()
+
+    override fun setTripData(trip: Trip) {
+        // Send query to Google Maps API to get route polyline to print in map
+        initialDataFetch(trip)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,9 +65,6 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
 
         navigationButton = requireView().findViewById<FloatingActionButton>(R.id.navigation)
         navigationButton!!.setOnClickListener{ onNavigationButtonClick() }
-
-        // Send query to Google Maps API to get route polyline to print in map
-        initialDataFetch()
 
         mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -145,19 +145,20 @@ class DetailsTripsFragment : Fragment(), OnMapReadyCallback {
         isTimerRunning = false
     }
 
-    private fun initialDataFetch() = runBlocking {
+    private fun initialDataFetch(trip: Trip) = runBlocking {
         // Get key points and send query to Google Maps API
-        withContext(Dispatchers.IO) {
-            getKeyPoints()
-        }
+        getKeyPoints(trip)
         requestRoute()
     }
 
-    private fun getKeyPoints() {
-        // TODO get points from server
-        origin = "43.27,-8.54"
-        waypoints = "42.03,-8.7|41.53,-8.65"
-        destination = "41.16,-8.7"
+    private fun getKeyPoints(trip: Trip) {
+        origin = trip.begin.point!!
+        val waypointArray = arrayListOf<String>()
+        trip.waypoints.forEach { waypoint ->
+            waypoint.point?.let { waypointArray.add(it) }
+        }
+        waypoints = waypointArray.joinToString("|")
+        destination = trip.finish.point!!
     }
 
     private fun requestRoute() = runBlocking {
