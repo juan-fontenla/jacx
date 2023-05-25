@@ -51,9 +51,11 @@ object ApiClient {
         executeRequest(request)
     }
 
-    suspend fun delete(path: String): String = withContext(Dispatchers.IO) {
-        val url = HttpUrl.Builder().scheme(SCHEME).host(BASE_URL).addPathSegments("api$path").build()
-        val request = Request.Builder().url(url).headers(setupHeaders()).delete().build()
+    suspend fun delete(path: String, jsonBody: String): String = withContext(Dispatchers.IO) {
+        val url = HttpUrl.Builder().scheme("https").host(BASE_URL).addPathSegments("api$path").build()
+        val request = Request.Builder().url(url).headers(setupHeaders())
+            .delete(jsonBody.toRequestBody("application/json".toMediaType()))
+            .build()
 
         executeRequest(request)
     }
