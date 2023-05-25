@@ -2,18 +2,26 @@ package com.apm.jacx
 
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.adapter.ItemPlayListAdapter
 import com.apm.jacx.spotify.MusicViewModel
+import com.apm.jacx.util.AppVariables.CLIENT_ID_SPOTIFY
+import com.apm.jacx.util.AppVariables.REDIRECT_URI_SPOTIFY
+import com.apm.jacx.util.AppVariables.REQUEST_CODE_SPOTIFY
+import com.apm.jacx.util.RecyclerViewSizeChangeListener
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
-import com.spotify.protocol.types.Track
+import com.spotify.sdk.android.auth.AuthorizationClient
+import com.spotify.sdk.android.auth.AuthorizationRequest
+import com.spotify.sdk.android.auth.AuthorizationResponse
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -44,7 +52,6 @@ class MusicFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        setHasOptionsMenu(true);
 
         // Spotify
         val connectionParams = ConnectionParams.Builder(CLIENT_ID)
@@ -55,33 +62,13 @@ class MusicFragment : Fragment() {
         SpotifyAppRemote.connect(context, connectionParams, object : Connector.ConnectionListener {
             override fun onConnected(appRemote: SpotifyAppRemote) {
                 spotifyAppRemote = appRemote
-                Log.d("MainActivity", "Connected! Yay!")
-                // Now you can start interacting with App Remote
-                // El metodo connected nos permite reproducir musica aleatoria.
-                // connected()
             }
 
             override fun onFailure(throwable: Throwable) {
                 Log.e("MainActivity", throwable.message, throwable)
-                // Something went wrong when attempting to connect! Handle errors here
             }
         })
         //
-    }
-
-    private fun connected() {
-
-        spotifyAppRemote?.let {
-            // Play a playlist
-            val playlistURI = "spotify:playlist:37i9dQZF1DX2sUQwD7tbmL"
-            it.playerApi.play(playlistURI)
-            // Subscribe to PlayerState
-            it.playerApi.subscribeToPlayerState().setEventCallback {
-                val track: Track = it.track
-                Log.d("MainActivity", track.name + " by " + track.artist.name)
-            }
-        }
-
     }
 
     override fun onCreateView(
@@ -97,6 +84,21 @@ class MusicFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         loadMusicFragmentData(view)
         createListenerSpotifyButton(view)
+
+        val recyclerView = view.findViewById<RecyclerView>(R.id.list_playlist)
+        val containerNoMusic = view.findViewById<ConstraintLayout>(R.id.no_playlist)
+        val sizeChangeListener = RecyclerViewSizeChangeListener {
+            // Lógica a ejecutar cuando cambie el tamaño del RecyclerView
+            val itemCount = recyclerView.adapter?.itemCount ?: 0
+            if(itemCount <= 0) {
+                recyclerView.visibility = View.INVISIBLE
+                containerNoMusic.visibility = View.VISIBLE
+            } else {
+                recyclerView.visibility = View.VISIBLE
+                containerNoMusic.visibility = View.INVISIBLE
+            }
+        }
+        recyclerView.addOnScrollListener(sizeChangeListener)
     }
 
     override fun onStop() {
@@ -129,28 +131,42 @@ class MusicFragment : Fragment() {
     private fun loadMusicFragmentData(viewFragment: View) {
         viewModel.initPlaylistMutableData()
         viewModel.playList.observe(viewLifecycleOwner) {
-            val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_songs)
+            val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_playlist)
             Log.d("Playlist disponibles en Spotify", it.toString())
-            recyclerView?.adapter = context?.let { viewModel.playList.value?.let { it1 ->
-                ItemPlayListAdapter(it,
-                    it1
-                )
-            } }
+            recyclerView?.adapter = context?.let {
+                viewModel.playList.value?.let { it1 ->
+                    ItemPlayListAdapter(
+                        it,
+                        it1
+                    )
+                }
+            }
             recyclerView.setHasFixedSize(true)
         }
     }
 
     private fun createListenerSpotifyButton(viewFragment: View) {
-        val button : Button = viewFragment.findViewById(R.id.spotify_button)
+        val button: Button = viewFragment.findViewById(R.id.spotify_button)
         button.setOnClickListener {
-            Log.d("Reproduciendo en Spotify", "Connected! Yay!")
-            connected()
-            Toast.makeText(context, "Reproduciendo musica en Spotify", Toast.LENGTH_SHORT).show();
+            // Inicializamos login spotify.
+            val builder = AuthorizationRequest.Builder(
+                CLIENT_ID_SPOTIFY,
+                AuthorizationResponse.Type.TOKEN,
+                REDIRECT_URI_SPOTIFY
+            );
+            builder.setShowDialog(false)
+            // Se añaden los siguientes scopes según las funcinalidades que queremos realizar
+            builder.setScopes(
+                arrayOf(
+                    "streaming",
+                    "playlist-read-private",
+                    "playlist-read-collaborative",
+                    "user-read-private",
+                    "user-read-email"
+                )
+            )
+            val request = builder.build()
+            AuthorizationClient.openLoginActivity(requireActivity(), REQUEST_CODE_SPOTIFY, request)
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_search_input, menu);
-        return super.onCreateOptionsMenu(menu, inflater)
     }
 }

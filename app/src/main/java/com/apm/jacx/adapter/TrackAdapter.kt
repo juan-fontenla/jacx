@@ -1,18 +1,15 @@
 package com.apm.jacx.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.R
 import com.apm.jacx.spotify.MediaServiceLifecycle
-import com.apm.jacx.spotify.TrackItem
+import com.apm.jacx.spotify.domain.TrackItem
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.Track
