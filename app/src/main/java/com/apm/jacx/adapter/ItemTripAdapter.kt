@@ -46,6 +46,7 @@ class ItemTripAdapter(
         Picasso.get().load(item.finish.url).into(holder.image)
         holder.cardTrip.setOnClickListener {
             val intent = Intent(context, DetailRouteActivity::class.java)
+            intent.putExtra("routeId", item.id)
             context.startActivity(intent)
         }
     }
