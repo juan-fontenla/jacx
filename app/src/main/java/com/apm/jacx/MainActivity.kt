@@ -33,8 +33,7 @@ class MainActivity : AppCompatActivity() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNav.setOnItemSelectedListener(navListener)
 
-        supportFragmentManager.beginTransaction().replace(R.id.main_view_container, TripFriendFragment()).commit()
-    }
+        supportFragmentManager.beginTransaction().replace(R.id.main_view_container, TripsFragment()).commit()    }
 
     fun showUpButton() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
