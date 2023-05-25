@@ -103,4 +103,5 @@
     <string name="send">Send mail</string>
     <string name="trip_form_errors">Errores en el formulario</string>
     <string name="network_err">Error on server request</string>
+    <string name="no_music">Sin música</string>
 </resources>

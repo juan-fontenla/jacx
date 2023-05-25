@@ -1,4 +1,4 @@
-package com.apm.jacx.spotify
+package com.apm.jacx.spotify.domain
 
 import java.util.*
 

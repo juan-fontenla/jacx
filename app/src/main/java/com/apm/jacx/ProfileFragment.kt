@@ -65,28 +65,46 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        view.findViewById<Button>(R.id.profile_logout_spotify).isEnabled = AppPreferences.TOKEN_SPOTIFY != null
+        view.findViewById<Button>(R.id.logout_google).isEnabled = AppPreferences.TOKEN_GOOGLE != null
+
         // Inicializamos lo informacion del usuario
         val userInformation: JsonObject =
             Gson().fromJson(AppPreferences.USER_INFORMATION, JsonObject::class.java)
 
-        val firstname = userInformation.get("firstName").asString
-        val lastname = userInformation.get("lastName").asString
+        val firstname = if (!userInformation.get("firstName").isJsonNull) {
+            userInformation.get("firstName").asString
+        } else {
+            "NO FIRSTNAME"
+        }
+        val lastname = if (!userInformation.get("lastName").isJsonNull) {
+            userInformation.get("lastName").asString
+        } else {
+            "NO LASTNAME"
+        }
         // Obtén el idioma actual de la aplicación
         val currentLocale: Locale = Locale.getDefault()
         // Crea un objeto DateTimeFormatter con el formato largo en el idioma actual
         val dateFormatter: DateTimeFormatter =
             DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", currentLocale)
         // Formatea la fecha en un String
-        val birthday : String = userInformation.get("birthday").asString.format(dateFormatter)
-        val email = userInformation.get("email").asString
-
+        val birthday = if (!userInformation.get("birthday").isJsonNull) {
+            userInformation.get("birthday").asString.format(dateFormatter)
+        } else {
+            "NO BIRTHDAY"
+        }
+        val email = if (!userInformation.get("email").isJsonNull) {
+            userInformation.get("email").asString
+        } else {
+            "NO EMAIL"
+        }
         val firstnameText = view.findViewById<TextView>(R.id.signup_name)
         firstnameText.text = firstname
-        val lastnameText =view.findViewById<TextView>(R.id.signup_lastname)
+        val lastnameText = view.findViewById<TextView>(R.id.signup_lastname)
         lastnameText.text = lastname
-        val emailText =view.findViewById<TextView>(R.id.profile_email)
+        val emailText = view.findViewById<TextView>(R.id.profile_email)
         emailText.text = email
-        val birthdayText =view.findViewById<TextView>(R.id.profile_birthday)
+        val birthdayText = view.findViewById<TextView>(R.id.profile_birthday)
         birthdayText.text = birthday
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -103,19 +121,22 @@ class ProfileFragment : Fragment() {
         val logoutGoogle = getView()?.findViewById<Button>(R.id.logout_google)
         logoutGoogle?.setOnClickListener {
             activity?.let { it1 ->
-                mGoogleSignInClient?.signOut()?.addOnCompleteListener(it1, object : OnCompleteListener<Void?> {
-                    override fun onComplete(p0: Task<Void?>) {
-                        //TODO: ELIMINAR TOKEN DE BASE DE DATOS
-                        AuthorizationClient.clearCookies(context)
-                    }
-                })
+                mGoogleSignInClient?.signOut()
+                    ?.addOnCompleteListener(it1, object : OnCompleteListener<Void?> {
+                        override fun onComplete(p0: Task<Void?>) {
+                            AppPreferences.TOKEN_GOOGLE = null
+                            AuthorizationClient.clearCookies(context)
+                            view.findViewById<Button>(R.id.logout_google).isEnabled = false
+                        }
+                    })
             }
         }
 
         val logoutSpotify = getView()?.findViewById<Button>(R.id.profile_logout_spotify)
         logoutSpotify?.setOnClickListener {
-            // TODO: Se debe eliminar el token de la base de datos
+            AppPreferences.TOKEN_SPOTIFY = null
             AuthorizationClient.clearCookies(context)
+            view.findViewById<Button>(R.id.profile_logout_spotify).isEnabled = false
         }
 
         val changePasswordBtn = getView()?.findViewById<TextView>(R.id.profile_change_password)

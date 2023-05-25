@@ -1,10 +1,9 @@
-package com.apm.jacx.spotify
+package com.apm.jacx.spotify.domain
 
-import com.apm.jacx.spotify.domain.PlaylistItem
 import com.apm.jacx.spotify.response.PlaylistTracksResponse
 
 
-data class PlayList (
+data class PlayList(
     val id: String,
     val images: List<Image>,
     val name: String,

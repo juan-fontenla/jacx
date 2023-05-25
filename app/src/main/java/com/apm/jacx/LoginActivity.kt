@@ -9,10 +9,17 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.apm.jacx.client.ApiClient
 import com.apm.jacx.internalStorage.AppPreferences
+import com.apm.jacx.spotify.MusicViewModel
+import com.apm.jacx.util.AppVariables
+import com.apm.jacx.util.AppVariables.CLIENT_ID_SPOTIFY
+import com.apm.jacx.util.AppVariables.REDIRECT_URI_SPOTIFY
+import com.apm.jacx.util.AppVariables.REQUEST_CODE_GOOGLE
+import com.apm.jacx.util.AppVariables.REQUEST_CODE_SPOTIFY
 import com.apm.jacx.validations.ValidationUtils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -34,11 +41,7 @@ import java.io.IOException
 
 
 class LoginActivity : AppCompatActivity() {
-    private val REQUEST_CODE_GOOGLE = 45897640
-
-    private val REQUEST_CODE_SPOTIFY = 65290045
-    private val CLIENT_ID_SPOTIFY = "84d6e78f634c4bf593e20545c8768c47"
-    private val REDIRECT_URI_SPOTIFY = "jacx://authcallback"
+    private val viewModel: MusicViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +49,12 @@ class LoginActivity : AppCompatActivity() {
         AppPreferences.setup(applicationContext)
 
         setContentView(R.layout.activity_login)
+
+        // Si ya existe un token no es necesario volver a iniciar sesion
+        if(AppPreferences.TOKEN_BD != null){
+            val intentMain = Intent(this, MainActivity::class.java)
+            startActivity(intentMain)
+        }
 
         val userName = findViewById<TextInputEditText>(R.id.user_name)
         val password = findViewById<TextInputEditText>(R.id.user_password)
@@ -100,13 +109,14 @@ class LoginActivity : AppCompatActivity() {
                 REDIRECT_URI_SPOTIFY
             );
             builder.setShowDialog(false)
-            // Se añaden los siguientes scopes según las funcinalidades que queremos realizar:
-            // https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists
+            // Se añaden los siguientes scopes según las funcinalidades que queremos realizar
             builder.setScopes(
                 arrayOf(
                     "streaming",
                     "playlist-read-private",
-                    "playlist-read-collaborative"
+                    "playlist-read-collaborative",
+                    "user-read-private",
+                    "user-read-email"
                 )
             )
             val request = builder.build()
@@ -143,7 +153,8 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: IOException) {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
-                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG)
+                    .show()
                 val loginBtn = findViewById<Button>(R.id.button_login)
                 loginBtn.visibility = View.VISIBLE
                 val spinner = findViewById<ProgressBar>(R.id.login_spinner)
@@ -152,7 +163,8 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
-                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG)
+                    .show()
                 val loginBtn = findViewById<Button>(R.id.button_login)
                 loginBtn.visibility = View.VISIBLE
                 val spinner = findViewById<ProgressBar>(R.id.login_spinner)
@@ -178,11 +190,13 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: IOException) {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
-                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG)
+                    .show()
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
-                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG)
+                    .show()
 
             } finally {
                 val loginBtn = findViewById<Button>(R.id.button_login)
@@ -192,6 +206,44 @@ class LoginActivity : AppCompatActivity() {
                 resetInputs()
             }
         }
+    }
+
+    private fun checkAccountAndLoginSpotify() {
+        viewModel.getSpotifyUserInformation()
+        viewModel.me.observe(this) {
+            val email = it.email
+            val displayName = it.display_name
+            CoroutineScope(Dispatchers.Main).launch {
+                try {
+                    // Comprobamos si existe el usuario de spotify
+                    val responseGet = ApiClient.get("/user/$displayName-spotify")
+                    if(responseGet.isBlank()) {
+                        // Si no existe el usuario se crea
+                        val jsonBody = JSONObject().apply {
+                            put("username", "$displayName-spotify")
+                            put("password", "O6EEy732JL3oPuBg")
+                            put("firstName", displayName)
+                            put("email", email)
+                        }.toString()
+                        ApiClient.post("/user", jsonBody)
+                        Toast.makeText(this@LoginActivity, "Usuario $displayName-spotify creado!", Toast.LENGTH_LONG).show()
+                    }
+
+                    login("$displayName-spotify", "O6EEy732JL3oPuBg" )
+
+                } catch (e: IOException) {
+                    // Manejar errores de red aquí
+                    Log.d("Error de red", e.toString())
+                    Toast.makeText(this@LoginActivity, "Error de red", Toast.LENGTH_LONG).show()
+                } catch (e: Exception) {
+                    // Manejar otros errores aquí
+                    Log.d("Error en la peticion", e.toString())
+                    Toast.makeText(this@LoginActivity, "Error en la peticion", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+
     }
 
     private fun resetInputs() {
@@ -205,16 +257,16 @@ class LoginActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
 
-        if (requestCode == REQUEST_CODE_SPOTIFY) {
+        if (requestCode == AppVariables.REQUEST_CODE_SPOTIFY) {
             val response = AuthorizationClient.getResponse(resultCode, intent)
             handleSignInResultSpotify(response)
         }
 
-        if (requestCode == REQUEST_CODE_GOOGLE) {
+        if (requestCode == AppVariables.REQUEST_CODE_GOOGLE) {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(intent)
-            handleSignInResultGoogle(task);
+            handleSignInResultGoogle(task)
         }
     }
 
@@ -223,8 +275,11 @@ class LoginActivity : AppCompatActivity() {
             AuthorizationResponse.Type.TOKEN -> {
 
                 // Almacenamos el token en el almacenamiento interno
-                Log.d("token spotify:", response.accessToken);
-                AppPreferences.TOKEN_SPOTIFY = response.accessToken;
+                Log.d("token spotify:", response.accessToken)
+                AppPreferences.TOKEN_SPOTIFY = response.accessToken
+
+                // Creamos la cuenta de usuario si no existe y hacemos login.
+                checkAccountAndLoginSpotify()
 
                 // Redirigimos a la actividad principal.
                 val intentMain = Intent(this, MainActivity::class.java)
@@ -237,7 +292,7 @@ class LoginActivity : AppCompatActivity() {
                     applicationContext,
                     "Error: " + response.error,
                     Toast.LENGTH_LONG
-                ).show();
+                ).show()
             }
 
             else -> {
@@ -245,7 +300,7 @@ class LoginActivity : AppCompatActivity() {
                     applicationContext,
                     "Error desconocido: " + response.error,
                     Toast.LENGTH_LONG
-                ).show();
+                ).show()
             }
         }
     }
@@ -257,10 +312,10 @@ class LoginActivity : AppCompatActivity() {
                 applicationContext,
                 "Sesion iniciada: " + account,
                 Toast.LENGTH_LONG
-            ).show();
+            ).show()
 
             // Almacenamos el token en el almacenamiento interno
-            AppPreferences.TOKEN_GOOGLE = account.idToken;
+            AppPreferences.TOKEN_GOOGLE = account.idToken
 
             // Signed in successfully, show authenticated UI.
             val intentMain = Intent(this, MainActivity::class.java)
@@ -273,7 +328,7 @@ class LoginActivity : AppCompatActivity() {
                 applicationContext,
                 "Error desconocido: " + e.message,
                 Toast.LENGTH_LONG
-            ).show();
+            ).show()
         }
     }
 }
