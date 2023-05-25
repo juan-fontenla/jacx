@@ -24,10 +24,19 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
+            android:name=".NewFriendActivity"
+            android:exported="false" />
+      
+        <activity
+            android:name=".new_friend"
+            android:exported="false" />
+      
+       <activity
             android:name=".PasswordEmailActivity"
             android:exported="false"
             android:label="@string/title_activity_password_email"
             android:theme="@style/Theme.MyApplication" />
+
 
         <service
             android:name=".UserPositionService"

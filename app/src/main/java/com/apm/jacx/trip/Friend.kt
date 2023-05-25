@@ -1,8 +1,11 @@
 package com.apm.jacx.trip
 
-class Friend(val id: Int,
-             val logoPerfil: Int,
-             val userName: String,
-             val email: String) {
-}
+data class Friend(
+    val username: String,
+    val email: String
+)
+
+data class FriendUsername(
+    val usernameFriend: String
+)
 

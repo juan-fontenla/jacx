@@ -1,25 +1,50 @@
 package com.apm.jacx.trip
 
+import android.util.Log
 import com.apm.jacx.R
+import com.apm.jacx.client.ApiClient
+import com.google.android.gms.common.api.Api
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
+import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.io.IOException
 
 class DataSourceTrip {
 
-    fun loadFriendsTrip(): List<Friend> {
-        val list = mutableListOf<Friend>()
-        for (i in 1..50) {
-            val num = list.size;
-            list.add(
-                Friend(num, R.mipmap.ic_launcher_round,"Nombre Completo","xxxx@udc.es")
-            )
+    suspend fun getFriends(): List<Friend> {
+        val listFriends: MutableList<Friend> = mutableListOf()
+        val responseGet = ApiClient.get("/friends")
+        Log.d("GET FRIENDS", responseGet)
+        val friendsArray = Gson().fromJson(responseGet, Array<FriendUsername>::class.java)
+        friendsArray.forEach { el ->
+            val username = el.usernameFriend
+            val userData = ApiClient.get("/user/$username")
+            val jsonData: JsonObject = Gson().fromJson(userData, JsonObject::class.java)
+            val friend =
+                Friend(jsonData.get("username").asString, jsonData.get("email").asString)
+            listFriends.add(friend)
         }
-        return list
+        Log.d("LISTA DE AMIGOS", listFriends.toString())
+        return listFriends.toList()
     }
 
     fun loadMusicTrip(): List<MusicTrip> {
         val list = mutableListOf<MusicTrip>()
         for (i in 1..50) {
             val num: Int = list.size;
-            list.add(MusicTrip(num,"Calm Down","Rema, Selena Gomez", R.drawable.baseline_photo_album_24))
+            list.add(
+                MusicTrip(
+                    num,
+                    "Calm Down",
+                    "Rema, Selena Gomez",
+                    R.drawable.baseline_photo_album_24
+                )
+            )
         }
         return list
     }
@@ -28,7 +53,15 @@ class DataSourceTrip {
         val list = mutableListOf<AlbumTrip>()
         for (i in 1..50) {
             val num: Int = list.size;
-            list.add(AlbumTrip(num,"UserName",2,  R.mipmap.ic_launcher_round, R.drawable.baseline_photo_album_24))
+            list.add(
+                AlbumTrip(
+                    num,
+                    "UserName",
+                    2,
+                    R.mipmap.ic_launcher_round,
+                    R.drawable.baseline_photo_album_24
+                )
+            )
         }
         return list
     }
