@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
     <TextView
-        android:id="@+id/text_name"
+        android:id="@+id/signup_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_login"
+        android:id="@+id/signup_lastname"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -31,10 +31,10 @@
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toBottomOf="@+id/text_name" />
+        app:layout_constraintTop_toBottomOf="@+id/signup_name" />
 
     <TextView
-        android:id="@+id/text_mail"
+        android:id="@+id/profile_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
@@ -43,10 +43,10 @@
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/icon_mail"
-        app:layout_constraintTop_toBottomOf="@+id/text_login" />
+        app:layout_constraintTop_toBottomOf="@+id/signup_lastname" />
 
     <TextView
-        android:id="@+id/text_date"
+        android:id="@+id/profile_birthday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -55,34 +55,52 @@
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/icon_calendar"
-        app:layout_constraintTop_toBottomOf="@+id/text_mail" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_email" />
 
     <TextView
-        android:id="@+id/change_password"
+        android:id="@+id/profile_change_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:text="@string/change_password"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/logout_google"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_date" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_birthday" />
 
-    <Button
-        android:id="@+id/logout"
+    <RelativeLayout
+        android:id="@+id/buttonContainer3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="80dp"
-        android:text="@string/button_logout"
-        android:textColor="@color/black"
+        android:layout_marginBottom="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/profile_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:text="@string/button_logout"
+            android:textColor="@color/black"
+            android:visibility="visible"
+            app:rippleColor="@color/green"
+            app:strokeColor="@color/green" />
+
+        <ProgressBar
+            android:id="@+id/logout_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/icon_mail"
@@ -91,11 +109,11 @@
         android:layout_marginStart="72dp"
         android:layout_marginTop="70dp"
         android:foregroundTint="#000000"
-        android:tint="#000000"
-        app:layout_constraintEnd_toStartOf="@+id/text_mail"
+        app:layout_constraintEnd_toStartOf="@+id/profile_email"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_login"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:layout_constraintTop_toBottomOf="@+id/signup_lastname"
+        app:srcCompat="@android:drawable/ic_dialog_email"
+        app:tint="#000000" />
 
     <ImageView
         android:id="@+id/icon_calendar"
@@ -103,12 +121,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
         android:layout_marginTop="18dp"
-        android:tint="#000000"
-        app:layout_constraintEnd_toStartOf="@+id/text_date"
+        app:layout_constraintEnd_toStartOf="@+id/profile_birthday"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/icon_mail"
-        app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+        app:srcCompat="@android:drawable/ic_menu_my_calendar"
+        app:tint="#000000" />
 
     <ImageView
         android:id="@+id/imageView4"
@@ -116,34 +134,29 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="75dp"
         android:layout_marginTop="72dp"
-        app:layout_constraintEnd_toStartOf="@+id/text_name"
+        app:layout_constraintEnd_toStartOf="@+id/signup_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/profile_foreground" />
 
     <Button
-        android:id="@+id/logout_spotify"
+        android:id="@+id/profile_logout_spotify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/Logout_Spotify"
-        app:layout_constraintBottom_toTopOf="@+id/logout"
+        app:layout_constraintBottom_toTopOf="@+id/buttonContainer3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logout_google" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/logout_google"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/Logout_Google"
-        app:layout_constraintBottom_toTopOf="@+id/logout_spotify"
+        app:layout_constraintBottom_toTopOf="@+id/profile_logout_spotify"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/change_password" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,16 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.apm.jacx.adapter.ItemPlayListAdapter
 import com.apm.jacx.adapter.TrackAdapter
 import com.apm.jacx.spotify.MediaServiceLifecycle
 import com.apm.jacx.spotify.MusicViewModel
-import com.apm.jacx.spotify.PlayList
+import com.apm.jacx.spotify.domain.PlayList
 
 
 class TracksFragment : Fragment() {

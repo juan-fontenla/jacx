@@ -1,7 +1,7 @@
 package com.apm.jacx.spotify.response
 
-import com.apm.jacx.spotify.Track
-import com.apm.jacx.spotify.TrackItem
+import com.apm.jacx.spotify.domain.Track
+import com.apm.jacx.spotify.domain.TrackItem
 
 
 data class PlaylistTracksResponse(
