@@ -13,7 +13,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.apm.jacx.AlbumFragment
 import com.apm.jacx.R
 import com.apm.jacx.client.ApiClient
 import com.apm.jacx.model.Photo
@@ -69,6 +71,13 @@ class ItemPhotoAdapter(
                 }.toString()
 
                 ApiClient.delete("/image", jsonBody)
+
+                val fragmentToLoad = AlbumFragment()
+                val activity = context as AppCompatActivity
+                activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.main_view_container, fragmentToLoad)
+                    .addToBackStack(null)
+                    .commit()
 
             } catch (e: IOException) {
                 Toast.makeText(context, "There was a problem deleting the image", Toast.LENGTH_LONG)
