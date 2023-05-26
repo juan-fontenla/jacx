@@ -26,12 +26,6 @@ Para poder establecer la conexión con una cuenta de google es necesario realiza
 
 2. Seleccionar la clave API para la que deseas establecer una restricción.
 
-3. Cuando registre la aplicación, incluir el nombre del paquete (com.apm.jacx) para que el servicio de cuentas de Google devuelva la llamada a la aplicación después de autorizarla. Además, generar la huella digital de la aplicación, y así, verificar su identidad. Para ello ejecute el siguiente comando en su terminal:
+3. Cuando registre la aplicación, incluir el nombre del paquete (com.apm.jacx) para que el servicio de cuentas de Google devuelva la llamada a la aplicación después de autorizarla. Además, se debe añadir la huella digital del certificado.
 
-```
-keytool -keystore path-to-debug-or-production-keystore -list -v
-```
-
-Una vez ejecutado el comando anterior, debería recibir una huella digital similar a esta:
-
-`SHA1: 7F:B6:32:D8:B5:2A:23:64:11:02:7E:34:BC:D1:A2:C6:1B:B7:A7:E4`
+Una vez realizamos los pasos anteriores, guardamos.
