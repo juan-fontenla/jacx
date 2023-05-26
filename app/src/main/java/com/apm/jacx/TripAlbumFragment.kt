@@ -19,9 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.apm.jacx.adapter.ItemPhotoAdapter
 import com.apm.jacx.client.ApiClient
-import com.apm.jacx.data.Datasource
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -32,36 +30,26 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import android.Manifest
+import android.util.Log
+import com.apm.jacx.trip.DataSourceTrip
+import com.apm.jacx.trip.ItemAlbumTripAdapter
+import com.google.gson.JsonObject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val ARG_PARAM1 = "routeName"
 
-class TripAlbumFragment : Fragment() {
+class TripAlbumFragment() : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var routeName: String? = "Proba"
 
     private val REQUEST_IMAGE = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            routeName = it.getString(ARG_PARAM1)
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            TripAlbumFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 
     override fun onCreateView(
@@ -70,7 +58,7 @@ class TripAlbumFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_trip_album, container, false)
 
-        getAlbumImages()
+        getImagesFromRoute(routeName)
 
         return view
     }
@@ -118,7 +106,7 @@ class TripAlbumFragment : Fragment() {
         val numberOfColumns: Int;
 
         // Initialize data.
-        val myDataset = Datasource().loadPhotos(jsonArray)
+        val myDataset = DataSourceTrip().loadAlbumTrip(jsonArray)
 
         if (myDataset.size == 1){
             numberOfColumns = 1
@@ -127,7 +115,7 @@ class TripAlbumFragment : Fragment() {
         }
 
         recyclerView?.layoutManager = GridLayoutManager(context, numberOfColumns)
-        recyclerView?.adapter = context?.let { ItemPhotoAdapter(it, myDataset) }
+        recyclerView?.adapter = context?.let { ItemAlbumTripAdapter(it, myDataset, routeName!!) }
 
         // Use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -153,8 +141,12 @@ class TripAlbumFragment : Fragment() {
                     put("base64", imageInput)
                 }.toString()
 
-                ApiClient.post("/image", jsonBody)
-                getAlbumImages()
+                val responsePost = ApiClient.post("/image", jsonBody)
+
+                if (!responsePost.isNullOrBlank()){
+                    val jsonObject: JsonObject = Gson().fromJson(responsePost, JsonObject::class.java)
+                    uploadImageInAlbum(jsonObject.get("id").asInt, routeName)
+                }
 
                 spinner.visibility = View.INVISIBLE
 
@@ -176,22 +168,28 @@ class TripAlbumFragment : Fragment() {
         }
     }
 
-    fun getAlbumImages(){
+    fun getImagesFromRoute(rutaName: String?){
         // Petición al backend.
         // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
                 spinner.visibility = View.VISIBLE
-                val responseGet = ApiClient.get("/images")
+                val responseGet = ApiClient.get("/route/$rutaName")
+                if (!responseGet.isNullOrBlank()){
+                    val jsonObject: JsonObject = Gson().fromJson(responseGet, JsonObject::class.java)
 
-                val jsonArray: JsonArray = Gson().fromJson(responseGet, JsonArray::class.java)
-                if (jsonArray.size() == 0) {
-                    Toast.makeText(context, "There are no images", Toast.LENGTH_SHORT).show()
+                    val images = jsonObject.get("images").asJsonArray
+                    if (images.isEmpty) {
+                        Toast.makeText(context, "The are not images in the route yet", Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        loadAlbumFragmentData(images)
+                    }
+                } else {
+                    Toast.makeText(context, "The route does not exist", Toast.LENGTH_SHORT).show()
                 }
-                else {
-                    loadAlbumFragmentData(jsonArray)
-                }
+
 
                 spinner.visibility = View.INVISIBLE
 
@@ -209,5 +207,53 @@ class TripAlbumFragment : Fragment() {
                 spinner.visibility = View.INVISIBLE
             }
         }
+    }
+
+    private fun uploadImageInAlbum(id: Int, rutaName: String?){
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
+                spinner.visibility = View.VISIBLE
+
+                val jsonBody = JSONObject().apply {
+                    put("imageId", id)
+                    put("routeName", rutaName)
+                }.toString()
+
+                Log.d("routeName","O de sempre")
+
+                val responsePost = ApiClient.post("/route/image", jsonBody)
+                Log.d("response", responsePost)
+
+                getImagesFromRoute(rutaName)
+                spinner.visibility = View.INVISIBLE
+
+            } catch (e: IOException) {
+                // Manejar errores de red aquí
+                Toast.makeText(context, "There was a problem uploading the image", Toast.LENGTH_LONG)
+                    .show()
+                val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
+                spinner.visibility = View.INVISIBLE
+            } catch (e: Exception) {
+                // Manejar otros errores aquí
+                Toast.makeText(context, "There was a problem uploading the image", Toast.LENGTH_LONG)
+                    .show()
+                val button = requireView().findViewById<FloatingActionButton>(R.id.add_photo_button)
+                button.visibility = View.VISIBLE
+                val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
+                spinner.visibility = View.INVISIBLE
+            }
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(param1: String) =
+            TripAlbumFragment()
+                .apply {
+                    arguments = Bundle().apply {
+                        putString(ARG_PARAM1, param1)
+                }
+            }
     }
 }

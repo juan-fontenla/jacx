@@ -7,6 +7,7 @@ import com.apm.jacx.client.ApiClient
 import com.apm.jacx.spotify.MusicViewModel
 import com.google.android.gms.common.api.Api
 import com.apm.jacx.R
+import com.apm.jacx.model.Photo
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.reflect.TypeToken
@@ -21,20 +22,11 @@ class DataSourceTrip {
         return gson.fromJson(jsonArray, friendsList)
     }
 
-    fun loadAlbumTrip(): List<AlbumTrip> {
-        val list = mutableListOf<AlbumTrip>()
-        for (i in 1..50) {
-            val num: Int = list.size;
-            list.add(
-                AlbumTrip(
-                    num,
-                    "UserName",
-                    2,
-                    R.mipmap.ic_launcher_round,
-                    R.drawable.baseline_photo_album_24
-                )
-            )
-        }
-        return list
+    fun loadAlbumTrip(jsonArray: JsonArray): List<Photo> {
+
+        val gson = Gson()
+        val albumList = object : TypeToken<List<Photo>>() {}.type
+
+        return gson.fromJson(jsonArray, albumList)
     }
 }
