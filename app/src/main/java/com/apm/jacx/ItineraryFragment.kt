@@ -65,6 +65,7 @@ class ItineraryFragment : Fragment() {
 
         myViewModel = ViewModelProvider(requireActivity())[ActivityViewModel::class.java]
         waypoints = myViewModel.apiResult.value?.waypoints!!
+        waypoints.sortBy { it.orderPosition }
         adapter = ItemWaypointAdapter(requireContext(), waypoints)
         recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_trip_waypoints)
         recyclerView!!.adapter = adapter

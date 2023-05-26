@@ -11,8 +11,11 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.apm.jacx.R
+import com.apm.jacx.client.ApiClient
 import com.apm.jacx.model.Waypoint
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 import java.util.*
 
 class ItemWaypointAdapter(
@@ -23,7 +26,6 @@ class ItemWaypointAdapter(
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view), ItemTouchHelperViewHolder {
         val cardWaypoint: CardView  = view.findViewById(R.id.card_waypoint)
         val textWaypoint: TextView = view.findViewById(R.id.waypoint_name)
-        val waypointOrder: TextView = view.findViewById(R.id.waypoint_order)
         val image: ImageView = view.findViewById(R.id.waypoint_image)
 
         override fun onItemSelected() {
@@ -48,7 +50,6 @@ class ItemWaypointAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
         holder.textWaypoint.text = item.name
-        holder.waypointOrder.text = item.orderPosition.toString()
         Picasso.get().load(item.url).into(holder.image)
     }
 
@@ -57,8 +58,12 @@ class ItemWaypointAdapter(
         notifyItemMoved(fromPosition, toPosition)
     }
 
-    override fun onItemSwiped(position: Int) {
+    override fun onItemSwiped(position: Int) = runBlocking {
+        val id = dataset[position].id
         dataset.removeAt(position)
+        val body = JSONObject()
+        body.put("id", id)
+        ApiClient.delete("/waypoint", body.toString())
         notifyItemRemoved(position)
     }
 }
