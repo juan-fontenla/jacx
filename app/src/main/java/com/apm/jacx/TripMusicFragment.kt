@@ -2,6 +2,7 @@ package com.apm.jacx
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -39,7 +40,8 @@ private const val ARG_PARAM1 = "routeName"
 
 class TripMusicFragment : Fragment() {
 
-    private var routeName: String? = "rutaXaime"
+    private var routeName: String? = null
+
     private val viewModel: MusicViewModel by viewModels()
 
     private lateinit var firstSpinner: Spinner
@@ -122,6 +124,9 @@ class TripMusicFragment : Fragment() {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
                 Toast.makeText(requireContext(), "Error de red", Toast.LENGTH_LONG).show()
+
+                val intent = Intent(context, LoginActivity::class.java)
+                startActivity(intent)
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
@@ -253,6 +258,9 @@ class TripMusicFragment : Fragment() {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
                 Toast.makeText(context, "Error de red", Toast.LENGTH_LONG).show()
+
+                val intent = Intent(context, LoginActivity::class.java)
+                startActivity(intent)
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())

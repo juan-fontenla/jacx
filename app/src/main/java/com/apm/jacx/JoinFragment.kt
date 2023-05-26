@@ -1,6 +1,7 @@
 package com.apm.jacx
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -149,6 +150,9 @@ class JoinFragment : Fragment() {
                     // Manejar errores de red aquí
                     Log.d("Error de red", e.toString())
                     Toast.makeText(context, "Datos de acceso incorrectos", Toast.LENGTH_LONG).show()
+
+                    val intent = Intent(context, LoginActivity::class.java)
+                    startActivity(intent)
                 } catch (e: Exception) {
                     // Manejar otros errores aquí
                     Log.d("Error en la peticion", e.toString())

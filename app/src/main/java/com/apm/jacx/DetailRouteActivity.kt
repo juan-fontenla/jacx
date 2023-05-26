@@ -1,8 +1,6 @@
 package com.apm.jacx
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
 import android.location.Location
@@ -12,15 +10,11 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
 import android.util.Log
-import android.widget.Button
-import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.apm.jacx.view_model.ActivityViewModel
-import com.google.android.gms.location.*
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapsSdkInitializedCallback
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -34,6 +28,7 @@ class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
 
     // Route data related
     private var routeId : Int = 0
+    private var routeName: String = ""
     private lateinit var myViewModel: ActivityViewModel
     // Geolocation related
     private var navigation = false
@@ -63,6 +58,8 @@ class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
         setContentView(R.layout.activity_detail_route)
 
         routeId = intent.getIntExtra("routeId", 0)
+        routeName = intent.getStringExtra("routeName")!!
+
         //Init view model
         myViewModel = ViewModelProvider(this)[ActivityViewModel::class.java]
 
@@ -242,10 +239,13 @@ class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
                 selectedFragment = TripFriendFragment()
             }
             R.id.music_trip -> {
-                selectedFragment = TripMusicFragment()
+                selectedFragment = TripMusicFragment.newInstance(routeName)
             }
             R.id.album_trip -> {
-                selectedFragment = TripAlbumFragment()
+                selectedFragment = TripAlbumFragment.newInstance(routeName)
+            }
+            R.id.QR_Trip -> {
+                selectedFragment = QRFragment.newInstance(routeName)
             }
 
         }
