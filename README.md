@@ -22,10 +22,18 @@ Copia la huella digital y el nombre del paquete e ingrésalo en el [panel de con
 
 Para poder establecer la conexión con una cuenta de google es necesario realizar los siguientes pasos:
 
-1. Crear un nuevo proyecto **jacx** para especificar las [credencias](https://console.cloud.google.com/project/_/google/maps-apis/credentials?utm_source=Docs_Credentials&hl=es-419&_gl=1*1txe4fw*_ga*MjM3MDU4NTIyLjE2Nzk0NDA4Njk.*_ga_NRWSTWS78N*MTY4NTEyMzQyMi4xLjEuMTY4NTEyMzYxOS4wLjAuMA..)
+1. Iniciar sesión en google cloud [enlace](https://console.cloud.google.com/welcome?_ga=2.209109969.-2128765216.1681486254&_gac=1.195838686.1685131589.CjwKCAjwscGjBhAXEiwAswQqNK2stkv5JqBgcN8E4wEKR3Q7zaihHnrQp2gpnt9YZFQvqyOYv_GsIBoCaJoQAvD_BwE&hl=es&authuser=1&project=jacx-apm) con la cuenta del equipo. Ver que está JACX como proyecto seleccionado.
 
-2. Seleccionar la clave API para la que deseas establecer una restricción.
+2. Seleccionar la clave API para la que deseas establecer una restricción, en este caso OAuth 2.0. Se podría modificar la existente o crear una nueva.
 
-3. Cuando registre la aplicación, incluir el nombre del paquete (com.apm.jacx) para que el servicio de cuentas de Google devuelva la llamada a la aplicación después de autorizarla. Además, se debe añadir la huella digital del certificado.
+3. Si se modifica la existente, solo sería necesario actualizar la huella digital del certificado. En otro caso, cuando registre la aplicación, incluir el nombre del paquete (com.apm.jacx) para que el servicio de cuentas de Google devuelva la llamada a la aplicación después de autorizarla. Además, se debe añadir la huella digital del certificado. Para generar la huella es necesario realizar lo mismo que para spotify:
+
+```
+keytool -alias androiddebugkey -keystore %HOMEPATH%\.android\debug.keystore -list -v
+```
+
+Una vez ejecutado el comando anterior, debería recibir una huella digital similar a esta:
+
+`SHA1: E7:47:B5:45:71:A9:B4:47:EA:AD:21:D7:7C:A2:8D:B4:89:1C:BF:75`
 
 Una vez realizamos los pasos anteriores, guardamos.
