@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/frameLayoutFriend"
+    android:windowSoftInputMode="adjustNothing"
     tools:context=".TripFriendFragment">
 
     <TextView
@@ -12,7 +13,7 @@
         android:layout_width="68dp"
         android:layout_height="27dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="250dp"
         android:layout_marginBottom="8dp"
         android:text="@string/tV_lista_amigos_trip_friend"
@@ -26,10 +27,11 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nombre_friend"
-        android:layout_width="144dp"
+        android:layout_width="160dp"
         android:layout_height="76dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
+        android:windowSoftInputMode="adjustResize|stateAlwaysVisible"
         app:errorEnabled="true"
         app:layout_constraintBottom_toTopOf="@+id/list_friends"
         app:layout_constraintEnd_toStartOf="@+id/button_new_friend"
@@ -46,13 +48,14 @@
 
     <Button
         android:id="@+id/button_new_friend"
-        android:layout_width="88dp"
-        android:layout_height="48dp"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:backgroundTint="@color/green"
         android:text="@string/save_friend"
         android:textColor="@color/black"
+        android:windowSoftInputMode="stateAlwaysVisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.848"
         app:layout_constraintStart_toEndOf="@+id/nombre_friend"
@@ -67,6 +70,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:fitsSystemWindows="false"
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"

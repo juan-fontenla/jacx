@@ -61,9 +61,6 @@ class MainActivity : AppCompatActivity() {
             R.id.album -> {
                 selectedFragment = AlbumFragment()
             }
-            R.id.explore -> {
-                selectedFragment = ExploreFragment()
-            }
             R.id.music -> {
                 selectedFragment = MusicFragment()
             }
