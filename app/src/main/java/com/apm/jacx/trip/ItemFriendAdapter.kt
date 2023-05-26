@@ -45,8 +45,6 @@ class ItemFriendAdapter(
 
         holder.userNameView.setOnClickListener{
             showDialogDeleteFriend(item.username)
-            Toast.makeText(context, "userName"+item.username, Toast.LENGTH_SHORT).show();
-
         }
     }
 

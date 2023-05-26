@@ -10,6 +10,8 @@ import com.apm.jacx.spotify.domain.PlayList
 import com.apm.jacx.spotify.domain.TrackItem
 import com.apm.jacx.spotify.interceptor.AuthorizationInterceptor
 import com.apm.jacx.spotify.response.MeResponse
+import com.apm.jacx.trip.MusicTrip
+import com.apm.jacx.trip.PlaylistID
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -26,6 +28,7 @@ class MusicViewModel : ViewModel() {
     val tracks = MutableLiveData<List<TrackItem>>()
     val playList = MutableLiveData<List<PlayList>>()
     val me = MutableLiveData<MeResponse>()
+    val listTracksTrip = MutableLiveData<List<MusicTrip>>()
 
     private var spotifyApi: SpotifyApi;
 
@@ -79,6 +82,24 @@ class MusicViewModel : ViewModel() {
             } catch (e: IOException) {
                 Log.d("Spotify API", "No hay conexión a internet")
             }
+        }
+    }
+
+    fun initTracksByArrayIds(spotifyIDs: Array<PlaylistID>, rutaName: String) {
+        viewModelScope.launch {
+            try {
+                val listTracks = mutableListOf<MusicTrip>()
+                spotifyIDs.forEach { el ->
+                    val song = spotifyApi.getTracksById(el.spotifyId).getOrThrow()
+                    listTracks.add(MusicTrip(el.spotifyId, song.name, song.artists[0].name, rutaName))
+                }
+                listTracksTrip.value = listTracks
+            } catch (e: HttpException) {
+                Log.d("Spotify API", "HTTP fallo")
+            } catch (e: IOException) {
+                Log.d("Spotify API", "No hay conexión a internet")
+            }
+
         }
     }
 

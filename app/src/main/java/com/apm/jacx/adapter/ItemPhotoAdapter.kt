@@ -49,7 +49,7 @@ class ItemPhotoAdapter(
         holder.photoView.setImageBitmap(base64ToBitmap(item.base64))
 
         holder.photoView.setOnClickListener {
-            showDeleteConfirmationDialog(item.id, it)
+            showDeleteConfirmationDialog(item.id)
         }
     }
 
@@ -58,13 +58,11 @@ class ItemPhotoAdapter(
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
     }
 
-    private fun deleteImage(id: Int, view: View){
+    private fun deleteImage(id: Int){
         // Petición al backend.
         // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                val spinner = view.findViewById<ProgressBar>(R.id.progressBar)
-                spinner.visibility = View.VISIBLE
 
                 val jsonBody = JSONObject().apply {
                     put("id", id)
@@ -72,13 +70,9 @@ class ItemPhotoAdapter(
 
                 ApiClient.delete("/image", jsonBody)
 
-                spinner.visibility = View.INVISIBLE
-
             } catch (e: IOException) {
                 Toast.makeText(context, "There was a problem deleting the image", Toast.LENGTH_LONG)
                     .show()
-                val spinner = view.findViewById<ProgressBar>(R.id.progressBar)
-                spinner.visibility = View.INVISIBLE
             } catch (e: Exception) {
                 Toast.makeText(context, "There was a problem deleting the image", Toast.LENGTH_LONG)
                     .show()
@@ -86,13 +80,13 @@ class ItemPhotoAdapter(
         }
     }
 
-    private fun showDeleteConfirmationDialog(id: Int, view: View) {
+    private fun showDeleteConfirmationDialog(id: Int) {
         val alertDialogBuilder = AlertDialog.Builder(context)
         alertDialogBuilder.setTitle("Delete Image")
         alertDialogBuilder.setMessage("¿Are you sure you want to delete the image?")
         alertDialogBuilder.setPositiveButton("Yes") { _: DialogInterface, _: Int ->
             // Acción a realizar si se confirma la eliminación
-            deleteImage(id, view)
+            deleteImage(id)
         }
         alertDialogBuilder.setNegativeButton("No", null)
         val alertDialog = alertDialogBuilder.create()

@@ -159,13 +159,13 @@ class ProfileFragment : Fragment() {
                 val spinner = view?.findViewById<ProgressBar>(R.id.logout_spinner)
                 spinner?.visibility = View.VISIBLE
 
-                val jsonBody = JSONObject().apply {}.toString()
-                val responsePost = ApiClient.post("/logout", jsonBody)
-                Gson().fromJson(responsePost, JsonObject::class.java)
-
                 // Eliminamos el token del almacenamiento interno y sus datos asociados
                 AppPreferences.USER_INFORMATION = null
                 AppPreferences.TOKEN_BD = null
+
+                val jsonBody = JSONObject().apply {}.toString()
+                val responsePost = ApiClient.post("/logout", jsonBody)
+                Gson().fromJson(responsePost, JsonObject::class.java)
 
                 btn?.visibility = View.VISIBLE
                 spinner?.visibility = View.INVISIBLE
