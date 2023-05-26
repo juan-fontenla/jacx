@@ -1,8 +1,10 @@
 package com.apm.jacx.trip
 
 import android.util.Log
+import androidx.fragment.app.viewModels
 import com.apm.jacx.R
 import com.apm.jacx.client.ApiClient
+import com.apm.jacx.spotify.MusicViewModel
 import com.google.android.gms.common.api.Api
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -31,22 +33,6 @@ class DataSourceTrip {
         }
         Log.d("LISTA DE AMIGOS", listFriends.toString())
         return listFriends.toList()
-    }
-
-    fun loadMusicTrip(): List<MusicTrip> {
-        val list = mutableListOf<MusicTrip>()
-        for (i in 1..50) {
-            val num: Int = list.size;
-            list.add(
-                MusicTrip(
-                    num,
-                    "Calm Down",
-                    "Rema, Selena Gomez",
-                    R.drawable.baseline_photo_album_24
-                )
-            )
-        }
-        return list
     }
 
     fun loadAlbumTrip(): List<AlbumTrip> {

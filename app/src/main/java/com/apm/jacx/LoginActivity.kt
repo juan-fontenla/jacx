@@ -51,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         // Si ya existe un token no es necesario volver a iniciar sesion
-        if(AppPreferences.TOKEN_BD != null){
+        if(AppPreferences.TOKEN_BD != null && AppPreferences.TOKEN_BD != ""){
             val intentMain = Intent(this, MainActivity::class.java)
             startActivity(intentMain)
         }
