@@ -108,13 +108,6 @@ class TripAlbumFragment() : Fragment() {
         // Initialize data.
         val myDataset = DataSourceTrip().loadAlbumTrip(jsonArray)
 
-        if (myDataset.size == 1){
-            numberOfColumns = 1
-        } else {
-            numberOfColumns = 2
-        }
-
-        recyclerView?.layoutManager = GridLayoutManager(context, numberOfColumns)
         recyclerView?.adapter = context?.let { ItemAlbumTripAdapter(it, myDataset, routeName!!) }
 
         // Use this setting to improve performance if you know that changes
@@ -189,7 +182,6 @@ class TripAlbumFragment() : Fragment() {
                 } else {
                     Toast.makeText(context, "The route does not exist", Toast.LENGTH_SHORT).show()
                 }
-
 
                 spinner.visibility = View.INVISIBLE
 
