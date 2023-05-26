@@ -12,6 +12,11 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
+import com.apm.jacx.adapter.ItemTripAdapter
+import com.apm.jacx.adapter.ItemWaypointAdapter
+import com.apm.jacx.view_model.ActivityViewModel
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -29,6 +34,7 @@ private const val ARG_PARAM2 = "param2"
 class ItineraryFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var myViewModel: ActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +54,16 @@ class ItineraryFragment : Fragment() {
         // Init Places SDK
         Places.initialize(requireContext(), getString(R.string.key))
 
-        createNewRoute(viewFragment)
-        deleteStopRoute(viewFragment)
+        myViewModel = ViewModelProvider(this)[ActivityViewModel::class.java]
+
+        val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_trip_waypoints)
+        recyclerView?.adapter = context?.let { myViewModel.apiResult.value?.let { it1 -> ItemWaypointAdapter(it, it1.waypoints) } }
+
+        myViewModel.apiResult.observe(viewLifecycleOwner) { result ->
+            val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_trip_waypoints)
+            recyclerView?.adapter = context?.let { ItemWaypointAdapter(it, result.waypoints) }
+        }
+
         addWaypoint(viewFragment)
         saveRoute(viewFragment)
 
@@ -65,29 +79,6 @@ class ItineraryFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
-    }
-
-    private fun createNewRoute(viewFragment: View) {
-
-        val btnStartRoute : Button = viewFragment.findViewById(R.id.btn_start_route_trip_friend)
-        btnStartRoute.setOnClickListener {
-            Toast.makeText(activity, "Iniciar ruta", Toast.LENGTH_SHORT).show();
-        }
-
-        val btnFinishRoute : Button = viewFragment.findViewById(R.id.btn_finish_route_trip_friend2)
-        btnFinishRoute.setOnClickListener {
-            Toast.makeText(activity, "Finalizar ruta", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    private fun deleteStopRoute(viewFragment: View) {
-
-        val btnDeleteStop : ImageButton = viewFragment.findViewById(R.id.iB_delete_stop_present)
-        btnDeleteStop.setOnClickListener {
-            Toast.makeText(activity, "Eliminar parada", Toast.LENGTH_SHORT).show();
-        }
-
     }
 
     private fun addWaypoint(viewFragment: View) {
