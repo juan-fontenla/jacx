@@ -160,6 +160,9 @@ class LoginActivity : AppCompatActivity() {
                 val spinner = findViewById<ProgressBar>(R.id.login_spinner)
                 spinner.visibility = View.INVISIBLE
                 resetInputs()
+
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(intent)
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
@@ -192,6 +195,9 @@ class LoginActivity : AppCompatActivity() {
                 Log.d("Error de red", e.toString())
                 Toast.makeText(this@LoginActivity, "Datos de acceso incorrectos", Toast.LENGTH_LONG)
                     .show()
+
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(intent)
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())
@@ -235,6 +241,9 @@ class LoginActivity : AppCompatActivity() {
                     // Manejar errores de red aquí
                     Log.d("Error de red", e.toString())
                     Toast.makeText(this@LoginActivity, "Error de red", Toast.LENGTH_LONG).show()
+
+                    val intent = Intent(applicationContext, LoginActivity::class.java)
+                    startActivity(intent)
                 } catch (e: Exception) {
                     // Manejar otros errores aquí
                     Log.d("Error en la peticion", e.toString())
@@ -284,6 +293,9 @@ class LoginActivity : AppCompatActivity() {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
                 Toast.makeText(this@LoginActivity, "Error de red", Toast.LENGTH_LONG).show()
+
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(intent)
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())

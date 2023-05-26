@@ -176,6 +176,9 @@ class ProfileFragment : Fragment() {
                 // Manejar errores de red aquí
                 Log.d("Error de red", e.toString())
                 Toast.makeText(context, "Error de red", Toast.LENGTH_LONG).show()
+
+                val intent = Intent(context, LoginActivity::class.java)
+                startActivity(intent)
             } catch (e: Exception) {
                 // Manejar otros errores aquí
                 Log.d("Error en la peticion", e.toString())

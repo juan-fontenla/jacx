@@ -104,7 +104,7 @@ public class AlbumFragment : Fragment() {
                 )
 
             } else {
-                Toast.makeText(activity, "Permission denied", Toast.LENGTH_LONG)
+                Toast.makeText(activity, "Permission denied", Toast.LENGTH_LONG).show()
             }
 
         val button = requireView().findViewById<FloatingActionButton>(R.id.add_photo_button)
