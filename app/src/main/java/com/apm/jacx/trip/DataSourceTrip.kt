@@ -8,16 +8,17 @@ import com.apm.jacx.spotify.MusicViewModel
 import com.google.android.gms.common.api.Api
 import com.apm.jacx.R
 import com.apm.jacx.model.Photo
+import com.apm.jacx.model.User
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.reflect.TypeToken
 
 class DataSourceTrip {
 
-    fun getFriends(jsonArray:JsonArray): List<FriendUsername> {
+    fun getFriends(jsonArray:JsonArray): List<User> {
 
         val gson = Gson()
-        val friendsList = object : TypeToken<List<FriendUsername>>() {}.type
+        val friendsList = object : TypeToken<List<User>>() {}.type
 
         return gson.fromJson(jsonArray, friendsList)
     }

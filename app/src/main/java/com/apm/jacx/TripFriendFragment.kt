@@ -31,22 +31,32 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.IOException
 
+private const val ARG_PARAM1 = "routeName"
+
 class TripFriendFragment : Fragment() {
 
+    private var routeName: String? = "Proba"
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            routeName = it.getString(ARG_PARAM1)
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_trip_friend, container, false)
 
-        getFriends()
+        getFriendsFromRoute(routeName);
 
         val username = view.findViewById<TextInputEditText>(R.id.username_friend)
         val newUser = view.findViewById<Button>(R.id.button_new_friend)
 
         newUser.setOnClickListener {
             if (username != null){
-                createNewFriend(username.text)
+                createNewFriend(username.text, routeName)
             }
             else {
                 Toast.makeText(context, "Debe introducir el nombre de un amigo", Toast.LENGTH_SHORT).show()
@@ -55,29 +65,16 @@ class TripFriendFragment : Fragment() {
         return view
     }
 
-    private suspend fun loadFriendFragmentData(jsonArray: JsonArray) {
+    private fun loadFriendFragmentData(jsonArray: JsonArray) {
         val recyclerView = view?.findViewById<RecyclerView>(R.id.list_friends)
 
         val myDataset = DataSourceTrip().getFriends(jsonArray)
-        val listFriends: MutableList<Friend> = mutableListOf()
-        myDataset.forEach { friend ->
-            val userData = ApiClient.get("/user/${friend.usernameFriend}")
-            val jsonData: JsonObject = Gson().fromJson(userData, JsonObject::class.java)
-            if (jsonData.isJsonNull){
-                Toast.makeText(context, "No existe ese usuario", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                val friend = Friend(jsonData.get("username").asString, jsonData.get("email").asString)
-                listFriends.add(friend)
-            }
-        }
 
-        Log.d("dataset", myDataset.toString())
-        recyclerView?.adapter = context?.let { ItemFriendAdapter(it, listFriends) }
+        recyclerView?.adapter = context?.let { ItemFriendAdapter(it, myDataset, routeName!!) }
         Toast.makeText(context, "Datos de amigos cargados", Toast.LENGTH_SHORT).show();
     }
 
-    private fun createNewFriend(username: CharSequence?) {
+    private fun createNewFriend(username: CharSequence?, rutaName: String?) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
@@ -85,11 +82,12 @@ class TripFriendFragment : Fragment() {
 
                 val jsonBody = JSONObject().apply {
                     put("username", username)
+                    put("routeName", rutaName)
                 }.toString()
 
-                ApiClient.post("/friend", jsonBody)
+                ApiClient.post("/route/user", jsonBody)
 
-                getFriends()
+                getFriendsFromRoute(rutaName)
 
                 spinner.visibility = View.INVISIBLE
             } catch (e: IOException) {
@@ -106,22 +104,26 @@ class TripFriendFragment : Fragment() {
         }
     }
 
-    private fun getFriends(){
+    private fun getFriendsFromRoute(rutaName: String?){
         // Petición al backend.
         // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
                 spinner.visibility = View.VISIBLE
-                val responseGet = ApiClient.get("/friends")
+                val responseGet = ApiClient.get("/route/$rutaName")
+                if (!responseGet.isNullOrBlank()){
+                    val jsonObject: JsonObject = Gson().fromJson(responseGet, JsonObject::class.java)
 
-                val jsonArray: JsonArray = Gson().fromJson(responseGet, JsonArray::class.java)
-
-                if (jsonArray.size() == 0) {
-                    Toast.makeText(context, "There are no friends", Toast.LENGTH_SHORT).show()
-                }
-                else {
-                    loadFriendFragmentData(jsonArray)
+                    val users = jsonObject.get("users").asJsonArray
+                    if (users.isEmpty) {
+                        Toast.makeText(context, "The are not users in the route yet", Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        loadFriendFragmentData(users)
+                    }
+                } else {
+                    Toast.makeText(context, "The route does not exist", Toast.LENGTH_SHORT).show()
                 }
 
                 spinner.visibility = View.INVISIBLE

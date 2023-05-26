@@ -9,9 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.apm.jacx.AlbumFragment
 import com.apm.jacx.R
+import com.apm.jacx.TripFriendFragment
 import com.apm.jacx.client.ApiClient
+import com.apm.jacx.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +24,8 @@ import java.io.IOException
 
 class ItemFriendAdapter(
     private val context: Context,
-    private val dataset: List<Friend>
+    private val dataset: List<User>,
+    private val routeName: String
 ) : RecyclerView.Adapter<ItemFriendAdapter.ItemViewHolder>() {
 
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -40,7 +45,7 @@ class ItemFriendAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
 
-        holder.userNameView.text = item.username
+        holder.userNameView.text = item.firstName + " " + item.lastName + " - " + item.username
         holder.emailView.text = item.email
 
         holder.userNameView.setOnClickListener{
@@ -77,18 +82,24 @@ class ItemFriendAdapter(
             try {
                 val jsonBody = JSONObject().apply {
                     put("username", username)
+                    put("routeName", routeName)
                 }.toString()
 
-                val responsePost = ApiClient.delete("/friend", jsonBody)
-                Log.d("DELETE FRIENDS", responsePost)
+                ApiClient.delete("/route/user", jsonBody)
 
+                val fragmentToLoad = TripFriendFragment()
+                val activity = context as AppCompatActivity
+                activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.main_view_container_trip, fragmentToLoad)
+                    .addToBackStack(null)
+                    .commit()
 
             } catch (e: IOException) {
-                // Manejar errores de red aquí
-                Log.d("Error de red", e.toString())
+                Toast.makeText(context, "There was a problem deleting the user", Toast.LENGTH_LONG)
+                    .show()
             } catch (e: Exception) {
-                // Manejar otros errores aquí
-                Log.d("Error en la peticion", e.toString())
+                Toast.makeText(context, "There was a problem deleting the user", Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }
