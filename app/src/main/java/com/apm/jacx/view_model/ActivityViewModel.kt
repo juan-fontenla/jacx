@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.apm.jacx.client.ApiClient
 import com.apm.jacx.model.Trip
+import com.apm.jacx.model.Waypoint
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
@@ -16,5 +17,9 @@ class ActivityViewModel: ViewModel() {
         // Realiza la petición a la API y obtén el resultado
         val result = JSONObject(ApiClient.get("/route/id/${id}"))
         _apiResult.value = Trip(result)
+    }
+
+    fun addWaypoint(waypoint: Waypoint) {
+        _apiResult.value?.waypoints?.add(waypoint)
     }
 }
