@@ -41,7 +41,7 @@ private const val ARG_PARAM1 = "routeName"
 
 class TripAlbumFragment() : Fragment() {
     // TODO: Rename and change types of parameters
-    private var routeName: String? = "Proba"
+    private var routeName: String? = null
 
     private val REQUEST_IMAGE = 100
 
@@ -82,7 +82,8 @@ class TripAlbumFragment() : Fragment() {
             Toast.makeText(activity, "Permission denied", Toast.LENGTH_LONG)
         }
 
-        val button = requireView().findViewById<FloatingActionButton>(R.id.btn_add_new_post_detail_trip_album)
+        val button =
+            requireView().findViewById<FloatingActionButton>(R.id.btn_add_new_post_detail_trip_album)
         button.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(intent, REQUEST_IMAGE)
@@ -94,7 +95,8 @@ class TripAlbumFragment() : Fragment() {
 
         if (requestCode == REQUEST_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             val imageUri: Uri? = data.data
-            val bitmap = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(imageUri!!))
+            val bitmap =
+                BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(imageUri!!))
 
             val imageToBase64 = bitmapToBase64(bitmap)
             uploadImage(imageToBase64)
@@ -136,8 +138,9 @@ class TripAlbumFragment() : Fragment() {
 
                 val responsePost = ApiClient.post("/image", jsonBody)
 
-                if (!responsePost.isNullOrBlank()){
-                    val jsonObject: JsonObject = Gson().fromJson(responsePost, JsonObject::class.java)
+                if (!responsePost.isNullOrBlank()) {
+                    val jsonObject: JsonObject =
+                        Gson().fromJson(responsePost, JsonObject::class.java)
                     uploadImageInAlbum(jsonObject.get("id").asInt, routeName)
                 }
 
@@ -145,13 +148,21 @@ class TripAlbumFragment() : Fragment() {
 
             } catch (e: IOException) {
                 // Manejar errores de red aquí
-                Toast.makeText(context, "There was a problem uploading the image", Toast.LENGTH_LONG)
+                Toast.makeText(
+                    context,
+                    "There was a problem uploading the image",
+                    Toast.LENGTH_LONG
+                )
                     .show()
                 val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
                 spinner.visibility = View.INVISIBLE
             } catch (e: Exception) {
                 // Manejar otros errores aquí
-                Toast.makeText(context, "There was a problem uploading the image", Toast.LENGTH_LONG)
+                Toast.makeText(
+                    context,
+                    "There was a problem uploading the image",
+                    Toast.LENGTH_LONG
+                )
                     .show()
                 val button = requireView().findViewById<FloatingActionButton>(R.id.add_photo_button)
                 button.visibility = View.VISIBLE
@@ -161,7 +172,7 @@ class TripAlbumFragment() : Fragment() {
         }
     }
 
-    fun getImagesFromRoute(rutaName: String?){
+    fun getImagesFromRoute(rutaName: String?) {
         // Petición al backend.
         // Se debe utilizar las corrutinas de esta forma. No mediante GlobalScope.
         CoroutineScope(Dispatchers.Main).launch {
@@ -169,14 +180,18 @@ class TripAlbumFragment() : Fragment() {
                 val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
                 spinner.visibility = View.VISIBLE
                 val responseGet = ApiClient.get("/route/$rutaName")
-                if (!responseGet.isNullOrBlank()){
-                    val jsonObject: JsonObject = Gson().fromJson(responseGet, JsonObject::class.java)
+                if (!responseGet.isNullOrBlank()) {
+                    val jsonObject: JsonObject =
+                        Gson().fromJson(responseGet, JsonObject::class.java)
 
                     val images = jsonObject.get("images").asJsonArray
                     if (images.isEmpty) {
-                        Toast.makeText(context, "The are not images in the route yet", Toast.LENGTH_SHORT).show()
-                    }
-                    else {
+                        Toast.makeText(
+                            context,
+                            "The are not images in the route yet",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
                         loadAlbumFragmentData(images)
                     }
                 } else {
@@ -201,7 +216,7 @@ class TripAlbumFragment() : Fragment() {
         }
     }
 
-    private fun uploadImageInAlbum(id: Int, rutaName: String?){
+    private fun uploadImageInAlbum(id: Int, rutaName: String?) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
@@ -212,7 +227,7 @@ class TripAlbumFragment() : Fragment() {
                     put("routeName", rutaName)
                 }.toString()
 
-                Log.d("routeName","O de sempre")
+                Log.d("routeName", "O de sempre")
 
                 val responsePost = ApiClient.post("/route/image", jsonBody)
                 Log.d("response", responsePost)
@@ -222,13 +237,21 @@ class TripAlbumFragment() : Fragment() {
 
             } catch (e: IOException) {
                 // Manejar errores de red aquí
-                Toast.makeText(context, "There was a problem uploading the image", Toast.LENGTH_LONG)
+                Toast.makeText(
+                    context,
+                    "There was a problem uploading the image",
+                    Toast.LENGTH_LONG
+                )
                     .show()
                 val spinner = requireView().findViewById<ProgressBar>(R.id.progressBar)
                 spinner.visibility = View.INVISIBLE
             } catch (e: Exception) {
                 // Manejar otros errores aquí
-                Toast.makeText(context, "There was a problem uploading the image", Toast.LENGTH_LONG)
+                Toast.makeText(
+                    context,
+                    "There was a problem uploading the image",
+                    Toast.LENGTH_LONG
+                )
                     .show()
                 val button = requireView().findViewById<FloatingActionButton>(R.id.add_photo_button)
                 button.visibility = View.VISIBLE
@@ -245,7 +268,7 @@ class TripAlbumFragment() : Fragment() {
                 .apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
+                    }
                 }
-            }
     }
 }

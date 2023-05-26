@@ -43,25 +43,25 @@ class TripsFragment : Fragment() {
         }
         setHasOptionsMenu(true);
     }
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_trips, container, false)
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        fetchTripsData(view)
 
         val joinButton = getView()?.findViewById<FloatingActionButton>(R.id.joinButton)
         joinButton!!.setOnClickListener{ onJoinButtonClick() }
 
         val createButton = getView()?.findViewById<FloatingActionButton>(R.id.newButton)
         createButton!!.setOnClickListener{ onCreateButtonClick() }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val viewFragment = inflater.inflate(R.layout.fragment_trips, container, false)
-        fetchTripsData(viewFragment)
-        return viewFragment
     }
 
     private fun fetchTripsData(viewFragment: View) = runBlocking{

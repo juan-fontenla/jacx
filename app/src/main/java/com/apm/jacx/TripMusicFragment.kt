@@ -39,7 +39,8 @@ private const val ARG_PARAM1 = "routeName"
 
 class TripMusicFragment : Fragment() {
 
-    private var routeName: String? = "rutaXaime"
+    private var routeName: String? = null
+
     private val viewModel: MusicViewModel by viewModels()
 
     private lateinit var firstSpinner: Spinner

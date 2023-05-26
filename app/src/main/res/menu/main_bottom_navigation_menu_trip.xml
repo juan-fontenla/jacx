@@ -18,4 +18,8 @@
         android:enabled="true"
         android:icon="@drawable/baseline_photo_album_24"
         android:title="@string/album_trip" />
+    <item
+        android:id="@+id/QR_Trip"
+        android:icon="@drawable/baseline_qr_code"
+        android:title="QR" />
 </menu>

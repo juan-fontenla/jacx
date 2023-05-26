@@ -47,6 +47,7 @@ class ItemTripAdapter(
         holder.cardTrip.setOnClickListener {
             val intent = Intent(context, DetailRouteActivity::class.java)
             intent.putExtra("routeId", item.id)
+            intent.putExtra("routeName", item.name)
             context.startActivity(intent)
         }
     }

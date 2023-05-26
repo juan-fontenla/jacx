@@ -28,6 +28,7 @@ class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
 
     // Route data related
     private var routeId : Int = 0
+    private var routeName: String = ""
     private lateinit var myViewModel: ActivityViewModel
     // Geolocation related
     private var navigation = false
@@ -57,6 +58,8 @@ class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
         setContentView(R.layout.activity_detail_route)
 
         routeId = intent.getIntExtra("routeId", 0)
+        routeName = intent.getStringExtra("routeName")!!
+
         //Init view model
         myViewModel = ViewModelProvider(this)[ActivityViewModel::class.java]
 
@@ -236,10 +239,13 @@ class DetailRouteActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
                 selectedFragment = TripFriendFragment()
             }
             R.id.music_trip -> {
-                selectedFragment = TripMusicFragment()
+                selectedFragment = TripMusicFragment.newInstance(routeName)
             }
             R.id.album_trip -> {
-                selectedFragment = TripAlbumFragment()
+                selectedFragment = TripAlbumFragment.newInstance(routeName)
+            }
+            R.id.QR_Trip -> {
+                selectedFragment = QRFragment.newInstance(routeName)
             }
 
         }
