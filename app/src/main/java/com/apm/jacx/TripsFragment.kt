@@ -41,7 +41,6 @@ class TripsFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        setHasOptionsMenu(true);
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -114,11 +113,6 @@ class TripsFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_search_input, menu);
-        return super.onCreateOptionsMenu(menu, inflater)
     }
 
 }
