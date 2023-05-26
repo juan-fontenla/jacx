@@ -149,7 +149,7 @@ class TripFormFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             val place = setPlace(result)
             if (place != null) {
-                origin = Util.placeToWaypoint(place)
+                origin = Util.placeToWaypoint(place, requireContext())
             }
         }
 
@@ -157,7 +157,7 @@ class TripFormFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             val place = setPlace(result)
             if (place != null) {
-                destination = Util.placeToWaypoint(place)
+                destination = Util.placeToWaypoint(place, requireContext())
             }
         }
 
