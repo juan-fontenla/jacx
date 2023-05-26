@@ -8,17 +8,18 @@ import com.google.android.libraries.places.api.model.Place
 import org.json.JSONObject
 import java.security.MessageDigest
 import android.content.res.Resources
+import android.util.Log
 import com.apm.jacx.R
 import java.net.URLEncoder
 
 class Util {
 
     companion object {
-        fun placeToWaypoint(place: Place): Waypoint {
+        fun placeToWaypoint(place: Place, context: Context): Waypoint {
             val json = JSONObject()
             json.put("name", place.name)
             json.put("point", "${place.latLng!!.latitude},${place.latLng!!.longitude}")
-            json.put("url", getPhotoUrl(place))
+            json.put("url", getPhotoUrl(place, context))
             json.put("color", place.iconBackgroundColor)
             return Waypoint(json)
         }
@@ -49,11 +50,11 @@ class Util {
             }
         }
 
-        private fun getPhotoUrl(place: Place): String? {
+        private fun getPhotoUrl(place: Place, context: Context): String? {
             if (place.photoMetadatas == null || place.photoMetadatas.size == 0) {
                 return null
             }
-            val key = Resources.getSystem().getString(R.string.key)
+            val key = context.resources.getString(R.string.key)
             val photoMetadata = place.photoMetadatas.get(0)
             val photoReference = photoMetadata.toString().split("photoReference=", "}")[1]
             return "https://maps.googleapis.com/maps/api/place/photo" +
