@@ -13,9 +13,14 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.apm.jacx.adapter.ItemTouchHelperCallback
 import com.apm.jacx.adapter.ItemTripAdapter
 import com.apm.jacx.adapter.ItemWaypointAdapter
+import com.apm.jacx.client.ApiClient
+import com.apm.jacx.model.Waypoint
+import com.apm.jacx.util.Util
 import com.apm.jacx.view_model.ActivityViewModel
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
@@ -26,6 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -35,6 +41,9 @@ class ItineraryFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var myViewModel: ActivityViewModel
+    private lateinit var waypoints: MutableList<Waypoint>
+    private lateinit var adapter: ItemWaypointAdapter
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,15 +63,15 @@ class ItineraryFragment : Fragment() {
         // Init Places SDK
         Places.initialize(requireContext(), getString(R.string.key))
 
-        myViewModel = ViewModelProvider(this)[ActivityViewModel::class.java]
+        myViewModel = ViewModelProvider(requireActivity())[ActivityViewModel::class.java]
+        waypoints = myViewModel.apiResult.value?.waypoints!!
+        adapter = ItemWaypointAdapter(requireContext(), waypoints)
+        recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_trip_waypoints)
+        recyclerView!!.adapter = adapter
+        val itemTouchHelperCallback = ItemTouchHelperCallback(adapter)
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
 
-        val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_trip_waypoints)
-        recyclerView?.adapter = context?.let { myViewModel.apiResult.value?.let { it1 -> ItemWaypointAdapter(it, it1.waypoints) } }
-
-        myViewModel.apiResult.observe(viewLifecycleOwner) { result ->
-            val recyclerView = viewFragment.findViewById<RecyclerView>(R.id.list_trip_waypoints)
-            recyclerView?.adapter = context?.let { ItemWaypointAdapter(it, result.waypoints) }
-        }
 
         addWaypoint(viewFragment)
         saveRoute(viewFragment)
@@ -85,7 +94,7 @@ class ItineraryFragment : Fragment() {
 
         val btnAddRoute : FloatingActionButton = viewFragment.findViewById(R.id.btn_add_route_trip_friend)
         btnAddRoute.setOnClickListener {
-            val fields = listOf(Place.Field.LAT_LNG, Place.Field.NAME)
+            val fields = listOf(Place.Field.LAT_LNG, Place.Field.NAME, Place.Field.ICON_BACKGROUND_COLOR, Place.Field.PHOTO_METADATAS)
             val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
                 .build(activity)
             startAutocomplete.launch(intent)
@@ -101,7 +110,7 @@ class ItineraryFragment : Fragment() {
                 val intent = result.data
                 if (intent != null) {
                     val place = Autocomplete.getPlaceFromIntent(intent)
-                    sendWaypoint(place.latLng)
+                    sendWaypoint(place)
                 }
             } else if (result.resultCode == Activity.RESULT_CANCELED) {
                 // The user canceled the operation.
@@ -109,15 +118,21 @@ class ItineraryFragment : Fragment() {
             }
         }
 
-    private fun sendWaypoint(latLng: LatLng) = runBlocking {
-        Log.d("ItineraryFragment", "SEND WAYPOINT!")
-        val pointString = "${latLng.latitude},${latLng.longitude}"
-        // TODO send point to server (maybe include name)
-
-        // TODO add to list if successful
-        activity?.runOnUiThread {
-            Toast.makeText(activity, "Send $pointString waypoint to server", Toast.LENGTH_LONG).show()
-        }
+    private fun sendWaypoint(place: Place) = runBlocking {
+        // Create way point
+        var waypoint = Util.placeToWaypoint(place, requireContext())
+        waypoint.orderPosition = waypoints.size + 1
+        var trip = myViewModel.apiResult.value
+        val json = JSONObject(ApiClient.post("/waypoint", waypoint.toJSONObject().toString()))
+        waypoint = Waypoint(json)
+        // Assign way point to trip
+        val assignBody = JSONObject()
+        assignBody.put("routeId", trip!!.id)
+        assignBody.put("waypointId", waypoint.id)
+        ApiClient.post("/route/waypoint", assignBody.toString())
+        // Update view
+        waypoints.add(waypoint)
+        adapter.notifyDataSetChanged()
     }
 
 
