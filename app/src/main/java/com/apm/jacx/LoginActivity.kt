@@ -62,7 +62,6 @@ class LoginActivity : AppCompatActivity() {
         val loginBtn: Button = findViewById(R.id.button_login)
         loginBtn.setOnClickListener {
             if (ValidationUtils.validateName(userName) && ValidationUtils.validatePassword(password)) {
-                Toast.makeText(this, "validacion correcta", Toast.LENGTH_SHORT).show()
                 login(userName.text?.trim(), password.text?.trim())
             }
         }
@@ -348,11 +347,6 @@ class LoginActivity : AppCompatActivity() {
     private fun handleSignInResultGoogle(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            Toast.makeText(
-                applicationContext,
-                "Sesion iniciada: " + account,
-                Toast.LENGTH_LONG
-            ).show()
 
             // Almacenamos el token en el almacenamiento interno
             AppPreferences.TOKEN_GOOGLE = account.idToken
