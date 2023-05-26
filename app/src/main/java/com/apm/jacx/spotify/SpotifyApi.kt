@@ -3,6 +3,7 @@ package com.apm.jacx.spotify
 import com.apm.jacx.spotify.response.MePlaylistsResponse
 import com.apm.jacx.spotify.response.MeResponse
 import com.apm.jacx.spotify.response.PlaylistTracksResponse
+import com.apm.jacx.spotify.response.SongResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -21,7 +22,10 @@ interface SpotifyApi {
     ): Result<PlaylistTracksResponse>
 
     @GET("me")
-    suspend fun getUserInformation() : Result<MeResponse>
+    suspend fun getUserInformation(): Result<MeResponse>
+
+    @GET("tracks/{id}")
+    suspend fun getTracksById(@Path("id") id: String): Result<SongResponse>
 
 
 }
