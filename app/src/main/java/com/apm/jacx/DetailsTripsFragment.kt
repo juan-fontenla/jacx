@@ -49,7 +49,7 @@ class DetailsTripsFragment : Fragment(), DetailRouteFragment, OnMapReadyCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
     override fun onCreateView(
@@ -82,10 +82,10 @@ class DetailsTripsFragment : Fragment(), DetailRouteFragment, OnMapReadyCallback
 
     }
 
-/*    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_selected_route, menu);
         return super.onCreateOptionsMenu(menu, inflater)
-    }*/
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
